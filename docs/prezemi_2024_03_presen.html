@@ -517,11 +517,15 @@ Soichi Matsuura
 <h2>回帰分析とは</h2>
 <ul>
 <li>因果関係を調べるための統計手法で，原因となる変数を<strong>説明変数</strong>，結果となる変数を<strong>目的変数</strong>といい，その関係を調べる手法です。</li>
-<li>最もシンプルな回帰分析は，<strong>単回帰分析</strong>で，説明変数が1つの場合です。 <span class="math display">
-Y_i = \alpha + \beta X_i + \varepsilon_i
-</span></li>
+<li>最もシンプルな回帰分析は，<strong>単回帰分析</strong>で，説明変数が1つの場合です。</li>
 </ul>
-<p>− ここでは，<span class="math inline">Y_i</span>が目的変数，<span class="math inline">X_i</span>が説明変数、<span class="math inline">\varepsilon_i</span>が誤差項です。 - <span class="math inline">\alpha</span>が切片，<span class="math inline">\beta</span>が傾きを表す、データから推定されるパラメータです。</p>
+<p><span class="math display">
+Y_i = \alpha + \beta X_i + \varepsilon_i
+</span></p>
+<ul>
+<li>ここでは，<span class="math inline">Y_i</span>が目的変数，<span class="math inline">X_i</span>が説明変数、<span class="math inline">\varepsilon_i</span>が誤差項です。</li>
+<li><span class="math inline">\alpha</span>が切片，<span class="math inline">\beta</span>が傾きを表す、データから推定されるパラメータです。</li>
+</ul>
 </section>
 <section id="回帰分析-図解" class="slide level2">
 <h2>回帰分析　図解</h2>
@@ -958,7 +962,7 @@ window.addEventListener('load', function () { styleCell_iny9l2drj166r11zvlht(9, 
 <pre><code> [1] "No"  "No"  "Yes" "No"  "No"  "No"  "No"  "No"  "No"  "No" </code></pre>
 </div>
 </div>
-<p><code>"No"</code>と<code>"Yes"</code>の2つのカテゴリーが文字列として入っていることが分かります。 このままだと回帰分析に使えないので，<code>mutate()</code>関数を使ってダミー変数を作成します。</p>
+<p><code>"No"</code>と<code>"Yes"</code>の2つのカテゴリーが文字列として入っていることが分かります。 このままだと回帰分析に使えないので（実際は使えないこともない），<code>mutate()</code>関数を使ってダミー変数を作成します。</p>
 </section>
 <section id="ダミー変数の作成" class="slide level2">
 <h2>ダミー変数の作成</h2>
@@ -966,20 +970,18 @@ window.addEventListener('load', function () { styleCell_iny9l2drj166r11zvlht(9, 
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>dataf <span class="ot">&lt;-</span> dataf <span class="sc">|&gt;</span></span>
 <span id="cb13-2"><a href=""></a>  <span class="fu">mutate</span>( <span class="co"># 新しい変数を作成</span></span>
-<span id="cb13-3"><a href=""></a>    <span class="co"># dplyr::ifelse()関数で条件分岐</span></span>
+<span id="cb13-3"><a href=""></a>    <span class="co"># dplyr::if_else()関数で条件分岐</span></span>
 <span id="cb13-4"><a href=""></a>    <span class="at">d_autolock =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(auto_lock <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb13-5"><a href=""></a>    <span class="at">d_autolock =</span> <span class="fu">factor</span>(d_autolock) <span class="co"># ファクター型に変換</span></span>
-<span id="cb13-6"><a href=""></a>    )</span>
-<span id="cb13-7"><a href=""></a>dataf<span class="sc">$</span>d_autolock <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-5"><a href=""></a>    )</span>
+<span id="cb13-6"><a href=""></a>dataf<span class="sc">$</span>d_autolock <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0 0 1 0 0 0 0 0 0 0
-Levels: 0 1</code></pre>
+<pre><code> [1] 0 0 1 0 0 0 0 0 0 0</code></pre>
 </div>
 </div>
 </section>
 <section id="ダミー変数を使った回帰分析" class="slide level2">
 <h2>ダミー変数を使った回帰分析</h2>
-<p>先ほど作成したダミー変数<code>d_autolock</code>を使って重回帰分析を行います。</p>
+<p>ダミー変数<code>d_autolock</code>を使った重回帰分析</p>
 <div class="cell">
 <style type="text/css">
 .table, th, td {
@@ -1002,6 +1004,12 @@ Levels: 0 1</code></pre>
 <span id="cb15-9"><a href=""></a>  <span class="at">gof_omit =</span> <span class="st">'RMSE|AIC|BIC|Log.Lik.|F|R2'</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
+<p><span class="math display">
+\begin{aligned}
+rent \_ total_i &amp;= \alpha + \beta_1 floor_i + \beta_2 d \_ autolock_i + \varepsilon_i \\
+rent \_ total_i &amp;= \alpha + \beta_1 floor_i + \beta_2 age_i + \beta_3 d \_ autolock_i + \varepsilon_i
+\end{aligned}
+</span></p>
 </section>
 <section id="ダミー変数を使った回帰分析-output" class="slide level2 output-location-slide"><h2>ダミー変数を使った回帰分析</h2><div class="cell output-location-slide">
 <div class="cell-output-display">
@@ -1236,7 +1244,806 @@ window.addEventListener('load', function () { styleCell_yfx3y5odsfao9mrtts6m(12,
 </details>
 
 </div>
-<img data-src="prezemi_2024_03_presen_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"><div class="quarto-auto-generated-content">
+<img data-src="prezemi_2024_03_presen_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="複数のダミー変数" class="slide level2">
+<h2>複数のダミー変数</h2>
+<p>ダミー変数は複数使うことができます。たとえば次のような分析を行いたいとします。</p>
+<ol type="1">
+<li>賃金<em>水準</em>は学歴によって差があり、高学歴ほど賃金<em>水準</em>が高い</li>
+<li>男女間でも賃金水準に差がある</li>
+<li>賃金は年齢とともに上昇するが、昇級の程度は男性あるいは高学歴の方が高い</li>
+<li>賃金水準は、最初は上昇するが後に減少する</li>
+</ol>
+<p>1と2を考慮するために，学歴と性別のダミー変数を使います。</p>
+</section>
+<section id="教育データを読み込む" class="slide level2">
+<h2>教育データを読み込む</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="co"># 賃金データ読み込み</span></span>
+<span id="cb17-2"><a href=""></a>dataf <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/wage-census2022.csv"</span>)</span>
+<span id="cb17-3"><a href=""></a><span class="fu">glimpse</span>(dataf)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 76
+Columns: 5
+$ age       &lt;dbl&gt; 18, 18, 18, 18, 22, 22, 22, 22, 22, 22, 22, 22, 27, 27, 27, …
+$ wage      &lt;dbl&gt; 173.3000, 189.0000, 177.3000, 207.9000, 199.6000, 209.3000, …
+$ tenure    &lt;dbl&gt; 1.100000, 0.900000, 1.400000, 1.000000, 2.600000, 3.200000, …
+$ male      &lt;dbl&gt; 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, …
+$ education &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, …</code></pre>
+</div>
+</div>
+</section>
+<section id="学歴ダミー変数を作成" class="slide level2">
+<h2>学歴ダミー変数を作成</h2>
+<p>変数<code>education</code>は1〜4の値をもち、1が中卒、2が高卒、3が専門・短大、4が大卒以上を表します。 変数<code>male</code>は男性なら1、女性なら0を表します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>dataf<span class="sc">$</span>education <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 2 1 2 1 2 3 4 1 2</code></pre>
+</div>
+</div>
+</section>
+<section id="カテゴリー変数をダミー変数に変換" class="slide level2">
+<h2>カテゴリー変数をダミー変数に変換</h2>
+<p><code>education</code>をダミー変数に変換するため，</p>
+<ul>
+<li><code>education</code>が<code>1</code>のとき<code>1</code>を，<code>1</code>以外のときは<code>0</code>を示す<code>edu1</code>，</li>
+<li><code>education</code>が<code>2</code>のとき<code>1</code>を，<code>2</code>以外のときは<code>0</code>を示す<code>edu2</code>と，</li>
+<li><code>education</code>が<code>3</code>のとき<code>1</code>を，<code>3</code>以外のときは<code>0</code>を示す<code>edu3</code>と，</li>
+<li><code>education</code>が<code>4</code>のとき<code>1</code>を，<code>4</code>以外のときは<code>0</code>を示す<code>edu4</code></li>
+</ul>
+<p>という4つのダミー変数を作成します。</p>
+</section>
+<section id="ダミー変数を作成" class="slide level2">
+<h2>ダミー変数を作成</h2>
+<p>ダミー変数を作る方法はいろいろありますが，ここでは条件分岐を使って作成します。 <code>dplyr::if_else()</code>関数が便利です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a>dataf <span class="ot">&lt;-</span> dataf <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-3"><a href=""></a>    <span class="at">edu1 =</span> <span class="fu">if_else</span>(education <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb21-4"><a href=""></a>    <span class="at">edu2 =</span> <span class="fu">if_else</span>(education <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb21-5"><a href=""></a>    <span class="at">edu3 =</span> <span class="fu">if_else</span>(education <span class="sc">==</span> <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb21-6"><a href=""></a>    <span class="at">edu4 =</span> <span class="fu">if_else</span>(education <span class="sc">==</span> <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb21-7"><a href=""></a>    )</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ダミー変数を使った回帰分析-1" class="slide level2">
+<h2>ダミー変数を使った回帰分析</h2>
+<p>年齢が賃金に与える影響を調べてみます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>model_99 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span> edu1 <span class="sc">+</span> edu2 <span class="sc">+</span> edu3 <span class="sc">+</span> edu4, <span class="at">data =</span> dataf)</span>
+<span id="cb22-2"><a href=""></a><span class="fu">summary</span>(model_99)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = wage ~ age + male + edu1 + edu2 + edu3 + edu4, data = dataf)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-111.04  -24.92   11.14   25.30   88.26 
+
+Coefficients: (1 not defined because of singularities)
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  232.5330    18.1246  12.830  &lt; 2e-16 ***
+age            2.6341     0.3468   7.595 1.02e-10 ***
+male          80.3920     9.4391   8.517 2.04e-12 ***
+edu1        -115.9678    13.3933  -8.659 1.12e-12 ***
+edu2        -102.2078    13.3933  -7.631 8.72e-11 ***
+edu3         -68.7770    13.7147  -5.015 3.85e-06 ***
+edu4               NA         NA      NA       NA    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 41.14 on 70 degrees of freedom
+Multiple R-squared:  0.7666,    Adjusted R-squared:   0.75 
+F-statistic: 45.99 on 5 and 70 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p><code>edu4</code>が<code>NA</code>になってる・・・？</p>
+</section>
+<section id="ダミー変数を全部入れちゃダメ問題" class="slide level2">
+<h2>ダミー変数を全部入れちゃダメ問題</h2>
+<ul>
+<li>ダミー変数を全部入れると<strong>多重共線性</strong>が生じます。</li>
+<li>たとえば，男性なら1女性なら0を示すダミー変数<code>male</code>と，女性なら1男性なら0を示すダミー変数<code>female</code>を使うと，<code>male</code>と<code>female</code>は完全に相関してしまいます。</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>dataf <span class="sc">|&gt;</span> <span class="fu">select</span>(edu1, edu2, edu3, edu4) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">4</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+   edu1  edu2  edu3  edu4
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     1     0     0     0
+2     0     1     0     0
+3     1     0     0     0
+4     0     1     0     0</code></pre>
+</div>
+</div>
+</section>
+<section id="適切な変数を選択した回帰分析" class="slide level2">
+<h2>適切な変数を選択した回帰分析</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>model_linear <span class="ot">&lt;-</span></span>
+<span id="cb26-2"><a href=""></a>  <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span> edu2 <span class="sc">+</span> edu3 <span class="sc">+</span> edu4, <span class="at">data =</span> dataf)</span>
+<span id="cb26-3"><a href=""></a><span class="fu">summary</span>(model_linear)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = wage ~ age + male + edu2 + edu3 + edu4, data = dataf)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-111.04  -24.92   11.14   25.30   88.26 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 116.5651    17.1913   6.780 3.13e-09 ***
+age           2.6341     0.3468   7.595 1.02e-10 ***
+male         80.3920     9.4391   8.517 2.04e-12 ***
+edu2         13.7600    13.0109   1.058 0.293886    
+edu3         47.1908    13.3933   3.523 0.000755 ***
+edu4        115.9678    13.3933   8.659 1.12e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 41.14 on 70 degrees of freedom
+Multiple R-squared:  0.7666,    Adjusted R-squared:   0.75 
+F-statistic: 45.99 on 5 and 70 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="図にしてみる" class="slide level2">
+<h2>図にしてみる。</h2>
+<p>女性の賃金モデル</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataf) <span class="sc">+</span></span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> wage, <span class="at">color =</span> <span class="fu">factor</span>(education)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb28-3"><a href=""></a><span class="co"># auto_lockごとに切片が異なる回帰式を追加</span></span>
+<span id="cb28-4"><a href=""></a>g <span class="ot">&lt;-</span> g <span class="sc">+</span></span>
+<span id="cb28-5"><a href=""></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">116.5651</span>, <span class="at">slope =</span> <span class="fl">2.6341</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb28-6"><a href=""></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">116.5651</span> <span class="sc">+</span> <span class="fl">13.7600</span>, <span class="at">slope =</span> <span class="fl">2.6341</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href=""></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">116.5651</span> <span class="sc">+</span> <span class="fl">47.1908</span>, <span class="at">slope =</span> <span class="fl">2.6341</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb28-8"><a href=""></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">116.5651</span> <span class="sc">+</span> <span class="fl">115.9678</span>, <span class="at">slope =</span> <span class="fl">2.6341</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href=""></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb28-10"><a href=""></a><span class="fu">print</span>(g)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section><section id="図にしてみる-output" class="slide level2 output-location-slide"><h2>図にしてみる。</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="prezemi_2024_03_presen_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></section></section>
+<section>
+<section id="交差項を使う" class="title-slide slide level1 center">
+<h1>交差項を使う</h1>
+
+</section>
+<section id="教育水準ごとに平均賃金を計算" class="slide level2">
+<h2>教育水準ごとに平均賃金を計算</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>dataf <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(education) <span class="sc">%&gt;%</span> <span class="co"># 教育水準ごとに</span></span>
+<span id="cb29-3"><a href=""></a>  <span class="fu">summarize</span>(</span>
+<span id="cb29-4"><a href=""></a>    <span class="fu">mean</span>(wage) <span class="co"># 平均賃金</span></span>
+<span id="cb29-5"><a href=""></a>    )</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  education `mean(wage)`
+      &lt;dbl&gt;        &lt;dbl&gt;
+1         1         261.
+2         2         275.
+3         3         315.
+4         4         383.</code></pre>
+</div>
+</div>
+</section>
+<section id="交差項を入れた分析方法" class="slide level2">
+<h2>交差項を入れた分析方法</h2>
+<ul>
+<li><code>変数A : 変数B</code> で，相互作用のみの回帰分析となり，</li>
+<li><code>変数A * 変数B</code> で，変数単体と相互作用をいれた回帰分析となります。</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>model_linear1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span> age<span class="sc">:</span>male, dataf)</span>
+<span id="cb31-2"><a href=""></a>model_linear2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">*</span> male, dataf)</span>
+<span id="cb31-3"><a href=""></a><span class="fu">list</span>(model_linear1, model_linear2) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href=""></a>  <span class="fu">msummary</span>(</span>
+<span id="cb31-5"><a href=""></a>    <span class="at">stars =</span> <span class="cn">TRUE</span>, <span class="co"># p値のマークをつける</span></span>
+<span id="cb31-6"><a href=""></a>    <span class="at">fmt =</span> <span class="st">'%.4f'</span>, <span class="co"># 小数点以下4桁まで表示</span></span>
+<span id="cb31-7"><a href=""></a>    <span class="at">gof_omit =</span> <span class="st">'RMSE|AIC|BIC|Log.Lik.|F|R2.Adj'</span> <span class="co"># 統計量を省略</span></span>
+<span id="cb31-8"><a href=""></a>  )</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
+<section id="交差項を入れた分析方法-output" class="slide level2 output-location-slide"><h2>交差項を入れた分析方法</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_ay76plqjz4p6k2wpigtl</title>
+    <style>
+.table td.tinytable_css_9l12inucbgyll8yzwgmg, .table th.tinytable_css_9l12inucbgyll8yzwgmg {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_uqw8h6d1idiv79wmo9je, .table th.tinytable_css_uqw8h6d1idiv79wmo9je {    text-align: left; }
+.table td.tinytable_css_6hlcfi3qy0e02d19tkpy, .table th.tinytable_css_6hlcfi3qy0e02d19tkpy {    text-align: center; }
+.table td.tinytable_css_llqwfb5x2dts3bwht57z, .table th.tinytable_css_llqwfb5x2dts3bwht57z {    text-align: center; }
+.table td.tinytable_css_buvermshtl5jcbvdgl0a, .table th.tinytable_css_buvermshtl5jcbvdgl0a {    border-bottom: solid 0.05em black; }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_ay76plqjz4p6k2wpigtl" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">(1)</th>
+                <th scope="col">(2)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>(Intercept)</td>
+                  <td>190.4211***</td>
+                  <td>190.4211***</td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(30.2611)  </td>
+                  <td>(30.2611)  </td>
+                </tr>
+                <tr>
+                  <td>age        </td>
+                  <td>1.8585*    </td>
+                  <td>1.8585*    </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.7043)   </td>
+                  <td>(0.7043)   </td>
+                </tr>
+                <tr>
+                  <td>male       </td>
+                  <td>-2.3055    </td>
+                  <td>-2.3055    </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(42.7956)  </td>
+                  <td>(42.7956)  </td>
+                </tr>
+                <tr>
+                  <td>age × male</td>
+                  <td>2.0300*    </td>
+                  <td>2.0300*    </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.9960)   </td>
+                  <td>(0.9960)   </td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.   </td>
+                  <td>76         </td>
+                  <td>76         </td>
+                </tr>
+                <tr>
+                  <td>R2         </td>
+                  <td>0.501      </td>
+                  <td>0.501      </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function styleCell_tinytable_aw290ajlhflvu6nvuwql(i, j, css_id) {
+        var table = document.getElementById("tinytable_ay76plqjz4p6k2wpigtl");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_ay76plqjz4p6k2wpigtl');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_aw290ajlhflvu6nvuwql(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ay76plqjz4p6k2wpigtl");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(0, 0, 'tinytable_css_9l12inucbgyll8yzwgmg') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(0, 1, 'tinytable_css_9l12inucbgyll8yzwgmg') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(0, 2, 'tinytable_css_9l12inucbgyll8yzwgmg') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(0, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(1, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(2, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(3, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(4, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(5, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(6, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(7, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(8, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(9, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(10, 0, 'tinytable_css_uqw8h6d1idiv79wmo9je') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(0, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(1, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(2, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(3, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(4, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(5, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(6, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(7, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(8, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(9, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(10, 1, 'tinytable_css_6hlcfi3qy0e02d19tkpy') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(0, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(1, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(2, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(3, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(4, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(5, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(6, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(7, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(8, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(9, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(10, 2, 'tinytable_css_llqwfb5x2dts3bwht57z') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(8, 0, 'tinytable_css_buvermshtl5jcbvdgl0a') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(8, 1, 'tinytable_css_buvermshtl5jcbvdgl0a') })
+window.addEventListener('load', function () { styleCell_tinytable_aw290ajlhflvu6nvuwql(8, 2, 'tinytable_css_buvermshtl5jcbvdgl0a') })
+    </script>
+
+  
+
+
+</div>
+</div></section><section id="交差項のグラフ" class="slide level2">
+<h2>交差項のグラフ</h2>
+<p><code>male</code>ダミーと<code>age</code>との交差項を入れた回帰分析では，切片の差と昇級の差が推定されます。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>コード</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataf) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> wage, <span class="at">color =</span> <span class="fu">factor</span>(male)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb32-2"><a href=""></a>g <span class="ot">&lt;-</span> g <span class="sc">+</span> <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">80</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a href=""></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">190.4211</span>, <span class="at">slope =</span> <span class="fl">1.8585</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href=""></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">190.4211</span> <span class="sc">-</span> <span class="fl">2.3055</span>, <span class="at">slope =</span> <span class="fl">1.8585</span> <span class="sc">+</span> <span class="fl">2.0300</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span>
+<span id="cb32-5"><a href=""></a><span class="fu">print</span>(g)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="prezemi_2024_03_presen_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"></section></section>
+<section>
+<section id="二乗項を使う" class="title-slide slide level1 center">
+<h1>二乗項を使う</h1>
+
+</section>
+<section id="二乗項" class="slide level2">
+<h2>二乗項？</h2>
+<ul>
+<li>年齢の影響が線形ではない場合，年齢の二乗項を追加することで，<strong>非線形な関係</strong>を捉えることができます。</li>
+<li>二乗項があると，次のような関数系になります。 <span class="math display">
+y = \alpha  + \beta _1 x + \beta _2 x^2
+</span> グラフにすると次のようになります。</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<details class="code-fold">
+<summary>コード</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, rgl)</span>
+<span id="cb33-2"><a href=""></a><span class="co"># x &gt; 0 の範囲を定義</span></span>
+<span id="cb33-3"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">100</span>)  <span class="co"># 0より大きいxの範囲</span></span>
+<span id="cb33-4"><a href=""></a>a <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb33-5"><a href=""></a><span class="co"># 3Dグリッドを作成</span></span>
+<span id="cb33-6"><a href=""></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x =</span> x, <span class="at">a =</span> a)</span>
+<span id="cb33-7"><a href=""></a><span class="co"># y = a + x + x^2 を計算</span></span>
+<span id="cb33-8"><a href=""></a>y <span class="ot">&lt;-</span> grid<span class="sc">$</span>a <span class="sc">+</span> grid<span class="sc">$</span>x <span class="sc">+</span> grid<span class="sc">$</span>x<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb33-9"><a href=""></a><span class="co"># 3Dプロット</span></span>
+<span id="cb33-10"><a href=""></a><span class="fu">plot3d</span>(grid<span class="sc">$</span>x, grid<span class="sc">$</span>a, y,</span>
+<span id="cb33-11"><a href=""></a>  <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb33-12"><a href=""></a>  <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"a"</span>, <span class="at">zlab =</span> <span class="st">"y"</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="二乗項の解釈" class="slide level2">
+<h2>二乗項の解釈</h2>
+<p>二乗項があると二次関数の形になるので，極値を求めることができます。 1階の条件で極値を求めると，次のようになります。</p>
+<p><span class="math display">
+\begin{aligned}
+\frac{dY}{dX} &amp;= \beta_1 + 2\beta_2 X = 0 \\
+X &amp;= -\frac{\beta_1}{2\beta_2}
+\end{aligned}
+</span></p>
+</section>
+<section id="年齢の二乗項" class="slide level2">
+<h2>年齢の二乗項</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>dataf <span class="ot">&lt;-</span> dataf <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">age2 =</span> age<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb34-2"><a href=""></a>results <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb34-3"><a href=""></a>  model_linear1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male, dataf),</span>
+<span id="cb34-4"><a href=""></a>  model_linear2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span> age2, dataf),</span>
+<span id="cb34-5"><a href=""></a>  model_linear3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>), dataf),</span>
+<span id="cb34-6"><a href=""></a>  model_linear4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span> tenure , dataf),</span>
+<span id="cb34-7"><a href=""></a>  model_linear5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(wage <span class="sc">~</span> male <span class="sc">+</span> tenure, dataf)</span>
+<span id="cb34-8"><a href=""></a>)</span>
+<span id="cb34-9"><a href=""></a>results <span class="sc">|&gt;</span> <span class="fu">msummary</span>(</span>
+<span id="cb34-10"><a href=""></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>, <span class="co"># p値のマークをつける</span></span>
+<span id="cb34-11"><a href=""></a>  <span class="at">fmt =</span> <span class="st">'%.4f'</span>, <span class="co"># 小数点以下4桁まで表示</span></span>
+<span id="cb34-12"><a href=""></a>  <span class="at">gof_omit =</span> <span class="st">'RMSE|AIC|BIC|Log.Lik.|F|R2.Adj'</span> <span class="co"># 統計量を省略</span></span>
+<span id="cb34-13"><a href=""></a>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
+<section id="年齢の二乗項-output" class="slide level2 output-location-slide"><h2>年齢の二乗項</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_u67r92d721yc3zviw5l7</title>
+    <style>
+.table td.tinytable_css_0keioxpoggvntaiq3rvn, .table th.tinytable_css_0keioxpoggvntaiq3rvn {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_d6bvs14kz00etaz19q13, .table th.tinytable_css_d6bvs14kz00etaz19q13 {    text-align: left; }
+.table td.tinytable_css_50du5v3jtqcdtc8jc2el, .table th.tinytable_css_50du5v3jtqcdtc8jc2el {    text-align: center; }
+.table td.tinytable_css_5aj1h4yrtaerox9rhwf3, .table th.tinytable_css_5aj1h4yrtaerox9rhwf3 {    text-align: center; }
+.table td.tinytable_css_dect2epzoypmrivncfr5, .table th.tinytable_css_dect2epzoypmrivncfr5 {    text-align: center; }
+.table td.tinytable_css_1405dgjyzjdsjuohcv3e, .table th.tinytable_css_1405dgjyzjdsjuohcv3e {    text-align: center; }
+.table td.tinytable_css_pw813jh8lfil8kywb46y, .table th.tinytable_css_pw813jh8lfil8kywb46y {    text-align: center; }
+.table td.tinytable_css_6qi86sqljduvxu3rhf2h, .table th.tinytable_css_6qi86sqljduvxu3rhf2h {    border-bottom: solid 0.05em black; }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_u67r92d721yc3zviw5l7" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">(1)</th>
+                <th scope="col">(2)</th>
+                <th scope="col">(3)</th>
+                <th scope="col">(4)</th>
+                <th scope="col">(5)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="6">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>(Intercept)</td>
+                  <td>149.0723***</td>
+                  <td>-92.4377  </td>
+                  <td>-92.4377  </td>
+                  <td>331.1615***</td>
+                  <td>194.3271***</td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(22.9332)  </td>
+                  <td>(58.9555) </td>
+                  <td>(58.9555) </td>
+                  <td>(32.3056)  </td>
+                  <td>(12.6450)  </td>
+                </tr>
+                <tr>
+                  <td>age        </td>
+                  <td>2.8736***  </td>
+                  <td>16.2533***</td>
+                  <td>16.2533***</td>
+                  <td>-6.4753*** </td>
+                  <td>           </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.5087)   </td>
+                  <td>(3.0954)  </td>
+                  <td>(3.0954)  </td>
+                  <td>(1.4333)   </td>
+                  <td>           </td>
+                </tr>
+                <tr>
+                  <td>male       </td>
+                  <td>80.3920*** </td>
+                  <td>80.3920***</td>
+                  <td>80.3920***</td>
+                  <td>19.0654    </td>
+                  <td>58.2363*** </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(13.8973)  </td>
+                  <td>(12.4405) </td>
+                  <td>(12.4405) </td>
+                  <td>(14.1726)  </td>
+                  <td>(12.6138)  </td>
+                </tr>
+                <tr>
+                  <td>age2       </td>
+                  <td>           </td>
+                  <td>-0.1644***</td>
+                  <td>          </td>
+                  <td>           </td>
+                  <td>           </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>           </td>
+                  <td>(0.0376)  </td>
+                  <td>          </td>
+                  <td>           </td>
+                  <td>           </td>
+                </tr>
+                <tr>
+                  <td>I(age^2)   </td>
+                  <td>           </td>
+                  <td>          </td>
+                  <td>-0.1644***</td>
+                  <td>           </td>
+                  <td>           </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>           </td>
+                  <td>          </td>
+                  <td>(0.0376)  </td>
+                  <td>           </td>
+                  <td>           </td>
+                </tr>
+                <tr>
+                  <td>tenure     </td>
+                  <td>           </td>
+                  <td>          </td>
+                  <td>          </td>
+                  <td>21.4583*** </td>
+                  <td>7.7523***  </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>           </td>
+                  <td>          </td>
+                  <td>          </td>
+                  <td>(3.1592)   </td>
+                  <td>(0.9916)   </td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.   </td>
+                  <td>76         </td>
+                  <td>76        </td>
+                  <td>76        </td>
+                  <td>76         </td>
+                  <td>76         </td>
+                </tr>
+                <tr>
+                  <td>R2         </td>
+                  <td>0.472      </td>
+                  <td>0.583     </td>
+                  <td>0.583     </td>
+                  <td>0.678      </td>
+                  <td>0.587      </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function styleCell_tinytable_ij64qrn6wc8h06qulold(i, j, css_id) {
+        var table = document.getElementById("tinytable_u67r92d721yc3zviw5l7");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_u67r92d721yc3zviw5l7');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_ij64qrn6wc8h06qulold(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_u67r92d721yc3zviw5l7");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 0, 'tinytable_css_0keioxpoggvntaiq3rvn') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 1, 'tinytable_css_0keioxpoggvntaiq3rvn') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 2, 'tinytable_css_0keioxpoggvntaiq3rvn') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 3, 'tinytable_css_0keioxpoggvntaiq3rvn') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 4, 'tinytable_css_0keioxpoggvntaiq3rvn') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 5, 'tinytable_css_0keioxpoggvntaiq3rvn') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(1, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(2, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(3, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(4, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(5, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(6, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(7, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(8, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(9, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(10, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(11, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(13, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(14, 0, 'tinytable_css_d6bvs14kz00etaz19q13') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(1, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(2, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(3, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(4, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(5, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(6, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(7, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(8, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(9, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(10, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(11, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(13, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(14, 1, 'tinytable_css_50du5v3jtqcdtc8jc2el') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(1, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(2, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(3, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(4, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(5, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(6, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(7, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(8, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(9, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(10, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(11, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(13, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(14, 2, 'tinytable_css_5aj1h4yrtaerox9rhwf3') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(1, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(2, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(3, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(4, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(5, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(6, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(7, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(8, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(9, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(10, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(11, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(13, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(14, 3, 'tinytable_css_dect2epzoypmrivncfr5') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(1, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(2, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(3, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(4, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(5, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(6, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(7, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(8, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(9, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(10, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(11, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(13, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(14, 4, 'tinytable_css_1405dgjyzjdsjuohcv3e') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(0, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(1, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(2, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(3, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(4, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(5, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(6, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(7, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(8, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(9, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(10, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(11, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(13, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(14, 5, 'tinytable_css_pw813jh8lfil8kywb46y') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 0, 'tinytable_css_6qi86sqljduvxu3rhf2h') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 1, 'tinytable_css_6qi86sqljduvxu3rhf2h') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 2, 'tinytable_css_6qi86sqljduvxu3rhf2h') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 3, 'tinytable_css_6qi86sqljduvxu3rhf2h') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 4, 'tinytable_css_6qi86sqljduvxu3rhf2h') })
+window.addEventListener('load', function () { styleCell_tinytable_ij64qrn6wc8h06qulold(12, 5, 'tinytable_css_6qi86sqljduvxu3rhf2h') })
+    </script>
+
+  
+
+
+</div>
+</div></section><section id="多重共線性" class="slide level2">
+<h2>多重共線性</h2>
+<p>独立変数間に強い相関があると，<strong>多重共線性</strong>が生じます。 多重共線性が生じると，推定された係数の信頼性が低下し，推定値が不安定になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">cor</span>(dataf<span class="sc">$</span>age, dataf<span class="sc">$</span>tenure, <span class="at">use=</span><span class="st">"pairwise.complete.obs"</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9357486</code></pre>
+</div>
+</div>
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
@@ -1417,7 +2224,7 @@ window.addEventListener('load', function () { styleCell_yfx3y5odsfao9mrtts6m(12,
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1244,
 
         height: 700,
 
