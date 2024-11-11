@@ -28,6 +28,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
   </style>
   <link rel="stylesheet" href="prezemi_2024_05_presen_files/libs/revealjs/dist/theme/quarto-38b5d31f19dbdec3b6e2c5a1e271e47d.css">
   <link rel="stylesheet" href="mystyle.css">
@@ -443,8 +508,349 @@ Y_i = \alpha + \beta_1 X_i + \beta_2 D_i + \varepsilon _i,
 <li>共変量<span class="math inline">\(C\)</span>が<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の両方に影響を与える場合、<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の間に関係がなくても、<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の間に関係があるように見えることがある。</li>
 </ul>
 
-
 <img data-src="prezemi_2024_05_presen_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"></section></section>
+<section>
+<section id="第5章-差の差分析とパネルデータ分析" class="title-slide slide level1 center">
+<h1>第5章 差の差分析とパネルデータ分析</h1>
+
+</section>
+<section id="準備" class="slide level2">
+<h2>準備</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="データ">データ</h3>
+<ul>
+<li><code>rent-odakyu-enoshima96-04.csv</code></li>
+<li><code>asai00-10.csv</code></li>
+<li><code>panel-gravity-data.csv</code></li>
+<li><code>Cambodia-gsp.csv</code></li>
+<li><code>nlswork.csv</code></li>
+<li><code>asai-data-construct.xlsx</code></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="パッケージ">パッケージ</h3>
+<ul>
+<li><code>tidyverse</code> : データ加工</li>
+<li><code>estimatr</code> : 差の差分析</li>
+<li><code>fixest</code> : 固定効果モデル</li>
+<li><code>plm</code> : パネルデータ分析</li>
+</ul>
+</div></div>
+</section>
+<section id="差の差分析" class="slide level2">
+<h2>差の差分析</h2>
+<ul>
+<li><strong>差の差分析</strong> (Difference-in-Differences: DiD) は、2つのグループにおいて、<strong>処置前後の変化</strong>を比較することで<strong>処置効果</strong>を推定する方法</li>
+<li><strong>パネルデータ</strong> (Panel Data, Logitudinal Data) は、同じ個体(unit)や地域における複数時点にわたって追跡調査したデータ</li>
+</ul>
+<p>処置を受けた群を<strong>処置群</strong>(treatment)といい、<span class="math inline">\(Y_T\)</span>で表す。 処置を受けていない群を<strong>対照群</strong>(control)といい、<span class="math inline">\(Y_C\)</span>で表す。 グループに属する個体を<span class="math inline">\(i\)</span>、時点を<span class="math inline">\(t\)</span>で表す。 <span class="math inline">\(Y_{T,i,t}\)</span>は処置群にいる<span class="math inline">\(i\)</span>の<span class="math inline">\(t\)</span>時点のデータを表す。</p>
+</section>
+<section id="差の差の分析" class="slide level2">
+<h2>差の差の分析</h2>
+<p>処置群と対照群の結果の差を比較するため、</p>
+<p><span class="math display">\[
+\underbrace{\underbrace{( Y_{T,i,t} - Y_{T,i,t-1} )}_{処置群の差} - \underbrace{( Y_{C,i,t} - Y_{C,i,t-1} )}_{対照群の差}}_{差の差}
+\]</span></p>
+<p>を計算する。 これが<strong>差の差の分析</strong>(Difference in Difference: <strong>DiD</strong>)の基礎概念である。 ただ、これはほぼ不可能なので、代わりに次のように推定する。</p>
+</section>
+<section id="反実仮想" class="slide level2">
+<h2>反実仮想</h2>
+<p>理想的な因果推論の方法として、<strong>反実仮想</strong>(counterfactual)を考える。 先のキャリアセンター企画の例で言うと、</p>
+<ul>
+<li>自分<span class="math inline">\(i\)</span>がキャリアセンター企画に参加したら、参加しなかった自分はいなくなる。</li>
+<li>しかし本当に知りたい処置効果は、参加した自分と参加しなかった自分の差である。</li>
+<li>処置群の<span class="math inline">\(Y_{T,i,t}\)</span>に対して、対照群の<span class="math inline">\(Y_{C,i,t}\)</span>は反実仮想である。</li>
+</ul>
+</section>
+<section id="反実仮想の推定" class="slide level2">
+<h2>反実仮想の推定</h2>
+<ul>
+<li>反実仮想は観察不可能なので、反実仮想を推定する方法が必要</li>
+<li>その方法が<strong>平均処置効果</strong>(ATE: Average Treatment Effect)の推定方法</li>
+<li>個々の処置効果は観察不可能だけれど、処置群と対照群の平均の差を比較することで、処置効果を推定できる。</li>
+<li>ランダムに処置を振り分けられている場合、平均をとることで個々の要因を相殺することができる、と考える。</li>
+</ul>
+</section>
+<section id="都市開発の効果分析" class="slide level2">
+<h2>5.1.2 都市開発の効果分析</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, estimatr, tinytable, modelsummary)</span>
+<span id="cb1-2"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/rent-odakyu-enoshima96-04.csv"</span>)</span>
+<span id="cb1-3"><a href=""></a>df <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 10
+   rent service floor   age auto_lock station station_j  year  walk   bus
+  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  12.5    0.5   79    3.83 No        Mutsuai 六会       1996    15     0
+2  10.7    0.4   65.4  3.58 No        Mutsuai 六会       1996    12     0
+3   9.2    0.5   61.9  7.83 No        Mutsuai 六会       1996    11     0
+4   8      0.25  40.2  2.25 No        Mutsuai 六会       1996    13     0
+5   8      0.2   40    3.83 No        Mutsuai 六会       1996     2     0
+6   7.7    0     30.8  6.08 No        Mutsuai 六会       1996     5     0</code></pre>
+</div>
+</div>
+<ul>
+<li>都市開発の対象グループを処置群、非対象グループを対照群とする。</li>
+</ul>
+</section>
+<section id="回帰モデル" class="slide level2">
+<h2>回帰モデル</h2>
+<p>差の差分析は、回帰モデルを使って推定することができる。</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{i,t} = \alpha &amp;+ \beta_1 Treat_i + \beta_2 After_t \\
+                 &amp;+ \beta_3 (Treat_i \times After_t) + \beta_4 X_{it} + \varepsilon_{i,t}
+\end{aligned}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Treat_i\)</span> : 個体<span class="math inline">\(i\)</span>が処置群なら1、そうでないなら0</li>
+<li><span class="math inline">\(After_t\)</span> : 時点<span class="math inline">\(t\)</span>が処置後なら1、そうでないなら0</li>
+<li><span class="math inline">\(Treat_i \times After_t\)</span> : 処置群かつ処置後なら1、そうでないなら0</li>
+</ul>
+</section>
+<section id="回帰係数の解釈" class="slide level2">
+<h2>回帰係数の解釈</h2>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial Y_{i,t}}{\partial Treat_i} &amp;= \beta_1 + \beta_3 After_t \\
+\frac{\partial Y_{i,t}}{\partial After_t} &amp;= \beta_2 + \beta_3 Treat_t \\
+\frac{\partial^2 Y_{i,t}}{\partial Treat_i \partial After_t } &amp;= \beta_3
+\end{aligned}
+\]</span></p>
+</section>
+<section id="ダミー変数の作成" class="slide level2">
+<h2>ダミー変数の作成</h2>
+<p>DiDで用いる処置群ダミーと処置年度ダミーを作成する。 前回と同じよう、<code>dplyr::mutate()</code>と<code>dplyr::if_else()</code>を使って作成する。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-3"><a href=""></a>    <span class="co"># 賃料と距離の変数作成</span></span>
+<span id="cb3-4"><a href=""></a>    <span class="at">rent_total =</span> rent <span class="sc">+</span> service,</span>
+<span id="cb3-5"><a href=""></a>    <span class="at">dist =</span> walk <span class="sc">+</span> bus,</span>
+<span id="cb3-6"><a href=""></a>    <span class="co"># ダミー変数の作成</span></span>
+<span id="cb3-7"><a href=""></a>    <span class="at">treat =</span> <span class="fu">if_else</span>(station <span class="sc">==</span> <span class="st">"Shonandai  "</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb3-8"><a href=""></a>    <span class="at">after =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2004</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb3-9"><a href=""></a>  )</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="回帰分析" class="slide level2">
+<h2>回帰分析</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>results <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-2"><a href=""></a>  <span class="st">"model1"</span> <span class="ot">=</span> <span class="fu">lm</span>(rent_total <span class="sc">~</span> floor <span class="sc">+</span> age <span class="sc">+</span> dist <span class="sc">+</span> treat<span class="sc">:</span>after, <span class="at">data =</span> df)</span>
+<span id="cb4-3"><a href=""></a>)</span>
+<span id="cb4-4"><a href=""></a><span class="fu">msummary</span>(</span>
+<span id="cb4-5"><a href=""></a>  results, </span>
+<span id="cb4-6"><a href=""></a>  <span class="at">gof_omit =</span> <span class="st">'DF|Deviance|AIC|BIC'</span>,</span>
+<span id="cb4-7"><a href=""></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-8"><a href=""></a>  <span class="fu">style_tt</span>(<span class="at">fontsize =</span> <span class="fl">0.5</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section><section id="回帰分析-output" class="slide level2 output-location-slide"><h2>回帰分析</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_m52y7m8ai62l2zsfinqg</title>
+    <style>
+.table td.tinytable_css_qg0135bm1znk4kxgxek3, .table th.tinytable_css_qg0135bm1znk4kxgxek3 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_fsr0z11zvicas8d3ss9t, .table th.tinytable_css_fsr0z11zvicas8d3ss9t {    text-align: left; }
+.table td.tinytable_css_es07r2heoz1sktiqlfpi, .table th.tinytable_css_es07r2heoz1sktiqlfpi {    text-align: center; }
+.table td.tinytable_css_bdb9pmb4mjz2yipfenk5, .table th.tinytable_css_bdb9pmb4mjz2yipfenk5 {    border-bottom: solid 0.05em black; }
+.table td.tinytable_css_9rg2jtxmqzs7sl0ylud5, .table th.tinytable_css_9rg2jtxmqzs7sl0ylud5 {    font-size: 0.5em; }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_m52y7m8ai62l2zsfinqg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">model1</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>(Intercept)</td>
+                  <td>3.979*** </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.304)  </td>
+                </tr>
+                <tr>
+                  <td>floor      </td>
+                  <td>0.114*** </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.005)  </td>
+                </tr>
+                <tr>
+                  <td>age        </td>
+                  <td>-0.095***</td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.011)  </td>
+                </tr>
+                <tr>
+                  <td>dist       </td>
+                  <td>-0.039*  </td>
+                </tr>
+                <tr>
+                  <td>           </td>
+                  <td>(0.018)  </td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.   </td>
+                  <td>228      </td>
+                </tr>
+                <tr>
+                  <td>R2         </td>
+                  <td>0.750    </td>
+                </tr>
+                <tr>
+                  <td>R2 Adj.    </td>
+                  <td>0.746    </td>
+                </tr>
+                <tr>
+                  <td>Log.Lik.   </td>
+                  <td>-385.308 </td>
+                </tr>
+                <tr>
+                  <td>RMSE       </td>
+                  <td>1.31     </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function styleCell_tinytable_lbfsa9r2duq1apx9fo8e(i, j, css_id) {
+        var table = document.getElementById("tinytable_m52y7m8ai62l2zsfinqg");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_m52y7m8ai62l2zsfinqg');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_lbfsa9r2duq1apx9fo8e(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_m52y7m8ai62l2zsfinqg");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(0, 0, 'tinytable_css_qg0135bm1znk4kxgxek3') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(0, 1, 'tinytable_css_qg0135bm1znk4kxgxek3') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(0, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(1, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(2, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(3, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(4, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(5, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(6, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(7, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(8, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(9, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(10, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(11, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(12, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(13, 0, 'tinytable_css_fsr0z11zvicas8d3ss9t') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(0, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(1, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(2, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(3, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(4, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(5, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(6, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(7, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(8, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(9, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(10, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(11, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(12, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(13, 1, 'tinytable_css_es07r2heoz1sktiqlfpi') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(8, 0, 'tinytable_css_bdb9pmb4mjz2yipfenk5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(8, 1, 'tinytable_css_bdb9pmb4mjz2yipfenk5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(1, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(2, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(3, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(4, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(5, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(6, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(7, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(8, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(9, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(10, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(11, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(12, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(13, 0, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(1, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(2, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(3, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(4, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(5, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(6, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(7, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(8, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(9, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(10, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(11, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(12, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+window.addEventListener('load', function () { styleCell_tinytable_lbfsa9r2duq1apx9fo8e(13, 1, 'tinytable_css_9rg2jtxmqzs7sl0ylud5') })
+    </script>
+
+  
+
+
+</div>
+</div></section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="img/yoko.jpg" class="slide-logo"></p>
