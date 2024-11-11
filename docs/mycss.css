@@ -71,7 +71,7 @@ a:hover {
 a[href$="html"]:not([href*="gaisho_2024"]) {
     color: #999;
     background: #f8f8f8;
-    cursor: not-allowed;
+    cursor: pointer; /* ここを変更 */
 }
 
 a[href$="html"]:not([href*="gaisho_2024"]):hover {
@@ -79,6 +79,14 @@ a[href$="html"]:not([href*="gaisho_2024"]):hover {
     color: #999;
     transform: none;
     box-shadow: none;
+}
+
+/* 非活性化されたリンクのスタイル */
+a.inactive {
+    color: #999;
+    background: #f8f8f8;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 /* レスポンシブデザイン */
