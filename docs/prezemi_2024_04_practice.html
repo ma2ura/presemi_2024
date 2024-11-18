@@ -368,7 +368,7 @@ $ marriage     &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0,
 <h2>問(2)</h2>
 <p><code>LDP</code>を従属変数としたロジットモデルを推定する。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>logit <span class="ot">=</span> <span class="fu">glm</span>(LDP <span class="sc">~</span> female <span class="sc">+</span> educ <span class="sc">+</span> marriage <span class="sc">+</span> income <span class="sc">+</span> age <span class="sc">+</span> value_family <span class="sc">+</span> social_class, <span class="at">data =</span> df, <span class="at">family =</span> binomial)</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>logit <span class="ot">=</span> <span class="fu">glm</span>(LDP <span class="sc">~</span> female <span class="sc">+</span> educ <span class="sc">+</span> marriage <span class="sc">+</span> income <span class="sc">+</span> age <span class="sc">+</span> value_family <span class="sc">+</span> social_class, <span class="at">data =</span> df, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
 <span id="cb4-2"><a href=""></a>logit <span class="sc">|&gt;</span></span>
 <span id="cb4-3"><a href=""></a>  <span class="fu">msummary</span>(</span>
 <span id="cb4-4"><a href=""></a>    <span class="at">output =</span> <span class="st">"kableExtra"</span>,</span>
