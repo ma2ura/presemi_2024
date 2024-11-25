@@ -94,7 +94,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="prezemi_2024_05_presen_files/libs/revealjs/dist/theme/quarto-ca68c1f1f4a36819c83f23ca14e7b822.css">
+  <link rel="stylesheet" href="prezemi_2024_05_presen_files/libs/revealjs/dist/theme/quarto-246df2c3fc4044dd90e8951a8c46dd82.css">
   <link rel="stylesheet" href="mystyle.css">
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -239,12 +239,20 @@ Soichi Matsuura
 <li><strong>疑似相関</strong>・見せかけの相関(spurious colleration)</li>
 </ul>
 </section>
-<section id="全くの偶然例題" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">全くの偶然｜例題</h2>
+<section id="第3の要因の図" class="slide level2">
+<h2>第3の要因の図</h2>
+<ul>
+<li>隠れた要因を，<strong>共変量</strong>(confounding variable)と呼ぶ。</li>
+<li>共変量<span class="math inline">\(C\)</span>が<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の両方に影響を与える場合、<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の間に関係がなくても、<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の間に関係があるように見えることがある。</li>
+</ul>
+
+<img data-src="prezemi_2024_05_presen_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"></section>
+<section id="例題" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">例題</h2>
 <p>キャリアセンターが集めたデータから、<strong>就活企画に参加した学生</strong>は、企画に参加していない学生と比べてその後の就職活動で成功している，ということが分かった。 そこから、<strong>就活企画に参加すると、就活に成功する</strong>という主張が可能でしょうか？</p>
 </section>
-<section id="全くの偶然例題-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">全くの偶然｜例題</h2>
+<section id="例題-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">例題</h2>
 <p>キャリアセンターが集めたデータから、<strong>就活企画に参加した学生</strong>は、企画に参加していない学生と比べてその後の就職活動で成功している，ということが分かった。 そこから、<strong>就活企画に参加すると、就活に成功する</strong>という主張が可能でしょうか？</p>
 <ol type="1">
 <li>キャリアセンター企画が就職活動の成功確率に直接影響している可能性</li>
@@ -305,7 +313,7 @@ Y_i = \alpha + \beta_1 X_i + \beta_2 D_i + \varepsilon _i,
 <li>ある変数が他の変数にどのように影響を与えるかを推定</li>
 </ul>
 
-<img data-src="prezemi_2024_05_presen_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><p><span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の関係を推定したら、正の関係があったとする。</p>
+<img data-src="prezemi_2024_05_presen_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><p><span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の関係を推定したら、正の関係があったとする。</p>
 </section>
 <section id="共変量" class="slide level2">
 <h2>共変量</h2>
@@ -314,7 +322,7 @@ Y_i = \alpha + \beta_1 X_i + \beta_2 D_i + \varepsilon _i,
 <li>共変量<span class="math inline">\(C\)</span>が<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の両方に影響を与える場合、<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の間に関係がなくても、<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の間に関係があるように見えることがある。</li>
 </ul>
 
-<img data-src="prezemi_2024_05_presen_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"></section></section>
+<img data-src="prezemi_2024_05_presen_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"></section></section>
 <section>
 <section id="第5章-差の差分析とパネルデータ分析" class="title-slide slide level1 center">
 <h1>第5章 差の差分析とパネルデータ分析</h1>
@@ -579,6 +587,221 @@ $ bus       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15, 0, 15, 
 Y_{it} = \alpha + \beta_1 Treat_i + \beta_2 After_t + \beta_3 Treat_i \times After_t + \beta_4 X_{it} + \varepsilon_{it}
 \]</span></p>
 <p><span class="math inline">\(\beta_3\)</span>は</p>
+</section></section>
+<section>
+<section id="パネルデータのdid" class="title-slide slide level1 center">
+<h1>パネルデータのDiD</h1>
+
+</section>
+<section id="パネルデータとは" class="slide level2">
+<h2>パネルデータとは？</h2>
+<ul>
+<li>複数の個体<span class="math inline">\(i\)</span>を、複数の時点<span class="math inline">\(t\)</span>で観測したデータを<strong>パネル・データ</strong>という。</li>
+<li>パネルデータの利点は、
+<ol type="1">
+<li>個体<span class="math inline">\(i\)</span>がもつ特徴をコントロールできる。</li>
+<li>時間による変化を評価できる</li>
+<li>サンプル・サイズが大きくできる</li>
+</ol></li>
+</ul>
+</section></section>
+<section>
+<section id="固定効果モデル" class="title-slide slide level1 center">
+<h1>固定効果モデル</h1>
+
+</section>
+<section id="固定効果とは" class="slide level2">
+<h2>固定効果とは？</h2>
+<ul>
+<li>パネルデータは個体<span class="math inline">\(i\)</span>ごとに時系列で追跡できる特性を持っている。</li>
+<li>都道府県を<span class="math inline">\(i\)</span>、時点を<span class="math inline">\(t\)</span>とし、各都道府県の母就業率<span class="math inline">\(Y_{it}\)</span>を考える。</li>
+<li><mark class="marky">各都道府県<span class="math inline">\(i\)</span>の保育所定員率<span class="math inline">\(X_{it}\)</span></mark>と<mark class="markb">時間で変わらない都道府県の特性<span class="math inline">\(\mu_i\)</span></mark>で決まるとする。</li>
+</ul>
+<p><span class="math display">\[
+Y_{it} = \alpha + \beta X_{it} + \mu _i + \varepsilon _{it}
+\]</span></p>
+<p>この<span class="math inline">\(\mu_i\)</span>をどうやって設定するかが問題。</p>
+</section>
+<section id="固定効果の測定方法" class="slide level2">
+<h2>固定効果の測定方法</h2>
+<ul>
+<li><strong>ダミー変数法</strong> : 各都道府県にダミー変数を設定し、都道府県ごとの特性を推定する。</li>
+<li>47都道府県なら、46個のダミー変数を設定する。つまり</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{it} = \alpha &amp;+ \beta_1 X_{it} + \beta_2 北海道ダミー + \beta_3 青森ダミー \\
+                &amp; + \beta_4 秋田ダミー + \cdots + \beta_{47} 鹿児島ダミー + \varepsilon _{it}
+\end{aligned}
+\]</span></p>
+<p>この各都道府県ダミーを<strong>固定効果</strong>(fixed effect)といい、観察できない都道府県の特性を表していると考える。</p>
+</section>
+<section id="時点固定効果" class="slide level2">
+<h2>時点固定効果</h2>
+<ul>
+<li>時点ダミーを設定することで時点ごとに異なる特性を推定できる。</li>
+<li>経営研究では、年度ダミーを設定することが多い。</li>
+<li>たとえば2010年から2024年の25年間のデータを使う場合、24個の年度ダミーを設定する。</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{it} = \alpha &amp;+ \beta_1 X_{it} + \beta_2 2010年ダミー + \beta_3 2011年ダミー \\
+                &amp; + \beta_4 2012ダミー + \cdots + \beta_{47} 2023年ダミー + \varepsilon _{it}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="二次元固定効果モデル" class="slide level2">
+<h2>二次元固定効果モデル</h2>
+<ul>
+<li>個体<span class="math inline">\(i\)</span>がもつ固定効果と、時点<span class="math inline">\(t\)</span>がもつ固定効果を同時に推定するモデルを<strong>二次元固定効果モデル</strong>という。</li>
+<li><mark class="marky">近年の実証研究では標準的な推定方法</mark>となっている。</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{it} = \alpha &amp; + \beta_1 X_{it} + \sum _{k = 2}^{24} \beta_k 年度ダミー_k + \sum _{l = 25}^{47} \beta_l 個体ダミー_l + \varepsilon _{it}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="rによる固定効果モデルの推定" class="slide level2">
+<h2>Rによる固定効果モデルの推定</h2>
+<p>5.2.5節で使うデータ<code>asai00-10.csv</code>を読み込む。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/asai00-10.csv"</span>)</span>
+<span id="cb7-2"><a href=""></a><span class="fu">glimpse</span>(df)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 141
+Columns: 6
+$ pref_id      &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17…
+$ pref         &lt;chr&gt; "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県…
+$ year         &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 200…
+$ emprate      &lt;dbl&gt; 0.2862, 0.4632, 0.4862, 0.3744, 0.5196, 0.6099, 0.4687, 0…
+$ caprate      &lt;dbl&gt; 0.2126, 0.4071, 0.2966, 0.1612, 0.3450, 0.2706, 0.1853, 0…
+$ dist_f_tokyo &lt;dbl&gt; 831, 577, 464, 305, 449, 289, 239, 99, 99, 96, 19, 40, 0,…</code></pre>
+</div>
+</div>
+</section>
+<section id="データ概要" class="slide level2">
+<h2>データ概要</h2>
+<p>国勢調査による母親就業率データです。</p>
+<ul>
+<li><code>pref_id</code> : 都道府県ID</li>
+<li><code>pref</code> : 都道府県名</li>
+<li><code>year</code> : 2000,2005,2010年の3時点</li>
+<li><code>emprate</code> : 母親の就業率</li>
+<li><code>caprate</code> : 保育所定員率</li>
+<li><code>dist_f_tokyo</code> : 東京からの距離</li>
+</ul>
+</section></section>
+<section>
+<section id="固定効果モデルの推定" class="title-slide slide level1 center">
+<h1>固定効果モデルの推定</h1>
+
+</section>
+<section id="プーリング回帰" class="slide level2">
+<h2>プーリング回帰</h2>
+<p>固定効果モデルを推定するために<code>fixest</code>パッケージの<code>lm_robust()</code>関数を使う。 最初に固定効果を考慮しないプーリング回帰行う。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>estimatr<span class="sc">::</span><span class="fu">lm_robust</span>(emprate <span class="sc">~</span> caprate, <span class="at">data =</span> df)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Estimate Std. Error  t value     Pr(&gt;|t|)  CI Lower  CI Upper  DF
+(Intercept) 0.2081685 0.01818904 11.44473 8.816333e-22 0.1722056 0.2441315 139
+caprate     0.6154402 0.04406993 13.96508 3.029369e-28 0.5283061 0.7025743 139</code></pre>
+</div>
+</div>
+<p>この結果は、<code>lm()</code>関数と同じ結果になる。</p>
+</section>
+<section id="固定効果を考慮した回帰" class="slide level2">
+<h2>固定効果を考慮した回帰</h2>
+<p>次に固定効果を考慮した回帰を行う。 固定効果モデルの推定には、<code>fixest</code>パッケージの<code>feols()</code>関数を使うと便利</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(fixest)</span>
+<span id="cb11-2"><a href=""></a>results <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb11-3"><a href=""></a>  <span class="st">"model1"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> pref, <span class="at">data =</span> df),</span>
+<span id="cb11-4"><a href=""></a>  <span class="st">"model2"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> year, <span class="at">data =</span> df),</span>
+<span id="cb11-5"><a href=""></a>  <span class="st">"model3"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> pref <span class="sc">+</span> year, <span class="at">data =</span> df)</span>
+<span id="cb11-6"><a href=""></a>)</span>
+<span id="cb11-7"><a href=""></a>fixest<span class="sc">::</span><span class="fu">etable</span>(results, <span class="at">se.below =</span> <span class="cn">TRUE</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section><section id="固定効果を考慮した回帰-output" class="slide level2 output-location-slide"><h2>固定効果を考慮した回帰</h2><div class="cell output-location-slide">
+<div class="cell-output cell-output-stdout">
+<pre><code>                    model1     model2   model3
+Dependent Var.:    emprate    emprate  emprate
+                                              
+caprate          0.8051***  0.5848***  0.0903 
+                (0.0452)   (0.0061)   (0.0600)
+Fixed-Effects:  ---------- ---------- --------
+pref                   Yes         No      Yes
+year                    No        Yes      Yes
+_______________ __________ __________ ________
+S.E.: Clustered   by: pref   by: year by: pref
+Observations           141        141      141
+R2                 0.98364    0.54602  0.99462
+Within R2          0.85906    0.48961  0.02775
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div></section></section>
+<section>
+<section id="didとしての固定効果モデル" class="title-slide slide level1 center">
+<h1>DiDとしての固定効果モデル</h1>
+
+</section>
+<section id="固定効果モデル-1" class="slide level2">
+<h2>固定効果モデル</h2>
+<p>パネルデータは2時点<span class="math inline">\(t=1\)</span>と<span class="math inline">\(t=2\)</span>をもつ。</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{i,1} &amp;= \alpha + \beta X_{i,1} + \gamma _1 D_1 + \cdots + \gamma _k D_k + \varepsilon _{i,1} \\
+Y_{i,2} &amp;= \alpha + \beta X_{i,2} + \gamma _1 D_1 + \cdots + \gamma _k D_k + \varepsilon _{i,2}
+\end{aligned}
+\]</span></p>
+<p><span class="math inline">\(Y_{i,1} - Y_{i,2} \equiv \Delta Y_i\)</span>をとると、</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{i,1} - Y_{i,1} &amp;= (\alpha - \alpha) + (X_{i,1} - X_{i,2}) \beta \\
+                   &amp;+ (\gamma_1 D_1 - \gamma_1 D_1) + \cdots + (\gamma_k D_k - \gamma_k D_k) + (\varepsilon_{i,1} - \varepsilon_{i,2})\\
+\Delta Y_i &amp;= \beta \Delta X_i + \Delta \varepsilon_i
+\end{aligned}
+\]</span></p>
+</section>
+<section id="階差回帰モデル" class="slide level2">
+<h2>階差回帰モデル</h2>
+<ul>
+<li>差分をとることで時点間で変化しない<strong>定数項</strong>と<strong>個体ダミー</strong>(<span class="math inline">\(\gamma_i\)</span>)は消える。</li>
+<li><span class="math inline">\(\beta\)</span>は<span class="math inline">\(X\)</span>が1変動した<span class="math inline">\(\Delta X\)</span>に対する<span class="math inline">\(Y\)</span>をどれだけ変化させるかを示す。</li>
+<li><span class="math inline">\(X\)</span>が全く変化しないのを比較群、1変化したのを処置群とすると、係数<span class="math inline">\(\beta\)</span>は処置群と比較群の<span class="math inline">\(Y\)</span>の変化幅の差を示す。つまりDiD</li>
+</ul>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;"><span class="math inline">\(X\)</span>の変化</th>
+<th style="text-align: center;"><span class="math inline">\(Y\)</span>の変化</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">処置群</td>
+<td style="text-align: center;"><span class="math inline">\(\Delta X = 1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\beta\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">比較群</td>
+<td style="text-align: center;"><span class="math inline">\(\Delta X = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="パネルデータのdidの特徴" class="slide level2">
+<h2>パネルデータのDiDの特徴</h2>
+<ol type="1">
+<li>処置群ダミーと処置後ダミーの交差項のみをモデルに含める</li>
+<li>時間を通じて変化しない変数は説明変数に含められない</li>
+<li>FEモデルによるDiDでは説明変数として導入できない第3の要因を考慮できる</li>
+</ol>
+<p>パネルデータ分析に時間を通じて一定の変数を導入するには、<strong>相関変量効果</strong>(correlated random effects)モデルを使う。</p>
 
 </section></section>
     </div>
