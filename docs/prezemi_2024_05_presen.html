@@ -6,8 +6,8 @@
 <script src="prezemi_2024_05_presen_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="prezemi_2024_05_presen_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="prezemi_2024_05_presen_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="prezemi_2024_05_presen_files/libs/quarto-html/quarto-syntax-highlighting-722b7ecd703fa194e825a0d619ad685e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.36">
+<link href="prezemi_2024_05_presen_files/libs/quarto-html/quarto-syntax-highlighting-fc6d358c97f25a8ea829b86655043430.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.32">
 
   <meta name="author" content="Soichi Matsuura">
   <title>プレゼミ2024  第5章 差の差の分析 </title>
@@ -94,7 +94,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="prezemi_2024_05_presen_files/libs/revealjs/dist/theme/quarto-246df2c3fc4044dd90e8951a8c46dd82.css">
+  <link rel="stylesheet" href="prezemi_2024_05_presen_files/libs/revealjs/dist/theme/quarto-8d31080ffe072f6888f9b4cebf6f6780.css">
   <link rel="stylesheet" href="mystyle.css">
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -102,6 +102,204 @@
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="prezemi_2024_05_presen_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -351,6 +549,9 @@ Y_i = \alpha + \beta_1 X_i + \beta_2 D_i + \varepsilon _i,
 </ul>
 </div></div>
 </section>
+<section id="前後比較と差の差の分析" class="slide level2">
+<h2>前後比較と差の差の分析</h2>
+</section>
 <section id="差の差分析" class="slide level2">
 <h2>差の差分析</h2>
 <ul>
@@ -545,7 +746,7 @@ Y_{i,t} = \alpha &amp;+ \beta_1 Treat_i + \beta_2 After_t \\
 </tr>
 </tbody><tfoot>
 <tr class="odd">
-<td style="text-align: left; padding: 0;"><sup></sup> + p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
+<td style="text-align: left; padding: 0;"><sup></sup> + p</td>
 <td style="text-align: center;"></td>
 </tr>
 </tfoot>
@@ -556,7 +757,7 @@ Y_{i,t} = \alpha &amp;+ \beta_1 Treat_i + \beta_2 After_t \\
 </div>
 </div></section></section>
 <section>
-<section id="前後比較と差の差の分析" class="title-slide slide level1 center">
+<section id="前後比較と差の差の分析-1" class="title-slide slide level1 center">
 <h1>前後比較と差の差の分析</h1>
 
 </section>
@@ -583,10 +784,673 @@ $ bus       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15, 0, 15, 
 </section>
 <section id="回帰分析でdid" class="slide level2">
 <h2>回帰分析でDiD</h2>
+<p>電車の新路線開通が、賃貸価格に与える影響を調べるため、DiD分析を行う。</p>
 <p><span class="math display">\[
 Y_{it} = \alpha + \beta_1 Treat_i + \beta_2 After_t + \beta_3 Treat_i \times After_t + \beta_4 X_{it} + \varepsilon_{it}
 \]</span></p>
-<p><span class="math inline">\(\beta_3\)</span>は</p>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> :湘南台ダミー</li>
+<li><span class="math inline">\(\beta_2\)</span> :2004年ダミー</li>
+<li><span class="math inline">\(\beta_3\)</span> :湘南台ダミーと2004年ダミーの交差項で、<span class="marky">湘南台プレミアが1996年から2004年でどの程度変化したのかを示し、これが差の差分析の処置効果</span>を現している。</li>
+</ul>
+</section>
+<section id="rで分析" class="slide level2">
+<h2>Rで分析</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, estimatr, modelsummary, gt, gtExtras)</span>
+<span id="cb7-2"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/rent-odakyu-enoshima96-04.csv"</span>)</span>
+<span id="cb7-3"><a href=""></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-5"><a href=""></a>    <span class="at">rent_total =</span> rent <span class="sc">+</span> service,</span>
+<span id="cb7-6"><a href=""></a>    <span class="at">dist =</span> walk <span class="sc">+</span> bus,</span>
+<span id="cb7-7"><a href=""></a>    <span class="at">treat =</span> <span class="fu">if_else</span>(station <span class="sc">==</span> <span class="st">"Shonandai"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb7-8"><a href=""></a>    <span class="at">after =</span> <span class="fu">if_else</span>(year <span class="sc">==</span> <span class="dv">2004</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb7-9"><a href=""></a>  )</span>
+<span id="cb7-10"><a href=""></a><span class="fu">head</span>(df,<span class="dv">3</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 14
+   rent service floor   age auto_lock station station_j  year  walk   bus
+  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  12.5     0.5  79    3.83 No        Mutsuai 六会       1996    15     0
+2  10.7     0.4  65.4  3.58 No        Mutsuai 六会       1996    12     0
+3   9.2     0.5  61.9  7.83 No        Mutsuai 六会       1996    11     0
+# ℹ 4 more variables: rent_total &lt;dbl&gt;, dist &lt;dbl&gt;, treat &lt;dbl&gt;, after &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="湘南台駅の前後比較" class="slide level2">
+<h2>湘南台駅の前後比較</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>results1 <span class="ot">&lt;-</span> estimatr<span class="sc">::</span><span class="fu">lm_robust</span>(rent_total <span class="sc">~</span> floor <span class="sc">+</span> age <span class="sc">+</span> dist <span class="sc">+</span> treat<span class="sc">:</span>after, <span class="at">data =</span> df, station <span class="sc">==</span> <span class="st">"Shonandai"</span>)</span>
+<span id="cb9-2"><a href=""></a><span class="fu">summary</span>(results1)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+estimatr::lm_robust(formula = rent_total ~ floor + age + dist + 
+    treat:after, data = df, weights = station == "Shonandai")
+
+Weighted, Standard error type:  HC2 
+
+Coefficients:
+             Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper  DF
+(Intercept)  3.741986   0.483397  7.7410 3.407e-13  2.78938  4.69460 223
+floor        0.112109   0.007048 15.9075 1.383e-38  0.09822  0.12600 223
+age         -0.091582   0.030766 -2.9768 3.235e-03 -0.15221 -0.03095 223
+dist        -0.009986   0.031237 -0.3197 7.495e-01 -0.07154  0.05157 223
+treat:after  0.698525   0.229196  3.0477 2.584e-03  0.24686  1.15019 223
+
+Multiple R-squared:  0.7852 ,   Adjusted R-squared:  0.7814 
+F-statistic: 75.29 on 4 and 223 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="差の差の分析-1" class="slide level2">
+<h2>差の差の分析</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>results2 <span class="ot">&lt;-</span> estimatr<span class="sc">::</span><span class="fu">lm_robust</span>(rent_total <span class="sc">~</span> floor <span class="sc">+</span> age <span class="sc">+</span> dist <span class="sc">+</span> treat<span class="sc">*</span>after, <span class="at">data =</span> df)</span>
+<span id="cb11-2"><a href=""></a><span class="fu">summary</span>(results2)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+estimatr::lm_robust(formula = rent_total ~ floor + age + dist + 
+    treat * after, data = df)
+
+Standard error type:  HC2 
+
+Coefficients:
+            Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper  DF
+(Intercept)  3.75165   0.342919  10.940 1.522e-22  3.07584  4.42746 221
+floor        0.10872   0.005752  18.900 4.744e-48  0.09739  0.12006 221
+age         -0.09025   0.016394  -5.505 1.020e-07 -0.12256 -0.05794 221
+dist        -0.04459   0.015836  -2.816 5.307e-03 -0.07580 -0.01338 221
+treat        0.52168   0.222332   2.346 1.984e-02  0.08351  0.95984 221
+after       -0.20377   0.189427  -1.076 2.832e-01 -0.57709  0.16954 221
+treat:after  0.93752   0.299595   3.129 1.988e-03  0.34710  1.52795 221
+
+Multiple R-squared:  0.8038 ,   Adjusted R-squared:  0.7984 
+F-statistic: 71.97 on 6 and 221 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="結果の比較" class="slide level2">
+<h2>結果の比較</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>modelsummary<span class="sc">::</span><span class="fu">msummary</span>(</span>
+<span id="cb13-2"><a href=""></a>  <span class="fu">list</span>(<span class="st">"前後比較"</span> <span class="ot">=</span> results1, <span class="st">"差の差分析"</span> <span class="ot">=</span> results2),</span>
+<span id="cb13-3"><a href=""></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-4"><a href=""></a>  <span class="at">gof_omit =</span> <span class="st">'DF|Deviance|AIC|BIC|F|Log.Lik.'</span>,</span>
+<span id="cb13-5"><a href=""></a>  <span class="at">output =</span> <span class="st">"gt"</span></span>
+<span id="cb13-6"><a href=""></a>) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href=""></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="kkfwtgefgi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kkfwtgefgi table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#kkfwtgefgi thead, #kkfwtgefgi tbody, #kkfwtgefgi tfoot, #kkfwtgefgi tr, #kkfwtgefgi td, #kkfwtgefgi th {
+  border-style: none;
+}
+
+#kkfwtgefgi p {
+  margin: 0;
+  padding: 0;
+}
+
+#kkfwtgefgi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#kkfwtgefgi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#kkfwtgefgi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#kkfwtgefgi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#kkfwtgefgi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#kkfwtgefgi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#kkfwtgefgi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#kkfwtgefgi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#kkfwtgefgi .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#kkfwtgefgi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#kkfwtgefgi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#kkfwtgefgi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#kkfwtgefgi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#kkfwtgefgi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#kkfwtgefgi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkfwtgefgi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#kkfwtgefgi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#kkfwtgefgi .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#kkfwtgefgi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkfwtgefgi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#kkfwtgefgi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkfwtgefgi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#kkfwtgefgi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkfwtgefgi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kkfwtgefgi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkfwtgefgi .gt_left {
+  text-align: left;
+}
+
+#kkfwtgefgi .gt_center {
+  text-align: center;
+}
+
+#kkfwtgefgi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#kkfwtgefgi .gt_font_normal {
+  font-weight: normal;
+}
+
+#kkfwtgefgi .gt_font_bold {
+  font-weight: bold;
+}
+
+#kkfwtgefgi .gt_font_italic {
+  font-style: italic;
+}
+
+#kkfwtgefgi .gt_super {
+  font-size: 65%;
+}
+
+#kkfwtgefgi .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#kkfwtgefgi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#kkfwtgefgi .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#kkfwtgefgi .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#kkfwtgefgi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#kkfwtgefgi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#kkfwtgefgi .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#kkfwtgefgi .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#kkfwtgefgi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="前後比較" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">前後比較</th>
+<th id="差の差分析" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">差の差分析</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">(Intercept)</td>
+<td class="gt_row gt_center" headers="前後比較">3.742***</td>
+<td class="gt_row gt_center" headers="差の差分析">3.752***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="前後比較">(0.483)</td>
+<td class="gt_row gt_center" headers="差の差分析">(0.343)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">floor</td>
+<td class="gt_row gt_center" headers="前後比較">0.112***</td>
+<td class="gt_row gt_center" headers="差の差分析">0.109***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="前後比較">(0.007)</td>
+<td class="gt_row gt_center" headers="差の差分析">(0.006)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">age</td>
+<td class="gt_row gt_center" headers="前後比較">-0.092**</td>
+<td class="gt_row gt_center" headers="差の差分析">-0.090***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="前後比較">(0.031)</td>
+<td class="gt_row gt_center" headers="差の差分析">(0.016)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">dist</td>
+<td class="gt_row gt_center" headers="前後比較">-0.010</td>
+<td class="gt_row gt_center" headers="差の差分析">-0.045**</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="前後比較">(0.031)</td>
+<td class="gt_row gt_center" headers="差の差分析">(0.016)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">treat × after</td>
+<td class="gt_row gt_center" headers="前後比較">0.699**</td>
+<td class="gt_row gt_center" headers="差の差分析">0.938**</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="前後比較">(0.229)</td>
+<td class="gt_row gt_center" headers="差の差分析">(0.300)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">treat</td>
+<td class="gt_row gt_center" headers="前後比較"></td>
+<td class="gt_row gt_center" headers="差の差分析">0.522*</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="前後比較"></td>
+<td class="gt_row gt_center" headers="差の差分析">(0.222)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">after</td>
+<td class="gt_row gt_center" headers="前後比較"></td>
+<td class="gt_row gt_center" headers="差の差分析">-0.204</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="前後比較" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="差の差分析" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.189)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
+<td class="gt_row gt_center" headers="前後比較">228</td>
+<td class="gt_row gt_center" headers="差の差分析">228</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">R2</td>
+<td class="gt_row gt_center" headers="前後比較">0.785</td>
+<td class="gt_row gt_center" headers="差の差分析">0.804</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">R2 Adj.</td>
+<td class="gt_row gt_center" headers="前後比較">0.781</td>
+<td class="gt_row gt_center" headers="差の差分析">0.798</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_center" headers="前後比較">1.25</td>
+<td class="gt_row gt_center" headers="差の差分析">1.16</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="3" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="結果の解釈" class="slide level2">
+<h2>結果の解釈</h2>
+<ul>
+<li><span class="math inline">\(treat \times after\)</span>の係数は<code>0.938</code>と統計的に有意に正の値であるため、湘南台駅の開業により賃料が上昇したことが示唆される。</li>
+<li>前後比較の<code>after</code>変数の係数は統計的に有意ではないため、何も分からない。</li>
+<li>処置群と対照群の差は<code>treat</code>で、回帰係数は正に有意となっており、湘南台駅付近の賃料は他の賃料よりも高いことが示されている。</li>
+</ul>
 </section></section>
 <section>
 <section id="パネルデータのdid" class="title-slide slide level1 center">
@@ -653,7 +1517,7 @@ Y_{it} = \alpha &amp;+ \beta_1 X_{it} + \beta_2 2010年ダミー + \beta_3 2011�
 <section id="二次元固定効果モデル" class="slide level2">
 <h2>二次元固定効果モデル</h2>
 <ul>
-<li>個体<span class="math inline">\(i\)</span>がもつ固定効果と、時点<span class="math inline">\(t\)</span>がもつ固定効果を同時に推定するモデルを<strong>二次元固定効果モデル</strong>という。</li>
+<li>個体<span class="math inline">\(i\)</span>がもつ固定効果と、時点<span class="math inline">\(t\)</span>がもつ固定効果を同時に推定するモデルを<br><strong>二次元固定効果モデル</strong>という。</li>
 <li><mark class="marky">近年の実証研究では標準的な推定方法</mark>となっている。</li>
 </ul>
 <p><span class="math display">\[
@@ -666,8 +1530,8 @@ Y_{it} = \alpha &amp; + \beta_1 X_{it} + \sum _{k = 2}^{24} \beta_k 年度ダミ
 <h2>Rによる固定効果モデルの推定</h2>
 <p>5.2.5節で使うデータ<code>asai00-10.csv</code>を読み込む。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/asai00-10.csv"</span>)</span>
-<span id="cb7-2"><a href=""></a><span class="fu">glimpse</span>(df)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/asai00-10.csv"</span>)</span>
+<span id="cb14-2"><a href=""></a><span class="fu">glimpse</span>(df)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 141
 Columns: 6
@@ -701,7 +1565,7 @@ $ dist_f_tokyo &lt;dbl&gt; 831, 577, 464, 305, 449, 289, 239, 99, 99, 96, 19, 40
 <h2>プーリング回帰</h2>
 <p>固定効果モデルを推定するために<code>fixest</code>パッケージの<code>lm_robust()</code>関数を使う。 最初に固定効果を考慮しないプーリング回帰行う。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>estimatr<span class="sc">::</span><span class="fu">lm_robust</span>(emprate <span class="sc">~</span> caprate, <span class="at">data =</span> df)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>estimatr<span class="sc">::</span><span class="fu">lm_robust</span>(emprate <span class="sc">~</span> caprate, <span class="at">data =</span> df)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Estimate Std. Error  t value     Pr(&gt;|t|)  CI Lower  CI Upper  DF
 (Intercept) 0.2081685 0.01818904 11.44473 8.816333e-22 0.1722056 0.2441315 139
@@ -714,13 +1578,13 @@ caprate     0.6154402 0.04406993 13.96508 3.029369e-28 0.5283061 0.7025743 139</
 <h2>固定効果を考慮した回帰</h2>
 <p>次に固定効果を考慮した回帰を行う。 固定効果モデルの推定には、<code>fixest</code>パッケージの<code>feols()</code>関数を使うと便利</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(fixest)</span>
-<span id="cb11-2"><a href=""></a>results <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb11-3"><a href=""></a>  <span class="st">"model1"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> pref, <span class="at">data =</span> df),</span>
-<span id="cb11-4"><a href=""></a>  <span class="st">"model2"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> year, <span class="at">data =</span> df),</span>
-<span id="cb11-5"><a href=""></a>  <span class="st">"model3"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> pref <span class="sc">+</span> year, <span class="at">data =</span> df)</span>
-<span id="cb11-6"><a href=""></a>)</span>
-<span id="cb11-7"><a href=""></a>fixest<span class="sc">::</span><span class="fu">etable</span>(results, <span class="at">se.below =</span> <span class="cn">TRUE</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(fixest)</span>
+<span id="cb18-2"><a href=""></a>results <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb18-3"><a href=""></a>  <span class="st">"model1"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> pref, <span class="at">data =</span> df),</span>
+<span id="cb18-4"><a href=""></a>  <span class="st">"model2"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> year, <span class="at">data =</span> df),</span>
+<span id="cb18-5"><a href=""></a>  <span class="st">"model3"</span> <span class="ot">=</span> <span class="fu">feols</span>(emprate <span class="sc">~</span> caprate <span class="sc">|</span> pref <span class="sc">+</span> year, <span class="at">data =</span> df)</span>
+<span id="cb18-6"><a href=""></a>)</span>
+<span id="cb18-7"><a href=""></a>fixest<span class="sc">::</span><span class="fu">etable</span>(results, <span class="at">se.below =</span> <span class="cn">TRUE</span>)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </section><section id="固定効果を考慮した回帰-output" class="slide level2 output-location-slide"><h2>固定効果を考慮した回帰</h2><div class="cell output-location-slide">
@@ -1139,6 +2003,8 @@ Y_{i,1} - Y_{i,1} &amp;= (\alpha - \alpha) + (X_{i,1} - X_{i,2}) \beta \\
       });
       clipboard.on('success', onCopySuccess);
       if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
         const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
           text: getTextToCopy,
           container: window.document.getElementById('quarto-embedded-source-code-modal')
