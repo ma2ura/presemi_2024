@@ -94,7 +94,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="prezemi_2024_07_presen_files/libs/revealjs/dist/theme/quarto-c7da3a213010e6b7f4d67cee4438528b.css">
+  <link rel="stylesheet" href="prezemi_2024_07_presen_files/libs/revealjs/dist/theme/quarto-bd07870ebcb6cdde4eae1788b28f327a.css">
   <link rel="stylesheet" href="mystyle.css">
   <link href="prezemi_2024_07_presen_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="prezemi_2024_07_presen_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -483,7 +483,7 @@ Soichi Matsuura
 頭痛薬の因果効果 = 服用後の頭痛の程度 - 未服用の場合
 \]</span></p>
 <ul>
-<li>問題は，一方の潜在的結果 (薬を飲んだ場合) しか観察できないこと</li>
+<li>問題は，<span class="marky">一方の潜在的結果 (薬を飲んだ場合) しか観察できない</span>こと</li>
 <li><span class="markp">理想的には2人の自分を用意して1人に投薬，片方は何もせず1時間全く同じ状態に置いた後に比較したい</span></li>
 <li>しかし潜在的結果の片方は観察不可能</li>
 </ul>
@@ -494,8 +494,8 @@ Soichi Matsuura
 <section id="潜在的結果-1" class="slide level2">
 <h2>潜在的結果</h2>
 <ul>
-<li>潜在的成果を <span class="math inline">\(y\)</span>、処置を受けた成果を <span class="math inline">\(y_1\)</span>、未処置を <span class="math inline">\(y_0\)</span></li>
-<li>知りたいのは、<span class="math inline">\(\mathrm{E}(y_1 - y_0)\)</span></li>
+<li>潜在的成果を <span class="math inline">\(y\)</span>、処置を受けた成果を <span class="math inline">\(Y_t\)</span>、未処置を <span class="math inline">\(Y_c\)</span></li>
+<li>知りたいのは、<span class="math inline">\(\mathbb{E}(Y_t - Y_c)\)</span></li>
 <li>処置の有無をダミー変数<span class="math inline">\(d\)</span>、<span class="math inline">\(d=1\)</span> を処置群、<span class="math inline">\(d=0\)</span> を対象群</li>
 </ul>
 <table class="caption-top">
@@ -514,17 +514,17 @@ Soichi Matsuura
 <tbody>
 <tr class="odd">
 <td>処置有り</td>
-<td><span class="math inline">\(\mathrm{E}(y_1 \mid d=1)\)</span></td>
-<td><span class="math inline">\(\mathrm{E}(y_1 \mid d=0)\)</span></td>
+<td><span class="math inline">\(\mathbb{E}(Y_t \mid d=1)\)</span> <sup>1</sup></td>
+<td><span class="math inline">\(\mathbb{E}(Y_t \mid d=0)\)</span></td>
 </tr>
 <tr class="even">
 <td>処置無し</td>
-<td><span class="math inline">\(\mathrm{E}(y_0 \mid d=1)\)</span></td>
-<td><span class="math inline">\(\mathrm{E}(y_0 \mid d=0)\)</span></td>
+<td><span class="math inline">\(\mathbb{E}(Y_c \mid d=1)\)</span></td>
+<td><span class="math inline">\(\mathbb{E}(Y_c \mid d=0)\)</span></td>
 </tr>
 </tbody>
 </table>
-</section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="math inline">\(d=1\)</span> を条件とした <span class="math inline">\(Y_t\)</span> の条件付期待値</p></li></ol></aside></section>
 <section id="潜在的結果-2" class="slide level2">
 <h2>潜在的結果</h2>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -538,14 +538,14 @@ Soichi Matsuura
 <div class="callout-content">
 <p><span class="math display">\[
 \begin{aligned}
-\text{処置群の因果効果} &amp;= \mathrm{E}(y_1 - y_0 \mid d=1) \\
-    &amp;= \mathrm{E}(y_1 \mid d=1) - \mathrm{E}(y_0 \mid d=1)
+\text{処置群の因果効果} &amp;= \mathbb{E}(Y_t - Y_c \mid d=1) \\
+    &amp;= \mathbb{E}(Y_t \mid d=1) - \mathbb{E}(Y_c \mid d=1)
 \end{aligned}
 \]</span></p>
 </div>
 </div>
 </div>
-<p>処置群に処置しなかった効果 <span class="math inline">\(\mathrm{E}(y_0 \mid d=1)\)</span> は反事実であるため観測不可能！<br>
+<p>処置群に処置しなかった効果 <span class="math inline">\(\mathbb{E}(Y_c \mid d=1)\)</span> は反事実であるため観測不可能！<br>
 だったら<span class="markp">反事実を補完する方法を考える</span>。</p>
 </section>
 <section id="割当メカニズム" class="slide level2">
@@ -578,8 +578,8 @@ Soichi Matsuura
 </ul>
 <p>このように割当メカニズムにより，処置の効果が全く逆になることもある。 このような問題は，<strong>混合的なメカニズム</strong>(confounded mechanism)によって生じている。</p>
 </section>
-<section id="混合的なメカニズム" class="slide level2">
-<h2>混合的なメカニズム</h2>
+<section id="割当メカニズム-2" class="slide level2">
+<h2>割当メカニズム</h2>
 <div class="v-center-container">
 <p><span style="font-size: 2em"><strong>混合的なメカニズム</strong></span></p>
 </div>
@@ -605,22 +605,22 @@ Soichi Matsuura
 </section>
 <section id="ランダム化比較対照実験-1" class="slide level2">
 <h2>ランダム化比較対照実験</h2>
-<p>潜在的結果を考慮にいれず割当を行う。つまり<span class="markp"><span class="math inline">\(y_0\)</span>と<span class="math inline">\(d\)</span>が独立であるという仮定が成り立つなら</span>，</p>
+<p>潜在的結果を考慮にいれず割当を行う。つまり<span class="markp"><span class="math inline">\(Y_c\)</span>と<span class="math inline">\(d\)</span>が独立であるという仮定が成り立つなら</span>，</p>
 <p><span class="math display">\[
 \begin{aligned}
-\mbox{処置群の因果効果} \approx \mathrm{E}(y_1 \mid d=1) - \mathrm{E}(y_0 \mid d=0)
+\mbox{処置群の因果効果} \approx \mathbb{E}(Y_t \mid d=1) - \mathbb{E}(Y_c \mid d=0)
 \end{aligned}
 \]</span> と近似できる。さらにここから， <span class="math display">\[
 \begin{aligned}
-ACE = \Pr (d=1) \mathrm{E} (y_1 - y_0 \mid d=1 ) - \Pr (d=0) \mathrm{E} (y_1 - y_0 \mid d=0 )
+ACE = \Pr (d=1) \mathbb{E} (Y_t - Y_c \mid d=1 ) - \Pr (d=0) \mathbb{E} (Y_t - Y_c \mid d=0 )
 \end{aligned}
-\]</span> を計算する。 しかし <span class="marky"><span class="math inline">\(\mathrm{E}(y_0 \mid d=1)\)</span> と <span class="math inline">\(\mathrm{E}(y_1 \mid d=0)\)</span> が観察不可能</span>である。</p>
+\]</span> を計算する。 しかし <span class="marky"><span class="math inline">\(\mathbb{E}(Y_c \mid d=1)\)</span> と <span class="math inline">\(\mathbb{E}(Y_t \mid d=0)\)</span> が観察不可能</span>である。</p>
 </section>
 <section class="slide level2">
 
-<p>しかし <span class="math inline">\(y_1\)</span> が <span class="math inline">\(d\)</span> と独立なら， <span class="math display">\[
+<p>しかし <span class="math inline">\(Y_t\)</span> が <span class="math inline">\(d\)</span> と独立なら， <span class="math display">\[
 \begin{aligned}
-ACE = ATE \approx \mathrm{E}(y_1 \mid d=1 ) - \mathrm{E}(y_0 \mid d=0)
+ACE = ATE \approx \mathbb{E}(Y_t \mid d=1 ) - \mathbb{E}(Y_c \mid d=0)
 \end{aligned}
 \]</span></p>
 <p>となる。これが成立するためには，割当を完全にランダムに行えばよい。 ただし，<span class="markp">社会科学において，政策評価をランダム化比較対照実験を用いて実行することは困難</span>である。</p>
@@ -889,13 +889,17 @@ ACE = ATE \approx \mathrm{E}(y_1 \mid d=1 ) - \mathrm{E}(y_0 \mid d=0)
 </ul>
 <p><span class="math display">\[
 d_M (\boldsymbol{y,x}) = \sqrt{(\boldsymbol{x} - \boldsymbol{y})^{\top} \boldsymbol{\Sigma }^{-1} (\boldsymbol{x}-\boldsymbol{y})}
-\]</span> を用いる。<span class="math inline">\(\boldsymbol{\Sigma}\)</span>は<span class="math inline">\(\boldsymbol{x}\)</span>の共分散行列である。 <span class="math inline">\(\boldsymbol{\Sigma}\)</span> が対角行列の場合，正規ユークリッド距離という。</p>
+\]</span> を用いる。 <span class="math inline">\(\boldsymbol{\Sigma}\)</span>は<span class="math inline">\(\boldsymbol{x}\)</span>の共分散行列である。</p>
+</section>
+<section id="複数の共変量-1" class="slide level2">
+<h2>複数の共変量</h2>
+<p><span class="math inline">\(\boldsymbol{\Sigma}\)</span> が対角行列の場合，正規ユークリッド距離という。</p>
 <p><span class="math display">\[
 d_M(\boldsymbol{y,x}) = \sqrt{\sum(x_i - y_i)^2/\sigma_i ^2}
 \]</span></p>
 <p><span class="math inline">\(\boldsymbol{\Sigma}\)</span> が単位行列なら，マハラノビス距離はユークリッド距離に等しくなる。</p>
 </section>
-<section id="複数の共変量-1" class="slide level2">
+<section id="複数の共変量-2" class="slide level2">
 <h2>複数の共変量</h2>
 <ul>
 <li>一部の共変量とは完全一致で，他の共変量とは距離が最小になるマッチングを<strong>正確マッチング</strong>(exact matching)という。</li>
@@ -1055,9 +1059,10 @@ weeks          -0.005901325  0.005663075 586</code></pre>
 <section id="傾向スコアの推定" class="slide level2">
 <h2>傾向スコアの推定</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>result_logit1<span class="ot">&lt;-</span><span class="fu">glm</span>(treated <span class="sc">~</span> age<span class="sc">+</span>age2<span class="sc">+</span>educ<span class="sc">+</span>educ2<span class="sc">+</span>married<span class="sc">+</span>nodegree</span>
-<span id="cb7-2"><a href=""></a>              <span class="sc">+</span>black<span class="sc">+</span>hispanic<span class="sc">+</span>re74<span class="sc">+</span>re75,<span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>),<span class="at">data=</span>nswcps)</span>
-<span id="cb7-3"><a href=""></a><span class="fu">summary</span>(result_logit1)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>result_logit1<span class="ot">&lt;-</span><span class="fu">glm</span>(treated <span class="sc">~</span> age <span class="sc">+</span> age2 <span class="sc">+</span> educ <span class="sc">+</span> educ2 <span class="sc">+</span> married <span class="sc">+</span> nodegree</span>
+<span id="cb7-2"><a href=""></a>               <span class="sc">+</span> black <span class="sc">+</span> hispanic <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb7-3"><a href=""></a>               <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>), <span class="at">data =</span> nswcps)</span>
+<span id="cb7-4"><a href=""></a><span class="fu">summary</span>(result_logit1)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1098,10 +1103,9 @@ Number of Fisher Scoring iterations: 10</code></pre>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>m_result1 <span class="ot">&lt;-</span> MatchIt<span class="sc">::</span><span class="fu">matchit</span>(treated <span class="sc">~</span> age<span class="sc">+</span>age2<span class="sc">+</span>educ<span class="sc">+</span>educ2<span class="sc">+</span>married<span class="sc">+</span>nodegree<span class="sc">+</span>black<span class="sc">+</span>hispanic<span class="sc">+</span>re74<span class="sc">+</span>re75,</span>
 <span id="cb10-2"><a href=""></a>                 <span class="at">data     =</span> nswcps,</span>
 <span id="cb10-3"><a href=""></a>                 <span class="at">method   =</span> <span class="st">"nearest"</span>,</span>
-<span id="cb10-4"><a href=""></a>                 <span class="at">distance =</span> <span class="st">"glm"</span>,<span class="at">discard=</span><span class="st">"both"</span>,</span>
+<span id="cb10-4"><a href=""></a>                 <span class="at">distance =</span> <span class="st">"glm"</span>, <span class="at">discard =</span> <span class="st">"both"</span>,</span>
 <span id="cb10-5"><a href=""></a>                 <span class="at">replace  =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb10-6"><a href=""></a></span>
-<span id="cb10-7"><a href=""></a><span class="fu">summary</span>(m_result1)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-6"><a href=""></a><span class="fu">summary</span>(m_result1)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1210,6 +1214,7 @@ F-statistic: 4.878 on 1 and 300 DF,  p-value: 0.02796</code></pre>
 </div>
 
 </section></section>
+
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="img/yoko.jpg" class="slide-logo"></p>
@@ -1396,7 +1401,7 @@ F-statistic: 4.878 on 1 and 300 DF,  p-value: 0.02796</code></pre>
         // specified using percentage units.
         width: 1400,
 
-        height: 700,
+        height: 1050,
 
         // Factor of the display size that should remain empty around the content
         margin: 0.1,
