@@ -6,8 +6,8 @@
 <script src="prezemi_2024_06_presen_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="prezemi_2024_06_presen_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="prezemi_2024_06_presen_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="prezemi_2024_06_presen_files/libs/quarto-html/quarto-syntax-highlighting-fc6d358c97f25a8ea829b86655043430.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.32">
+<link href="prezemi_2024_06_presen_files/libs/quarto-html/quarto-syntax-highlighting-722b7ecd703fa194e825a0d619ad685e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.36">
 
   <meta name="author" content="Soichi Matsuura">
   <title>プレゼミ2024  第5章 差の差の分析 第2回 </title>
@@ -94,7 +94,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="prezemi_2024_06_presen_files/libs/revealjs/dist/theme/quarto-8d31080ffe072f6888f9b4cebf6f6780.css">
+  <link rel="stylesheet" href="prezemi_2024_06_presen_files/libs/revealjs/dist/theme/quarto-d7074f7b8530a62a04b30ba244b74890.css">
   <link rel="stylesheet" href="mystyle.css">
   <link href="prezemi_2024_06_presen_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="prezemi_2024_06_presen_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -102,204 +102,6 @@
   <link href="prezemi_2024_06_presen_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
   <link href="prezemi_2024_06_presen_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="prezemi_2024_06_presen_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
-  <style type="text/css">
-
-  .callout {
-    margin-top: 1em;
-    margin-bottom: 1em;  
-    border-radius: .25rem;
-  }
-
-  .callout.callout-style-simple { 
-    padding: 0em 0.5em;
-    border-left: solid #acacac .3rem;
-    border-right: solid 1px silver;
-    border-top: solid 1px silver;
-    border-bottom: solid 1px silver;
-    display: flex;
-  }
-
-  .callout.callout-style-default {
-    border-left: solid #acacac .3rem;
-    border-right: solid 1px silver;
-    border-top: solid 1px silver;
-    border-bottom: solid 1px silver;
-  }
-
-  .callout .callout-body-container {
-    flex-grow: 1;
-  }
-
-  .callout.callout-style-simple .callout-body {
-    font-size: 1rem;
-    font-weight: 400;
-  }
-
-  .callout.callout-style-default .callout-body {
-    font-size: 0.9rem;
-    font-weight: 400;
-  }
-
-  .callout.callout-titled.callout-style-simple .callout-body {
-    margin-top: 0.2em;
-  }
-
-  .callout:not(.callout-titled) .callout-body {
-      display: flex;
-  }
-
-  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
-    padding-left: 1.6em;
-  }
-
-  .callout.callout-titled .callout-header {
-    padding-top: 0.2em;
-    margin-bottom: -0.2em;
-  }
-
-  .callout.callout-titled .callout-title  p {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
-    
-  .callout.callout-titled.callout-style-simple .callout-content  p {
-    margin-top: 0;
-  }
-
-  .callout.callout-titled.callout-style-default .callout-content  p {
-    margin-top: 0.7em;
-  }
-
-  .callout.callout-style-simple div.callout-title {
-    border-bottom: none;
-    font-size: .9rem;
-    font-weight: 600;
-    opacity: 75%;
-  }
-
-  .callout.callout-style-default  div.callout-title {
-    border-bottom: none;
-    font-weight: 600;
-    opacity: 85%;
-    font-size: 0.9rem;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-  }
-
-  .callout.callout-style-default div.callout-content {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-  }
-
-  .callout.callout-style-simple .callout-icon::before {
-    height: 1rem;
-    width: 1rem;
-    display: inline-block;
-    content: "";
-    background-repeat: no-repeat;
-    background-size: 1rem 1rem;
-  }
-
-  .callout.callout-style-default .callout-icon::before {
-    height: 0.9rem;
-    width: 0.9rem;
-    display: inline-block;
-    content: "";
-    background-repeat: no-repeat;
-    background-size: 0.9rem 0.9rem;
-  }
-
-  .callout-title {
-    display: flex
-  }
-    
-  .callout-icon::before {
-    margin-top: 1rem;
-    padding-right: .5rem;
-  }
-
-  .callout.no-icon::before {
-    display: none !important;
-  }
-
-  .callout.callout-titled .callout-body > .callout-content > :last-child {
-    padding-bottom: 0.5rem;
-    margin-bottom: 0;
-  }
-
-  .callout.callout-titled .callout-icon::before {
-    margin-top: .5rem;
-    padding-right: .5rem;
-  }
-
-  .callout:not(.callout-titled) .callout-icon::before {
-    margin-top: 1rem;
-    padding-right: .5rem;
-  }
-
-  /* Callout Types */
-
-  div.callout-note {
-    border-left-color: #4582ec !important;
-  }
-
-  div.callout-note .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
-  }
-
-  div.callout-note.callout-style-default .callout-title {
-    background-color: #dae6fb
-  }
-
-  div.callout-important {
-    border-left-color: #d9534f !important;
-  }
-
-  div.callout-important .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
-  }
-
-  div.callout-important.callout-style-default .callout-title {
-    background-color: #f7dddc
-  }
-
-  div.callout-warning {
-    border-left-color: #f0ad4e !important;
-  }
-
-  div.callout-warning .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
-  }
-
-  div.callout-warning.callout-style-default .callout-title {
-    background-color: #fcefdc
-  }
-
-  div.callout-tip {
-    border-left-color: #02b875 !important;
-  }
-
-  div.callout-tip .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
-  }
-
-  div.callout-tip.callout-style-default .callout-title {
-    background-color: #ccf1e3
-  }
-
-  div.callout-caution {
-    border-left-color: #fd7e14 !important;
-  }
-
-  div.callout-caution .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
-  }
-
-  div.callout-caution.callout-style-default .callout-title {
-    background-color: #ffe5d0
-  }
-
-  </style>
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -421,8 +223,8 @@ Soichi Matsuura
 <section id="差の差推定" class="slide level2">
 <h2>差の差推定</h2>
 <ul>
-<li>国際経営学科では大学2年生の夏休みに短期留学の参加が義務づけられ、経営学科は義務ではなかった、という状況を考える。</li>
-<li>短期留学の必修化の効果を考える。</li>
+<li><span class="markp">国際経営学科では大学2年生の夏休みに短期留学の参加が義務</span>づけられ、 <span class="markb">経営学科は義務ではなかった</span>、という状況を考える。</li>
+<li><span class="marky"><strong>短期留学の必修化の効果</strong></span>を考える。</li>
 <li>国際経営学科1回生終了時のTOEICスコアを<span class="math inline">\(Y_{T,i0}\)</span>とし、2回生終了時のTOEICスコアを<span class="math inline">\(Y_{T,i1}\)</span>とする。</li>
 <li>スコアの変化は<span class="math inline">\(Y_{T,i1} - Y_{T,i0}\)</span>で表す。</li>
 <li>この変化の期待値<span class="math inline">\(\mathrm{E}[Y_{T,i1} - Y_{T,i0}]\)</span>は、留学の効果だけを示すわけではなく、2年生の間の学習効果も含むことに注意。</li>
@@ -433,7 +235,7 @@ Soichi Matsuura
 <ul>
 <li>短期留学が義務ではない経営学科の学生を比較群とする。</li>
 <li>経営学科1回生終了時のTOEICスコアを<span class="math inline">\(Y_{C,i0}\)</span>、2回生終了時のTOEICスコアを<span class="math inline">\(Y_{C,i1}\)</span>とする。</li>
-<li>経営学科の学生のスコアの変化は<span class="math inline">\(Y_{C,i1} - Y_{C,i0}\)</span>で表し、期待値は<span class="math inline">\(\mathrm{E}[Y_{C,i1} - Y_{C,i0}]\)</span>とする。</li>
+<li>経営学科の学生のスコアの変化は<span class="math inline">\(Y_{C,i1} - Y_{C,i0}\)</span>で表し、期待値は<span class="math inline">\(\mathbb{E}[Y_{C,i1} - Y_{C,i0}]\)</span>とする。</li>
 <li>短期留学の効果を抽出するために、2つの期待値の差をとる。</li>
 </ul>
 <p><span class="math display">\[
@@ -476,7 +278,7 @@ Soichi Matsuura
 </tr>
 </tbody>
 </table>
-<p>ここで<span class="math inline">\(\bar{Y}\)</span>は[Y]$を表す。</p>
+<p>ここで <span class="math inline">\(\bar{Y}\)</span> は <span class="math inline">\(\mathrm{E}[Y]\)</span> を表す。</p>
 </section>
 <section id="線形回帰による差の差推定" class="slide level2">
 <h2>線形回帰による差の差推定</h2>
@@ -565,11 +367,11 @@ Y_i = \alpha + \beta X_i + \varepsilon
 <span id="cb1-3"><a href=""></a>g <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
 <span id="cb1-4"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2000</span>) <span class="sc">|&gt;</span> <span class="co"># 2000年のデータを抽出</span></span>
 <span id="cb1-5"><a href=""></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> caprate, <span class="at">y =</span> emprate, <span class="at">group =</span> pref) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb1-6"><a href=""></a><span class="fu">ggplotly</span>(g) </span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href=""></a><span class="fu">ggplotly</span>(g)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-338ba1057e0c34eae260" style="width:960px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-338ba1057e0c34eae260">{"x":{"data":[{"x":[0.21260000000000001,0.40710000000000002,0.29659999999999997,0.16120000000000001,0.34499999999999997,0.27060000000000001,0.18529999999999999,0.20169999999999999,0.22020000000000001,0.29849999999999999,0.15490000000000001,0.1951,0.2676,0.13780000000000001,0.44579999999999997,0.46350000000000002,0.53400000000000003,0.47820000000000001,0.38169999999999998,0.4481,0.3468,0.2044,0.31230000000000002,0.35399999999999998,0.25729999999999997,0.33229999999999998,0.21659999999999999,0.21659999999999999,0.27129999999999999,0.38640000000000002,0.48899999999999999,0.40310000000000001,0.30349999999999999,0.31319999999999998,0.31290000000000001,0.36330000000000001,0.34079999999999999,0.33510000000000001,0.59130000000000005,0.3014,0.33750000000000002,0.33110000000000001,0.40999999999999998,0.28010000000000002,0.3886,0.2928,0.22869999999999999],"y":[0.28620000000000001,0.4632,0.48620000000000002,0.37440000000000001,0.51959999999999995,0.6099,0.46870000000000001,0.34310000000000002,0.37890000000000001,0.35709999999999997,0.25729999999999997,0.2641,0.29370000000000002,0.22869999999999999,0.51170000000000004,0.52090000000000003,0.51259999999999994,0.54069999999999996,0.38690000000000002,0.38030000000000003,0.3548,0.34649999999999997,0.30320000000000003,0.36059999999999998,0.3246,0.31819999999999998,0.2349,0.25669999999999998,0.23769999999999999,0.29999999999999999,0.53410000000000002,0.53369999999999995,0.37540000000000001,0.3458,0.35639999999999999,0.43090000000000001,0.4032,0.34300000000000003,0.52470000000000006,0.34239999999999998,0.46920000000000001,0.42559999999999998,0.46960000000000002,0.38450000000000001,0.47189999999999999,0.38240000000000002,0.4244],"text":["caprate: 0.2126<br />emprate: 0.2862<br />pref: 北海道","caprate: 0.4071<br />emprate: 0.4632<br />pref: 青森県","caprate: 0.2966<br />emprate: 0.4862<br />pref: 岩手県","caprate: 0.1612<br />emprate: 0.3744<br />pref: 宮城県","caprate: 0.3450<br />emprate: 0.5196<br />pref: 秋田県","caprate: 0.2706<br />emprate: 0.6099<br />pref: 山形県","caprate: 0.1853<br />emprate: 0.4687<br />pref: 福島県","caprate: 0.2017<br />emprate: 0.3431<br />pref: 茨城県","caprate: 0.2202<br />emprate: 0.3789<br />pref: 栃木県","caprate: 0.2985<br />emprate: 0.3571<br />pref: 群馬県","caprate: 0.1549<br />emprate: 0.2573<br />pref: 埼玉県","caprate: 0.1951<br />emprate: 0.2641<br />pref: 千葉県","caprate: 0.2676<br />emprate: 0.2937<br />pref: 東京都","caprate: 0.1378<br />emprate: 0.2287<br />pref: 神奈川県","caprate: 0.4458<br />emprate: 0.5117<br />pref: 新潟県","caprate: 0.4635<br />emprate: 0.5209<br />pref: 富山県","caprate: 0.5340<br />emprate: 0.5126<br />pref: 石川県","caprate: 0.4782<br />emprate: 0.5407<br />pref: 福井県","caprate: 0.3817<br />emprate: 0.3869<br />pref: 山梨県","caprate: 0.4481<br />emprate: 0.3803<br />pref: 長野県","caprate: 0.3468<br />emprate: 0.3548<br />pref: 岐阜県","caprate: 0.2044<br />emprate: 0.3465<br />pref: 静岡県","caprate: 0.3123<br />emprate: 0.3032<br />pref: 愛知県","caprate: 0.3540<br />emprate: 0.3606<br />pref: 三重県","caprate: 0.2573<br />emprate: 0.3246<br />pref: 滋賀県","caprate: 0.3323<br />emprate: 0.3182<br />pref: 京都府","caprate: 0.2166<br />emprate: 0.2349<br />pref: 大阪府","caprate: 0.2166<br />emprate: 0.2567<br />pref: 兵庫県","caprate: 0.2713<br />emprate: 0.2377<br />pref: 奈良県","caprate: 0.3864<br />emprate: 0.3000<br />pref: 和歌山県","caprate: 0.4890<br />emprate: 0.5341<br />pref: 鳥取県","caprate: 0.4031<br />emprate: 0.5337<br />pref: 島根県","caprate: 0.3035<br />emprate: 0.3754<br />pref: 岡山県","caprate: 0.3132<br />emprate: 0.3458<br />pref: 広島県","caprate: 0.3129<br />emprate: 0.3564<br />pref: 山口県","caprate: 0.3633<br />emprate: 0.4309<br />pref: 徳島県","caprate: 0.3408<br />emprate: 0.4032<br />pref: 香川県","caprate: 0.3351<br />emprate: 0.3430<br />pref: 愛媛県","caprate: 0.5913<br />emprate: 0.5247<br />pref: 高知県","caprate: 0.3014<br />emprate: 0.3424<br />pref: 福岡県","caprate: 0.3375<br />emprate: 0.4692<br />pref: 佐賀県","caprate: 0.3311<br />emprate: 0.4256<br />pref: 長崎県","caprate: 0.4100<br />emprate: 0.4696<br />pref: 熊本県","caprate: 0.2801<br />emprate: 0.3845<br />pref: 大分県","caprate: 0.3886<br />emprate: 0.4719<br />pref: 宮崎県","caprate: 0.2928<br />emprate: 0.3824<br />pref: 鹿児島県","caprate: 0.2287<br />emprate: 0.4244<br />pref: 沖縄県"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":30.611872146118724,"r":7.3059360730593621,"b":44.56621004566211,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.11512500000000001,0.61397500000000005],"tickmode":"array","ticktext":["0.2","0.3","0.4","0.5","0.6"],"tickvals":[0.20000000000000001,0.30000000000000004,0.40000000000000002,0.5,0.59999999999999998],"categoryorder":"array","categoryarray":["0.2","0.3","0.4","0.5","0.6"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"caprate","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.20963999999999999,0.62895999999999996],"tickmode":"array","ticktext":["0.3","0.4","0.5","0.6"],"tickvals":[0.30000000000000004,0.40000000000000002,0.5,0.60000000000000009],"categoryorder":"array","categoryarray":["0.3","0.4","0.5","0.6"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"emprate","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"15b287a1f0527":{"x":{},"y":{},"type":"scatter"}},"cur_data":"15b287a1f0527","visdat":{"15b287a1f0527":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-607395afa0fd3f5fd01c" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-607395afa0fd3f5fd01c">{"x":{"data":[{"x":[0.21260000000000001,0.40710000000000002,0.29659999999999997,0.16120000000000001,0.34499999999999997,0.27060000000000001,0.18529999999999999,0.20169999999999999,0.22020000000000001,0.29849999999999999,0.15490000000000001,0.1951,0.2676,0.13780000000000001,0.44579999999999997,0.46350000000000002,0.53400000000000003,0.47820000000000001,0.38169999999999998,0.4481,0.3468,0.2044,0.31230000000000002,0.35399999999999998,0.25729999999999997,0.33229999999999998,0.21659999999999999,0.21659999999999999,0.27129999999999999,0.38640000000000002,0.48899999999999999,0.40310000000000001,0.30349999999999999,0.31319999999999998,0.31290000000000001,0.36330000000000001,0.34079999999999999,0.33510000000000001,0.59130000000000005,0.3014,0.33750000000000002,0.33110000000000001,0.40999999999999998,0.28010000000000002,0.3886,0.2928,0.22869999999999999],"y":[0.28620000000000001,0.4632,0.48620000000000002,0.37440000000000001,0.51959999999999995,0.6099,0.46870000000000001,0.34310000000000002,0.37890000000000001,0.35709999999999997,0.25729999999999997,0.2641,0.29370000000000002,0.22869999999999999,0.51170000000000004,0.52090000000000003,0.51259999999999994,0.54069999999999996,0.38690000000000002,0.38030000000000003,0.3548,0.34649999999999997,0.30320000000000003,0.36059999999999998,0.3246,0.31819999999999998,0.2349,0.25669999999999998,0.23769999999999999,0.29999999999999999,0.53410000000000002,0.53369999999999995,0.37540000000000001,0.3458,0.35639999999999999,0.43090000000000001,0.4032,0.34300000000000003,0.52470000000000006,0.34239999999999998,0.46920000000000001,0.42559999999999998,0.46960000000000002,0.38450000000000001,0.47189999999999999,0.38240000000000002,0.4244],"text":["caprate: 0.2126<br />emprate: 0.2862<br />pref: 北海道","caprate: 0.4071<br />emprate: 0.4632<br />pref: 青森県","caprate: 0.2966<br />emprate: 0.4862<br />pref: 岩手県","caprate: 0.1612<br />emprate: 0.3744<br />pref: 宮城県","caprate: 0.3450<br />emprate: 0.5196<br />pref: 秋田県","caprate: 0.2706<br />emprate: 0.6099<br />pref: 山形県","caprate: 0.1853<br />emprate: 0.4687<br />pref: 福島県","caprate: 0.2017<br />emprate: 0.3431<br />pref: 茨城県","caprate: 0.2202<br />emprate: 0.3789<br />pref: 栃木県","caprate: 0.2985<br />emprate: 0.3571<br />pref: 群馬県","caprate: 0.1549<br />emprate: 0.2573<br />pref: 埼玉県","caprate: 0.1951<br />emprate: 0.2641<br />pref: 千葉県","caprate: 0.2676<br />emprate: 0.2937<br />pref: 東京都","caprate: 0.1378<br />emprate: 0.2287<br />pref: 神奈川県","caprate: 0.4458<br />emprate: 0.5117<br />pref: 新潟県","caprate: 0.4635<br />emprate: 0.5209<br />pref: 富山県","caprate: 0.5340<br />emprate: 0.5126<br />pref: 石川県","caprate: 0.4782<br />emprate: 0.5407<br />pref: 福井県","caprate: 0.3817<br />emprate: 0.3869<br />pref: 山梨県","caprate: 0.4481<br />emprate: 0.3803<br />pref: 長野県","caprate: 0.3468<br />emprate: 0.3548<br />pref: 岐阜県","caprate: 0.2044<br />emprate: 0.3465<br />pref: 静岡県","caprate: 0.3123<br />emprate: 0.3032<br />pref: 愛知県","caprate: 0.3540<br />emprate: 0.3606<br />pref: 三重県","caprate: 0.2573<br />emprate: 0.3246<br />pref: 滋賀県","caprate: 0.3323<br />emprate: 0.3182<br />pref: 京都府","caprate: 0.2166<br />emprate: 0.2349<br />pref: 大阪府","caprate: 0.2166<br />emprate: 0.2567<br />pref: 兵庫県","caprate: 0.2713<br />emprate: 0.2377<br />pref: 奈良県","caprate: 0.3864<br />emprate: 0.3000<br />pref: 和歌山県","caprate: 0.4890<br />emprate: 0.5341<br />pref: 鳥取県","caprate: 0.4031<br />emprate: 0.5337<br />pref: 島根県","caprate: 0.3035<br />emprate: 0.3754<br />pref: 岡山県","caprate: 0.3132<br />emprate: 0.3458<br />pref: 広島県","caprate: 0.3129<br />emprate: 0.3564<br />pref: 山口県","caprate: 0.3633<br />emprate: 0.4309<br />pref: 徳島県","caprate: 0.3408<br />emprate: 0.4032<br />pref: 香川県","caprate: 0.3351<br />emprate: 0.3430<br />pref: 愛媛県","caprate: 0.5913<br />emprate: 0.5247<br />pref: 高知県","caprate: 0.3014<br />emprate: 0.3424<br />pref: 福岡県","caprate: 0.3375<br />emprate: 0.4692<br />pref: 佐賀県","caprate: 0.3311<br />emprate: 0.4256<br />pref: 長崎県","caprate: 0.4100<br />emprate: 0.4696<br />pref: 熊本県","caprate: 0.2801<br />emprate: 0.3845<br />pref: 大分県","caprate: 0.3886<br />emprate: 0.4719<br />pref: 宮崎県","caprate: 0.2928<br />emprate: 0.3824<br />pref: 鹿児島県","caprate: 0.2287<br />emprate: 0.4244<br />pref: 沖縄県"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":30.611872146118724,"r":7.3059360730593621,"b":44.56621004566211,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.11512500000000001,0.61397500000000005],"tickmode":"array","ticktext":["0.2","0.3","0.4","0.5","0.6"],"tickvals":[0.20000000000000001,0.30000000000000004,0.40000000000000002,0.5,0.59999999999999998],"categoryorder":"array","categoryarray":["0.2","0.3","0.4","0.5","0.6"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"caprate","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.20963999999999999,0.62895999999999996],"tickmode":"array","ticktext":["0.3","0.4","0.5","0.6"],"tickvals":[0.30000000000000004,0.40000000000000002,0.5,0.60000000000000009],"categoryorder":"array","categoryarray":["0.3","0.4","0.5","0.6"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"emprate","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"b7bf31bee61e":{"x":{},"y":{},"type":"scatter"}},"cur_data":"b7bf31bee61e","visdat":{"b7bf31bee61e":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -1294,8 +1096,6 @@ Y_{it} = \beta_0 + \sum _{d=2}^{n} \gamma_d D_{di} + \sum_{t=2}^T \delta_t T_{ti
       });
       clipboard.on('success', onCopySuccess);
       if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        // For code content inside modals, clipBoardJS needs to be initialized with a container option
-        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
         const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
           text: getTextToCopy,
           container: window.document.getElementById('quarto-embedded-source-code-modal')
