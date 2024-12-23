@@ -1,0 +1,135 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第5章 練習問題</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    width: 1400
+    # width: 1200
+    # height: 900
+    webgl: true
+    footer: "松浦プレゼミ2024"
+    logo: "img/yoko.jpg"
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+css: mystyle.css
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(dev = "ragg_png")
+```
+
+## 第5章の練習問題
+
+結婚している人は結婚していない人に比べて賃金が高い（マリッジ・プレミアム）の要因分析
+
+- パッケージ: `wooldridge`, `tidyverse`, `fixest`
+- データ：`wagepan.csv`
+
+```{r}
+pacman::p_load(wooldridge, tidyverse, fixest)
+data("wagepan")
+head(wagepan)
+```
+
+## (1) 回帰モデル
+
+賃金の対数値`lwage`を，`married`，`educ`，`exper`，`black`，`hisssp`で回帰する。プーリング回帰と固定効果モデルで推定する。
+
+### プーリング回帰
+
+
+```{r}
+lm_pool <- lm(lwage ~ married + educ + exper + black + hisp, data = wagepan)
+summary(lm_pool)
+```
+
+---
+
+### 固定効果モデル
+
+固体効果，固体効果と年固定効果の両方を入れた二つのモデルを推定する。
+固定効果モデルの推定には、`fixest`パッケージの`feols()`関数を使うと便利
+```{r}
+results <- list(
+  "個体効果"      = feols(lwage ~ married + educ + exper + black + hisp | nr , data = wagepan),
+  "個体・年度効果" = feols(lwage ~ married + educ + exper + black + hisp | nr + year, data = wagepan)
+  )
+fixest::etable(results, se.below = TRUE)
+```
+
+---
+
+### 固定効果モデル
+
+`lm()`関数を使って固定効果モデルを推定してみます。
+
+
+```{r}
+result <- list(
+  lm_fe1 <- lm(lwage ~ married + educ + exper + black + hisp + factor(nr) + factor(year), data = wagepan),
+  lm_fe2 <- lm(lwage ~ married + educ + exper + black + hisp + factor(nr) , data = wagepan)
+  )
+modelsummary::msummary(result, stars = TRUE)
+```
+
+##  刑事裁判のデータ
+
+アメリカの州ごとに司法の結果が異なるかを確認し，犯罪コストが犯罪発生率に与える影響を検証する。
+
+- パッケージ: `plm`, `fixest`，`tidyverse`，`modelsummary`
+- データ：`Crime`
+
+
+```{r}
+pacman::p_load(plm, fixest, tidyverse, modelsummary)
+data("Crime")
+head(Crime)
+```
+
+## (1) 回帰係数の符号予測
+
+従属変数`lcrmrte`を，
+
+- 逮捕確率`prbarr`：マイナス
+- 有罪確率`prbconv`：マイナス
+- 有罪ののち収監される確率`prbpris`：マイナス
+- 刑期の平均`avgsen`：マイナス
+- 人口当たり警察官の数`polpc`：マイナス
+- 人口密度`density`：プラス
+
+で回帰する。
+
+## (2) 回帰分析
+
+プーリング回帰と固定効果の比較を行う。
+
+
+```{r}
+lm_pool <- lm(lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density, data = Crime)
+summary(lm_pool)
+```
+
+---
+
+### 固定効果モデル
+
+固体効果，固体効果と年固定効果の両方を入れた二つのモデルを推定する。
+
+```{r}
+results <- list(
+  "個体効果"      = feols(lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density | county, data = Crime),
+  "個体・年度効果" = feols(lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density | county + year, data = Crime)
+  )
+fixest::etable(results, se.below = TRUE)
+```
+

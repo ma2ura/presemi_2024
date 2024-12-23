@@ -217,6 +217,10 @@ $X$と$Y$の関係を推定したら、正の関係があったとする。
 
 :::
 
+## 前後比較と差の差の分析
+
+
+
 ## 差の差分析
 
 - **差の差分析** (Difference-in-Differences: DiD) は、2つのグループにおいて、**処置前後の変化**を比較することで**処置効果**を推定する方法
@@ -335,167 +339,60 @@ glimpse(df)
 
 ## 回帰分析でDiD
 
+電車の新路線開通が、賃貸価格に与える影響を調べるため、DiD分析を行う。
+
 $$
 Y_{it} = \alpha + \beta_1 Treat_i + \beta_2 After_t + \beta_3 Treat_i \times After_t + \beta_4 X_{it} + \varepsilon_{it}
 $$
 
-$\beta_3$は
+- $\beta_1$ :湘南台ダミー
+- $\beta_2$ :2004年ダミー
+- $\beta_3$ :湘南台ダミーと2004年ダミーの交差項で、<span class="marky">湘南台プレミアが1996年から2004年でどの程度変化したのかを示し、これが差の差分析の処置効果</span>を現している。
 
-# パネルデータのDiD
-
-## パネルデータとは？
-
-- 複数の個体$i$を、複数の時点$t$で観測したデータを**パネル・データ**という。
-- パネルデータの利点は、
-  1. 個体$i$がもつ特徴をコントロールできる。
-  2. 時間による変化を評価できる
-  3. サンプル・サイズが大きくできる
-
-
-
-# 固定効果モデル
-
-## 固定効果とは？
-
-- パネルデータは個体$i$ごとに時系列で追跡できる特性を持っている。
-- 都道府県を$i$、時点を$t$とし、各都道府県の母就業率$Y_{it}$を考える。
-- <mark class="marky">各都道府県$i$の保育所定員率$X_{it}$</mark>と<mark class="markb">時間で変わらない都道府県の特性$\mu_i$</mark>で決まるとする。
-
-$$
-Y_{it} = \alpha + \beta X_{it} + \mu _i + \varepsilon _{it}
-$$
-
-この$\mu_i$をどうやって設定するかが問題。
-
-## 固定効果の測定方法
-
-- **ダミー変数法** : 各都道府県にダミー変数を設定し、都道府県ごとの特性を推定する。
-- 47都道府県なら、46個のダミー変数を設定する。つまり
-
-$$
-\begin{aligned}
-Y_{it} = \alpha &+ \beta_1 X_{it} + \beta_2 北海道ダミー + \beta_3 青森ダミー \\
-                & + \beta_4 秋田ダミー + \cdots + \beta_{47} 鹿児島ダミー + \varepsilon _{it}
-\end{aligned}
-$$
-
-この各都道府県ダミーを**固定効果**(fixed effect)といい、観察できない都道府県の特性を表していると考える。
-
-## 時点固定効果
-
-- 時点ダミーを設定することで時点ごとに異なる特性を推定できる。
-- 経営研究では、年度ダミーを設定することが多い。
-- たとえば2010年から2024年の25年間のデータを使う場合、24個の年度ダミーを設定する。
-
-$$
-\begin{aligned}
-Y_{it} = \alpha &+ \beta_1 X_{it} + \beta_2 2010年ダミー + \beta_3 2011年ダミー \\
-                & + \beta_4 2012ダミー + \cdots + \beta_{47} 2023年ダミー + \varepsilon _{it}
-\end{aligned}
-$$
-
-## 二次元固定効果モデル
-
-- 個体$i$がもつ固定効果と、時点$t$がもつ固定効果を同時に推定するモデルを**二次元固定効果モデル**という。
-- <mark class="marky">近年の実証研究では標準的な推定方法</mark>となっている。
-
-$$
-\begin{aligned}
-Y_{it} = \alpha & + \beta_1 X_{it} + \sum _{k = 2}^{24} \beta_k 年度ダミー_k + \sum _{l = 25}^{47} \beta_l 個体ダミー_l + \varepsilon _{it}
-\end{aligned}
-$$
-
-## Rによる固定効果モデルの推定
-
-5.2.5節で使うデータ`asai00-10.csv`を読み込む。
+## Rで分析
 
 ```{r}
-df <- read_csv("data/asai00-10.csv")
-glimpse(df)
+pacman::p_load(tidyverse, estimatr, modelsummary, gt, gtExtras)
+df <- read_csv("data/rent-odakyu-enoshima96-04.csv")
+df <- df |>
+  mutate(
+    rent_total = rent + service,
+    dist = walk + bus,
+    treat = if_else(station == "Shonandai", 1, 0),
+    after = if_else(year == 2004, 1, 0)
+  )
+head(df,3)
 ```
 
-## データ概要
-
-国勢調査による母親就業率データです。
-
-- `pref_id` : 都道府県ID
-- `pref` : 都道府県名
-- `year` : 2000,2005,2010年の3時点
-- `emprate` : 母親の就業率
-- `caprate` : 保育所定員率
-- `dist_f_tokyo` : 東京からの距離
-
-# 固定効果モデルの推定
-
-## プーリング回帰
-
-
-固定効果モデルを推定するために`fixest`パッケージの`lm_robust()`関数を使う。
-最初に固定効果を考慮しないプーリング回帰行う。
-
+## 湘南台駅の前後比較
 
 ```{r}
-estimatr::lm_robust(emprate ~ caprate, data = df)
+results1 <- estimatr::lm_robust(rent_total ~ floor + age + dist + treat:after, data = df, station == "Shonandai")
+summary(results1)
 ```
 
-この結果は、`lm()`関数と同じ結果になる。
-
-## 固定効果を考慮した回帰
-
-次に固定効果を考慮した回帰を行う。
-固定効果モデルの推定には、`fixest`パッケージの`feols()`関数を使うと便利
+## 差の差の分析
 
 ```{r}
-#| output-location: slide
-pacman::p_load(fixest)
-results <- list(
-  "model1" = feols(emprate ~ caprate | pref, data = df),
-  "model2" = feols(emprate ~ caprate | year, data = df),
-  "model3" = feols(emprate ~ caprate | pref + year, data = df)
-)
-fixest::etable(results, se.below = TRUE)
+results2 <- estimatr::lm_robust(rent_total ~ floor + age + dist + treat*after, data = df)
+summary(results2)
 ```
 
+## 結果の比較
 
-# DiDとしての固定効果モデル
+```{r}
+modelsummary::msummary(
+  list("前後比較" = results1, "差の差分析" = results2),
+  stars = TRUE,
+  gof_omit = 'DF|Deviance|AIC|BIC|F|Log.Lik.',
+  output = "gt"
+) |>
+  gt::fmt_number(columns = 2:3, decimals = 2)
+```
 
-## 固定効果モデル
+## 結果の解釈
 
-パネルデータは2時点$t=1$と$t=2$をもつ。
+- $treat \times after$の係数は`0.938`と統計的に有意に正の値であるため、湘南台駅の開業により賃料が上昇したことが示唆される。
+- 前後比較の`after`変数の係数は統計的に有意ではないため、何も分からない。
+- 処置群と対照群の差は`treat`で、回帰係数は正に有意となっており、湘南台駅付近の賃料は他の賃料よりも高いことが示されている。
 
-$$
-\begin{aligned}
-Y_{i,1} &= \alpha + \beta X_{i,1} + \gamma _1 D_1 + \cdots + \gamma _k D_k + \varepsilon _{i,1} \\
-Y_{i,2} &= \alpha + \beta X_{i,2} + \gamma _1 D_1 + \cdots + \gamma _k D_k + \varepsilon _{i,2}
-\end{aligned}
-$$
-
-$Y_{i,1} - Y_{i,2} \equiv \Delta Y_i$をとると、
-
-$$
-\begin{aligned}
-Y_{i,1} - Y_{i,1} &= (\alpha - \alpha) + (X_{i,1} - X_{i,2}) \beta \\
-                   &+ (\gamma_1 D_1 - \gamma_1 D_1) + \cdots + (\gamma_k D_k - \gamma_k D_k) + (\varepsilon_{i,1} - \varepsilon_{i,2})\\
-\Delta Y_i &= \beta \Delta X_i + \Delta \varepsilon_i
-\end{aligned}
-$$
-
-## 階差回帰モデル
-
-- 差分をとることで時点間で変化しない**定数項**と**個体ダミー**($\gamma_i$)は消える。
-- $\beta$は$X$が1変動した$\Delta X$に対する$Y$をどれだけ変化させるかを示す。
-- $X$が全く変化しないのを比較群、1変化したのを処置群とすると、係数$\beta$は処置群と比較群の$Y$の変化幅の差を示す。つまりDiD
-
-
-|    | $X$の変化 | $Y$の変化 |
-|:---|:---:|:---:|
-| 処置群 | $\Delta X = 1$ | $\beta$ |
-| 比較群 | $\Delta X = 0$ | $0$ |
-
-## パネルデータのDiDの特徴
-
-1. 処置群ダミーと処置後ダミーの交差項のみをモデルに含める
-2. 時間を通じて変化しない変数は説明変数に含められない
-3. FEモデルによるDiDでは説明変数として導入できない第3の要因を考慮できる
-
-パネルデータ分析に時間を通じて一定の変数を導入するには、**相関変量効果**(correlated random effects)モデルを使う。
