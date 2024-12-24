@@ -133,3 +133,6 @@ results <- list(
 fixest::etable(results, se.below = TRUE)
 ```
 
+
+## 結果の解釈
+
