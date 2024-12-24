@@ -1,0 +1,606 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第7章 傾向スコア法</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    width: 1400
+    # width: 1200
+    # height: 900
+    webgl: true
+    footer: "松浦プレゼミ2024"
+    logo: "img/yoko.jpg"
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+css: mystyle.css
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(dev = "ragg_png")
+```
+
+
+# 因果推論の基本
+
+## 因果関係の推定
+
+<br>
+
+:::{.v-center-container}
+<span style = "
+  font-family: Myryca MM;
+  font-size: 2em;
+  font-weight: bold;
+  color: #e3439e">
+  ジオングに足を付けるべきか
+</span>
+:::
+
+:::{.v-center-container}
+![](img/zeong.jpg)
+:::
+
+## 因果関係の推定
+
+
+これは、
+
+<br>
+
+:::{.v-center-container}
+<span style = "font-size: 2em;">足 <span style = "font-weight: bold; color: #e3439e">によって</span>性能が上がるかどうか</span>
+:::
+
+<br>
+
+という<span class ="markp">因果効果(causal effect)の因果推定(causal inference)が必要</span>となる。
+
+## 因果効果の推定の作法
+
+
+:::{.columns}
+
+:::{.column width=50%}
+
+:::{.callout-important}
+1. Campbell アプローチ
+2. Pearl アプローチ
+3. **Rubin アプローチ**
+:::
+
+ルービン流の因果推定の方法を学ぶ。
+
+:::
+
+:::{.column width=50%}
+
+![](img/hahji_inga.jpg){fig-align="center" width=50%}
+
+:::
+:::
+
+## 潜在的結果
+
+Rubinモデルで最も重要な概念は、
+
+:::{.v-center-container}
+<span style = "font-size: 1.5em;">潜在的結果</span>
+:::
+
+- 評価したい政策 = 処置(treatment)が対象(unit)にどのような影響を及ぼすのかを測定したい
+- 因果効果の測定のために、<span class="markp">対象に処置した場合としなかった場合を比較</span>
+- 処置ありと処置なしの結果という2種類の<span style = "font-weight">潜在的結果の差が</span>**因果効果**
+$$
+\text{足の因果効果} = \text{足つきの性能} - \text{足なしの性能}
+$$
+
+## 反事実
+
+頭痛薬によって頭痛が治るかどうかという因果効果を推定するとしよう。
+$$
+頭痛薬の因果効果 = 服用後の頭痛の程度 - 未服用の場合
+$$
+
+- 問題は，<span class="marky">一方の潜在的結果 (薬を飲んだ場合) しか観察できない</span>こと
+- <span class="markp">理想的には2人の自分を用意して1人に投薬，片方は何もせず1時間全く同じ状態に置いた後に比較したい</span>
+- しかし潜在的結果の片方は観察不可能
+
+:::{.v-center-container}
+<span style = "font-size: 2em; font-weight: bold; color: #e3439e">反事実</span>
+:::
+
+
+
+## 潜在的結果
+
+- 潜在的成果を $y$、処置を受けた成果を $Y_t$、未処置を $Y_c$
+- 知りたいのは、$\mathbb{E}(Y_t - Y_c)$
+- 処置の有無をダミー変数$d$、$d=1$ を処置群、$d=0$ を対象群
+
+
+|             | 処置群                      | 対象群            |
+|------------|----------------------------|---------------------------|
+| 処置有り     | $\mathbb{E}(Y_t \mid d=1)$ [^1] | <span class="markp">$\mathbb{E}(Y_t \mid d=0)$</span> |
+| 処置無し     | <span class="markp">$\mathbb{E}(Y_c \mid d=1)$</span> | $\mathbb{E}(Y_c \mid d=0)$ |
+
+[^1]: $d=1$ を条件とした $Y_t$ の条件付期待値
+
+## 潜在的結果
+
+
+::: {.callout-note}
+## 因果効果の定義
+
+$$
+\begin{aligned}
+\text{処置群の因果効果} &= \mathbb{E}(Y_t - Y_c \mid d=1) \\
+    &= \mathbb{E}(Y_t \mid d=1) - \mathbb{E}(Y_c \mid d=1)
+\end{aligned}
+$$
+:::
+
+処置群に処置しなかった効果 $\mathbb{E}(Y_c \mid d=1)$ は反事実であるため観測不可能！
+だったら<span class ="markp">反事実を補完する方法を考える</span>。
+
+## 割当メカニズム
+
+反事実を観察できない状況下で、因果効果を推定するために重要な概念が
+
+:::{.v-center-container}
+<span style = "font-size: 2em;">**割当メカニズム**</span> <br/>
+<span style = "fint-size: 0.5em;">allocation mechanism</span>
+:::
+
+- 各ユニットが、処置を受けるか受けないかを決めるメカニズム
+- この割当メカニズムがどうなっているかによって、因果効果の推定方法が異なる
+- <span class="markp">あるユニットへの処置が他のユニットの潜在的結果に影響を与えない</span>、という**SUTVA** (stable unit-treatment-value assumption)が要求される
+
+
+## 割当メカニズム
+
+SUTVAが成り立つ場合、処置群と対照群の平均的な効果を、
+
+<br/>
+<br/>
+
+:::{.v-center-container}
+<span style = "font-size: 2em">**平均処置効果**</span>
+:::
+
+## Rubinの「完璧な医者」の例
+
+ガンに対する新しい治療法の因果効果を推定したい。
+
+- 8名に処置した場合と処置しない場合の生存年数を比べる(*不可能*)。
+- 平均因果効果を比べると，処置しない方が長生きできるため，処置すべきでない。
+- しかし神の視点により，<span class="marky">処置すると生存年数が延びる患者にのみ処置すると，生存年数が延びる</span>。
+
+
+このように割当メカニズムにより，処置の効果が全く逆になることもある。
+このような問題は，**混合的なメカニズム**(confounded mechanism)によって生じている。
+
+## 割当メカニズム
+
+:::{.v-center-container}
+<span style = "font-size: 2em">**混合的なメカニズム**</span>
+:::
+
+- 処置を受けるか受けないかの決定が，潜在的結果を考慮に入れて行われているもの。
+- 潜在的結果を先取りしており，**内生性**(endogenous)の問題が生じる。
+- しかし混合的**でない**割当メカニズムのケースでは，因果効果を推定することは比較的容易となる。
+
+
+## ランダム化比較対照実験
+
+混合的**でない**割当メカニズムとして一般的なのがランダム化比較対象実験(RCT: randomized controlled trial)
+
+- 被験者を，処置群と対象群に\textbf{ランダムに}割り当て，
+- 処置群と対象群の差(つまり平均因果効果)を見て，
+- 処置の因果効果を推定する方法
+
+このメカニズムは潜在的結果を考慮に入れていないため，混合的ではない。
+
+- ランダム化比較対照実験では，試行ごとに異なる結果が出る。
+- <span class="markp">何度も試行を繰り返す $n\rightarrow \infty$ で，真の平均因果効果を推定できる</span>。
+
+## ランダム化比較対照実験
+
+潜在的結果を考慮にいれず割当を行う。つまり<span class="markp">$Y_c$と$d$が独立であるという仮定が成り立つなら</span>，
+
+$$
+\begin{aligned}
+\mbox{処置群の因果効果} \approx \mathbb{E}(Y_t \mid d=1) - \mathbb{E}(Y_c \mid d=0)
+\end{aligned}
+$$
+と近似できる。さらにここから，
+$$
+\begin{aligned}
+ACE = \Pr (d=1) \mathbb{E} (Y_t - Y_c \mid d=1 ) - \Pr (d=0) \mathbb{E} (Y_t - Y_c \mid d=0 )
+\end{aligned}
+$$
+を計算する。
+しかし <span class="marky">$\mathbb{E}(Y_c \mid d=1)$ と $\mathbb{E}(Y_t \mid d=0)$ が観察不可能</span>である。
+
+---
+
+
+しかし $Y_t$ が $d$ と独立なら，
+$$
+\begin{aligned}
+ACE = ATE \approx \mathbb{E}(Y_t \mid d=1 ) - \mathbb{E}(Y_c \mid d=0)
+\end{aligned}
+$$
+
+となる。これが成立するためには，割当を完全にランダムに行えばよい。
+ただし，<span class="markp">社会科学において，政策評価をランダム化比較対照実験を用いて実行することは困難</span>である。
+
+- 通常被験者が割当を自発的に選択するため、<span class="markp">被験者が割当を選んだ結果である観察データ(observational data)を用いて</span>，
+処置群と対象群を比較しただけでは，平均因果効果を推定することは困難
+- これを実行しようとしているが<span class="marky">フィールド実験(field experiment)</span>
+
+
+## 階層化
+
+ランダム割当でない観察データの場合に平均因果効果を推定するために，ランダム化比較対照実験におけるランダム化の意味を考える。
+
+- 処置以外で潜在的結果に影響を与える要因
+
+:::{.v-center-container}
+<span style = "font-size: 2em">**共変量**</span>
+:::
+
+- <span class="markp">共変量は処置前後で値が変わらないという特徴</span>をもつ。
+- 個人の因果効果の観察は処置以外の共変量の影響を受ける。
+- しかし，ランダム割当により(十分大きな $N$ において)**平均的には**真の因果効果を推定するため，処置群と対象群をランダムに振り分けることで共変量を相殺する。
+
+## 階層化・下位分類化
+
+1. 重要な共変量をピックアップ
+1. 処置群と対象群とから，<span class="markp">共変量がバランスしているサブグループを選択</span>
+1. 2つのサブ・グループについての観察結果の差を見て，共変量の影響を除去
+1. 各サブグループの平均因果効果を推定する。
+
+この手順を**階層化**(stratification)とか**下位分類化**(subclassification)という。
+
+## 心得
+
+- **ランダム化比較対照実験**(randomized controlled trial: RCT)では，分析者がランダム化という割当メカニズムを採用しているため，因果効果の推定に恣意性が小さい。
+- ただ，観察データに階層化を用いてRCTに近似した状況を作り出そうとする場合，
+
+	1. どの共変量に着目し，
+	2. どのくらいの大きさのサブグループを作るか，
+
+という点で恣意性が入る。
+
+## 心得2
+
+**建前として**以下のステップを踏む。
+
+- 設計段階では結果を見ない。
+- <span class="markp">結果を見る前に</span>，割当メカニズムで重要な共変量を考える。
+- 共変量のバランスが達成できるサブグループを作る。
+- 思い通りの結果がでなくても諦める。
+
+## まとめ
+
+- 因果効果を推定するためには、同じユニットに対して処置した場合と未処置の場合を比較する必要があるが、それは無理な場合がある
+- <span class="markp">処置群に処置を施さなかったらどうなっていたか、という反事実を補完する</span>ことで、因果効果の推定を行う
+- このときユニットが<span class="markp">処置群・対象群のどちらに入るのかを決める割当メカニズム</span>が**重要**
+- <span class="markb">潜在的結果を考慮しない割当メカニズムではランダム化比較対象実験が可能</span>
+- ユニットが処置を受けるかどうかを自分で選ぶような<span class="marky">潜在的結果を考慮した割当メカニズムでは、共変量に基づく階層化・下位分類化を行い比較する</span>
+
+
+# マッチング
+
+## マッチング
+
+- <span class="markp">反事実の補完のため</span>に用いられるのがマッチングである。
+- 階層化は，共変量がバランスしているサブグループを選び，片方に処置を行った上で比較し，因果効果を推定する方法だった。
+- つまりグループとグループを平均的に比較する方法である。
+
+マッチングはこのアイデアの延長線上にある。
+
+## マッチング
+
+- グループでは無く，ユニット(unit)ごとに共変量が同じものを対象群から抽出し，反事実とする方法。
+- このように<span class="markp">対応づけられた処置群のユニットと対象群のユニットを比較して</span>処置の因果効果を推定する。
+
+:::{.v-center-container}
+<span style = "font-size: 2em; font-weight: bold; color: #e3439e">マッチング</span>
+:::
+
+## 具体例
+
+<div style = "font-size: .5em;">
+|| 処置群||| 対照群 ||| マッチング |||
+|:----:|:----:|----:|:----:|:----:|----:|:----:|:----:|----:|----:|
+|id   |年  |年収   |id   |年  |年収   |id   |年  |年収   |  差 |
+|1    |28  |35,400 |1    |28  |35,400 |8    |28  |17,600 |17,800  |
+|2    |34  |20,400 |2    |28  |35,400 |14   |34  |48,400 |-28,000 |
+|3    |29  |28,800 |3    |30  |42,000 |17   |29  |12,400 |16,400  |
+|4    |25  |41,600 |4    |27  |18,600 |15   |25  |46,600 |-5,000  |
+|...  |... |...    |...  |... |...    |...  |... |...    |...|
+|18   |27  |21,400 |18   |28  |35,400 |4    |27  |18,600 |2,800   |
+|19   |28  |32,600 |19   |28  |35,400 |8    |28  |17,600 |15,000  |
+|     |    |       |20   |23  |19,000 |     |    |       |   |
+|     |    |       |21   |32  |51,800 |     |    |       |   |
+|平均 |<span class="markp">28.5</span> | <span class="marky">32,854</span> |平均 | <span class="markp">33</span>  | <span class="marky">41,448</span> |平均 |28.5|27,963 | *4,889*  |
+</div>
+
+- 各群の平均を比較すると処置群の方が低い！
+- しかし平均年齢は処置群の方が低い！
+- マッチングしてコントロールしたい。
+
+## マッチング
+
+- マッチングにより，<span class="markp">処置群における平均因果効果(ACET)のみならず，対象群における平均因果効果(ACEC)も計算できる</span>。
+- 処置群と対象群全体を通じた全体における平均因果効果(average causal effect: ACE)も計算できる。
+
+職業訓練の例では，
+
+- 処置群における平均因果効果は$4,889$となり，職業訓練により年収が増加
+- 対象群における平均因果効果は，対象群21ユニットに処置群19ユニットを対応づけることで計算
+- 全体の平均因果効果は処置群と対象群の平均因果効果から計算
+
+
+## 複数の共変量
+
+- マッチングには複数の共変量を用いたほうがよいが、複数の共変量を用いたマッチングでは，<span class="markp">近さを定義し，組み合わせを選ぶ必要がある</span>。
+- **距離基準**として，<span class="marky">正規ユークリッド距離とマハラノビス距離</span>が便利
+- ユークリッド距離 $d(y,x) = \sqrt{\sum (y_i - x_i)^2}$ ではなく，
+
+$$
+d_M (\boldsymbol{y,x}) = \sqrt{(\boldsymbol{x} - \boldsymbol{y})^{\top} \boldsymbol{\Sigma }^{-1} (\boldsymbol{x}-\boldsymbol{y})}
+$$
+を用いる。
+$\boldsymbol{\Sigma}$は$\boldsymbol{x}$の共分散行列である。
+
+## 複数の共変量
+
+$\boldsymbol{\Sigma}$ が対角行列の場合，正規ユークリッド距離という。
+
+$$
+d_M(\boldsymbol{y,x}) = \sqrt{\sum(x_i - y_i)^2/\sigma_i ^2}
+$$
+
+$\boldsymbol{\Sigma}$ が単位行列なら，マハラノビス距離はユークリッド距離に等しくなる。
+
+$$
+d_M (\boldsymbol{y,x}) = \sqrt{(\boldsymbol{x} - \boldsymbol{y})^{\top}
+\begin{pmatrix}
+\sigma_{11} &  & \text{\large{0}} \\
+ & \ddots &  \\
+\text{\large{0}} &  & \sigma_{nn} \\
+\end{pmatrix} ^{-1}
+(\boldsymbol{x}-\boldsymbol{y})}
+$$
+
+## 複数の共変量
+
+- 一部の共変量とは完全一致で，他の共変量とは距離が最小になるマッチングを**正確マッチング**(exact matching)という。
+- Rで正確マッチングをするためには，`Matchit`パッケージの`matchit()`関数を用いる。
+
+
+```{r}
+pacman::p_load(tidyverse, AER, estimatr, MatchIt)
+data("PSID1982")
+
+lm_robust(log(wage) ~ occupation + education + south + smsa + gender + ethnicity + industry + weeks, data = PSID1982)
+```
+
+## 正確マッチング
+
+```{r}
+fit.m <- matchit(occupation ~ education + south + smsa + gender + ethnicity + industry + weeks,
+                 data = PSID1982,
+                 method = "exact",
+                 estimand = "ATC"
+                 )
+fit.m
+```
+
+## 次元の呪い
+
+
+- 複数の共変量を用いると，完全な一致が得られにくくなる。
+- サンプルサイズが小さい場合はなおさら反事実の補完とは言いがたい。
+- 共変量の数が多すぎると，よいマッチングが出来なくなる。
+
+:::{.v-center-container}
+<span style = "font-size: 2em; font-weight: bold; color: #e3439e">次元の呪い</span>
+:::
+
+
+- 回避方法は、対象群のサンプル・サイズを大きくし，よいマッチング対象が見つかる可能性を高める。
+- サンプル・サイズを大きく出来ない場合は，バイアス修正方法を用いる。
+
+## 傾向スコア・マッチング
+
+- マッチングに用いる共変量が複数存在し，マッチングによる反事実の補完が機能しない**次元の呪い**を克服するために，近年良く用いられている(ような気がする)方法が**傾向スコア・マッチング**(propensity score matching)
+  - <span class ="markp">傾向スコアとは処置を受ける確率のこと</span>。
+  - この傾向スコアを使ってマッチングをすることで反事実を補完
+
+
+ただし次の判別条件を満たしている必要がある。
+
+:::{.callout-important}
+## 判別条件
+
+1. 処置を受けるかどうかが観察可能な共変量に基づいている。
+2. 傾向スコアが0超，1未満の間をとること。
+
+:::
+
+
+## 例：テレビCMの効果測定
+
+CM見たグループ vs. 見てないグループの購買量比較
+
+<div style = "font-size: .8em;">
+|       | 処置群 | 対象群 |
+|-------|:-----:|:------:|
+| CM見た    | 購買量 | **反事実**  |
+| CM見てない | **反事実** | 購買量   |
+| 共変量     | 収入，年齢など ||
+</div>
+
+- 処置群と対照群は観測値であるため、コントロール不可なので共変量の項目から**処置群**である確率を算出
+- 通常はロジット・モデルやプロビット・モデル、順序ロジットといった従属変数の値が0から1に収まる回帰モデルを用いて推定
+
+# 傾向スコア法
+
+## 傾向スコアとは？
+
+傾向スコア法とは，<span class ="markp">プログラム参加者(処置群)と非参加者(対照群)の中で参加者とよく似た人を探し出して比較する手法</span>。
+「よく似た人」をどのように探すのか？が問題
+
+- プロビット・モデルやロジット・モデルを使って，<span class ="markp">プログラム参加者である確率を推定</span>する。
+- 説明変数として，プログラム参加者であるかどうかを除いた共変量を使う。
+- このように計算された「プログラム参加者となる確率」を使って，非参加者の中で参加者と同じ程度の参加確率を持つ人を探し出し，対照群とする。
+
+
+## 傾向スコア・マッチングの手順
+
+1. プロビット/ロジット・モデルで対照群となる確率(傾向スコア)を推定
+2. 処置群の個体$i$と同じような傾向スコアをもつ対照群の個体を探し出して1対1でマッチング
+3. 処置群と対照群の平均的な効果(ATT)を比較
+
+## 処置効果の種類
+
+- 処置群と対照群の成果指標の平均の差: **ATT** (Average Treatment Effect on Treated)
+- 比較群における平均処置効果: **ATUT** (Average Treatment Effect on Un-Treated)
+- 全ての人が処置を受けた場合の平均処置効果: **ATE** (Average Treatment Effect)
+
+## データの準備
+
+- 使うデータは`nswcps_pamatch.csv`
+- パッケージは`MatchIt`
+
+```{r}
+pacman::p_load(tidyverse, MatchIt)
+nswcps <- readr::read_csv("data/nswcps_psmatch.csv")
+glimpse(nswcps)
+```
+
+16177観測値と23変数からなるデータセット
+
+
+## 傾向スコアの推定
+
+Dehajia and Wahba (1999)のデータを使った傾向スコア・マッチングの実践
+
+- 成果指標`re78` : 1978年の年収
+- 処置群`treated` : トリートメント群かどうか（参加なら1, 非参加なら0）
+- 共変量
+  - `re74`, `re75` : 1974年，1975年の年収
+  - `age`, `age2` : 年齢とその2乗
+  - `educ` : 教育年数
+  - `nodegree` : 高校中退なら1，それ以外は0
+  - `black` : 黒人ダミー
+  - `hispanic` : ヒスパニックダミー
+
+
+
+## データの概要
+
+```{r}
+nswcps |>
+  tableone::CreateTableOne(
+  vars = (c("re78","age","educ","married","black","hispanic")), strata = "treated"
+  )
+```
+
+処置群が185，対照群が15992
+
+
+## プログラム参加確率の推定
+
+ロジットモデルによるプログラム参加確率の推定
+
+$$
+\begin{aligned}
+\text{treated} &= \beta_0 + \beta_1 \text{age} + \beta_2 \text{age2} + \beta_3 \text{educ} + \beta_4 \text{educ2} \\
+                & + \beta_5 \text{married} + \beta_6 \text{nodegree} + \beta_7 \text{black}\\
+                &+ \beta_8 \text{hispanic} + \beta_9 \text{re74} + \beta_{10} \text{re75}
+\end{aligned}
+$$
+
+
+```{r}
+#| output-location: slide
+logit_model <- "treated ~ age + age2 + educ + educ2 + married + nodegree + black + hispanic + re74 + re75"
+result_logit1 <- glm(logit_model, family = binomial(link = "logit"), data = nswcps)
+DescTools::PseudoR2(result_logit1)
+summary(result_logit1)
+```
+<!--
+## 傾向スコア
+
+`treated`をグループとして，傾向スコアの箱ひげ図を描く
+
+```{r}
+nswcps$ps <- result_logit1$fitted.values
+nswcps %>%
+  ggplot(aes(x = ps, fill = factor(treated), group = factor(treated))) +
+  geom_boxplot() +
+  theme_minimal()
+```
+-->
+
+## マッチング
+
+`MatchIt`パッケージの`matchit()`関数を使ってマッチングする。
+
+```{r}
+#| output-location: slide
+m_result1 <- MatchIt::matchit(treated ~ age+age2+educ+educ2+married+nodegree+black+hispanic+re74+re75,
+                 data     = nswcps,
+                 method   = "nearest",
+                 distance = "glm", discard = "both",
+                 replace  = TRUE)
+summary(m_result1)
+```
+
+- `method = "nearest"` : 最近傍マッチング
+- `distance = "glm"` : ロジット・モデルを使って傾向スコアを推定
+- `discard = "both"` : 処置群と対照群のどちらかにマッチングしないデータを削除
+- `replace = TRUE` : 重複を許す
+
+
+## マッチングの結果
+
+```{r}
+summary(m_result1) %>% plot(xlim=c(0,1.5))
+```
+
+`hispanic`以外はうまくマッチングできている
+
+## 処置効果の計算
+
+処置群と対照群だけのデータセット`matched_data`を作成
+
+```{r}
+matched_data <- m_result1 %>% MatchIt::match.data()
+head(matched_data)
+```
+
+## 処置効果の推計
+
+`lm()`関数を使って年収`re78`を処置群と対照群で比較する。
+
+```{r}
+m_result2 <- lm(re78 ~ treated, data = matched_data, weights = weights)
+summary(m_result2)
+```
+
+`treated`の係数が統計的に正に有意であるため，処置群の年収は対照群よりも1881.9ドルｔ高いと言える。
+
