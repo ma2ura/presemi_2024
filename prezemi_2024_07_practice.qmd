@@ -1,0 +1,101 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第7章 練習問題</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    width: 1400
+    # width: 1200
+    # height: 900
+    webgl: true
+    footer: "松浦プレゼミ2024"
+    logo: "img/yoko.jpg"
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+css: mystyle.css
+---
+
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(dev = "ragg_png")
+```
+
+
+# 第1問
+
+## 準備
+
+パッケージとデータの読み込み
+
+```{r}
+# パッケージの読み込み
+pacman::p_load(tidyverse, tableone, MatchIt)
+# データの読み込み
+df <- read_csv("data/training.csv")
+```
+
+## データの概要
+
+教科書で変数名が間違っているものが多いので，正しい変数名を確認します。
+
+```{r}
+df |> names() # 変数名を抽出
+# カテゴリー変数の水準を確認
+df$empstat_edt |> table()
+```
+
+## データの確認
+
+`tableone`パッケージの`CreateTableOne()`関数を使って，データの概要を確認します。
+
+```{r}
+#| output-location: slide
+df |> CreateTableOne(
+    vars = ( # 変数の指定
+      c("training","age","educ_cat","empstat_edt","couple","child")
+    ),
+    strata = "training" # 層別の指定
+    )
+```
+
+## 傾向スコアの作成
+
+ロジスティックス回帰を使って，傾向スコアを作成します。
+
+```{r}
+#| output-location: slide
+logit_model <- "training ~ age + age^2 + educ_cat + empstat_edt"
+logit <- glm( # 一般化線形モデル
+  logit_model,  # 回帰モデル
+  data = df,  # データ
+  family = binomial(link = "logit") # リンク関数
+  )
+summary(logit)
+```
+
+
+## 傾向スコアの確認
+
+```{r}
+#| output-location: slide
+m_result1 <- MatchIt::matchit(
+  training ~ age + age^2 + educ_cat + empstat_edt,
+  data     = df, # データ
+  method   = "nearest", # 最近傍法
+  distance = "glm", # ロジスティックス回帰
+  discard = "both", # マッチング後のデータの削除
+  replace  = TRUE) # 重複の許可
+summary(m_result1) # 出力
+```
+
+
