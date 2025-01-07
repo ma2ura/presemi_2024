@@ -1,0 +1,80 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">5.3 変化率・ラグ項の扱い方 </span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    width: 1400
+    webgl: true
+    footer: "松浦プレゼミ2024"
+    logo: "img/yoko.jpg"
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+css: mystyle.css
+---
+
+# ラグ変数
+
+## ラグ変数とは
+
+ラグ変数(lag variable)とは、ある変数の値を一つ前の時点にずらした変数のことです。
+変数$X_t$のラグ変数は$X_{t-1}$と表記され、その差である$X_t - X_{t-1} = \Delta X_t$を変化額といい、
+変化率は、
+$$
+\frac{X_t - X_{t-1}}{X_{t-1}} = \frac{X_t}{X_{t-1}} - 1
+$$
+と表記されます。
+
+ここでは$X_{t-1}$を作成する方法を紹介します。
+
+
+## ラグ変数の作成方法
+
+```{r readr}
+pacman::p_load(tidyverse, plm)
+df <- read_csv("data/nlswork.csv")
+head(df)
+```
+
+## パネルデータの作成
+
+この`df`に格納されたデータがパネルデータであることをRに伝えるために、`plm`パッケージの`pdata.frame`関数を使います。
+個体ID`idcode`と年度`year`をインデックスとして指定します。
+
+```{r}
+p_df <- pdata.frame(df, index = c("idcode", "year"))
+class(p_df)
+```
+
+`pdata.frame`という型になっていることが分かります。
+
+## パネルデータの表示
+
+```{r}
+head(p_df)
+```
+
+一番左に、`idcode`と`year`の組み合わせのインデックスが追加されていることが分かります。
+
+## ラグ変数の作成
+
+`pdata.frame`型になった`p_df`からラグ変数を作成するには、`plm`パッケージの`lag()`関数を使います。
+
+
+```{r}
+p_df <- p_df %>% 
+  arrange(idcode, year) %>% 
+  mutate(
+    lwage_lag = plm::lag(ln_wage),
+    lwage_lag2 = lag(ln_wage))
+p_df[1:2, ]
+```
