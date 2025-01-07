@@ -602,5 +602,5 @@ m_result2 <- lm(re78 ~ treated, data = matched_data, weights = weights)
 summary(m_result2)
 ```
 
-`treated`の係数が統計的に正に有意であるため，処置群の年収は対照群よりも1881.9ドルｔ高いと言える。
+`treated`の係数が統計的に正に有意であるため，処置群の年収は対照群よりも1881.9ドル高いと言える。
 
