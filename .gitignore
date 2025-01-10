@@ -1,0 +1,42 @@
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# R Environment Variables
+.Renviron
+
+
+# RStudio Connect folder
+rsconnect/
+
+/.quarto/
+
+# Presemi folder
+*.log
+*.aux
+*.js
+
+/._extensions/
+/.data/
+/.img/
+
+*.aux
+*.log
+*.out
+
+!/docs/
+/松浦_R分析/
+/201_プレゼミ2024/
+/_extensions/
+/data/
+/img/
+/prezemi_2024_03_presen_cache/
+/prezemi_2024_03_presen_files/
+/prezemi_2024_04_presen_cache/
+/prezemi_2024_04_presen_files/
+/prezemi_2024_05_presen_cache/
+/prezemi_2024_05_presen_files/
+/prezemi_2024_06_presen_cache/
+/prezemi_2024_06_presen_files/
+/prezemi_2024_07_presen_cache/
+/prezemi_2024_07_presen_files/
