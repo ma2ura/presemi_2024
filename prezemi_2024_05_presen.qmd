@@ -1,0 +1,398 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第5章 差の差の分析 </span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    width: 1400
+    webgl: true
+    footer: "松浦プレゼミ2024"
+    logo: "img/yoko.jpg"
+    include-header:
+      text: |
+       <style>
+        .v-center-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 90%;
+        }
+        <style>
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+filters:
+  - webr
+webr:
+  packages: ['readr', 'dplyr', 'ggplot2'] # Install R packages on document open
+css: mystyle.css
+---
+
+```{r include=FALSE}
+# Necessary for using dvisvgm on macOS
+# See https://www.andrewheiss.com/blog/2021/08/27/tikz-knitr-html-svg-fun/
+Sys.setenv(LIBGS = "/usr/local/share/ghostscript/9.53.3/lib/libgs.dylib.9.53")
+font_opts <- list(dvisvgm.opts = "--font-format=woff")
+pacman::p_load(pdftools)
+```
+
+# 因果推論
+
+## 相関関係と因果関係
+
+- 原因と結果の関係である**因果関係**(causal relation)があるのかどうか、どんな関係なのか、どの程度の強さがあるのかを推定することが**因果推論**です。
+- 相関関係(correlation)と因果関係は異なるもので、相関関係があるからといって、必ずしも因果関係があるわけではありません。
+- **同時決定性** と **逆の因果性**
+
+## 同時決定問題
+
+- 2つの変数が同時に変化することで、相関関係が生じること
+- 例えば、教育水準と所得の関係を考えてみましょう。
+- 教育水準が高い人ほど所得が高いという相関関係があるが、これは教育水準が高いから所得が高いのか、逆に所得が高いから教育水準が高いのか、が分かりません。
+- 相関関係は線形関係の強さを示すだけで、原因と結果の関係については何もいえません。
+
+
+## 第3の要因
+
+- 2つの変数の間に因果関係があると考えられる場合、それらの変数に影響を与える**第3の要因**があるかどうかを考える必要があります。
+- 例えば、教育水準と所得の関係について考えてみましょう。
+- たとえば「ピアノを習っている」人ほど「学力が高い」という関係を見つけたとき、学力が高いことの原因がピアノを習っていたというより、隠れた要因として「親の所得」があるかもしれない可能性を検証する必要がある。
+- **疑似相関**・見せかけの相関(spurious colleration)
+
+
+## 第3の要因の図
+
+- 隠れた要因を，**共変量**(confounding variable)と呼ぶ。
+- 共変量$C$が$X$と$Y$の両方に影響を与える場合、$X$と$Y$の間に関係がなくても、$X$と$Y$の間に関係があるように見えることがある。
+
+```{r, engine = 'tikz' }
+#| echo: false
+#| fig-align: center
+#| out-width: 100%
+\begin{tikzpicture}
+\node[draw, circle] (X) at (0,0) {Piano};
+\node[draw, circle] (C) at (2,2) {Income};
+\node[draw, circle] (Y) at (4,0) {Score};
+\draw[->] (X) -- (Y);
+\draw[->, dashed] (C) -- (X);
+\draw[->, dashed] (C) -- (Y);
+\end{tikzpicture}
+```
+
+
+
+## 例題 {auto-animate="true"}
+
+キャリアセンターが集めたデータから、**就活企画に参加した学生**は、企画に参加していない学生と比べてその後の就職活動で成功している，ということが分かった。
+そこから、**就活企画に参加すると、就活に成功する**という主張が可能でしょうか？
+
+## 例題 {auto-animate=true}
+
+キャリアセンターが集めたデータから、**就活企画に参加した学生**は、企画に参加していない学生と比べてその後の就職活動で成功している，ということが分かった。
+そこから、**就活企画に参加すると、就活に成功する**という主張が可能でしょうか？
+
+1. キャリアセンター企画が就職活動の成功確率に直接影響している可能性
+2. 企画に参加した人はもともと就職活動に積極的な人で、企画に参加してなくても成功していた可能性
+3. 企画が就活の成否に全く影響を与えておらず、たまたま得られた結果
+
+
+## 理想的な因果推論
+
+1. キャリアセンター企画に参加した自分と参加してない自分を比較する
+2. キャリアセンターに参加した自分は就職活動で成功
+3. キャリアセンターに参加してない自分は就職活動で失敗
+4. その差がキャリアセンター企画の効果であると結論づける
+
+
+## 因果推論の方法
+
+**ランダム化比較実験** (RCT: Randomized Controlled Trial)
+
+:::{.columns}
+
+:::{.column width=50%}
+
+- 生徒をランダムに2グループに分ける
+- 片方(処置群)のグループだけキャリアセンターの企画に参加してもらい、もう片方(対照群)は不参加
+- 一定期間後に2グループの就活結果を比較し、成功確率に差があるかどうかを検証
+
+:::
+
+:::{.column width=50%  .column-custom-1}
+
+![ランダム化比較実験](img/fig_01.png)
+
+:::
+:::
+
+
+
+# 回帰分析の復習
+
+## 線形回帰分析とダミー変数
+
+- 複数の説明変数と1つの被説明変数との間の**(因果)関係**を調べるための手法
+- 説明変数(ここでは$X$)と被説明変数(ここでは$Y$)との間に*線形関係*を仮定した**線形回帰モデル**
+- ダミー変数(ここでは$D$)はカテゴリーを表す変数で0か1の値を取る変数
+
+$$
+Y_i = \alpha + \beta_1 X_i + \beta_2 D_i + \varepsilon _i,
+$$
+
+- $\alpha$ 、$\beta$ は回帰係数、$\varepsilon_i$ は誤差項といい、特定の手法(OLSなど)で推定
+
+## 線形回帰モデルの考え方
+
+- ある変数が他の変数にどのように影響を与えるかを推定
+
+```{r, engine = 'tikz' }
+#| echo: false
+#| fig-align: center
+#| out-width: 100%
+\begin{tikzpicture}
+\node[draw, circle] (X) at (0,0) {X};
+\node[draw, circle] (Y) at (4,0) {Y};
+\draw[->] (X) -- (Y);
+\end{tikzpicture}
+```
+
+$X$と$Y$の関係を推定したら、正の関係があったとする。
+
+## 共変量
+
+- 回帰分析において、説明変数以外の変数を**共変量** (ここでは$C$)と呼ぶ
+- 共変量$C$が$X$と$Y$の両方に影響を与える場合、$X$と$Y$の間に関係がなくても、$X$と$Y$の間に関係があるように見えることがある。
+
+```{r, engine = 'tikz'}
+#| echo: false
+#| fig-align: center
+#| out-width: 100%
+\begin{tikzpicture}
+\node[draw, circle] (X) at (0,0) {X};
+\node[draw, circle] (C) at (2,2) {C};
+\node[draw, circle] (Y) at (4,0) {Y};
+\draw[->] (X) -- (Y);
+\draw[->, dashed] (C) -- (X);
+\draw[->, dashed] (C) -- (Y);
+\end{tikzpicture}
+```
+
+
+# 第5章 差の差分析とパネルデータ分析
+
+## 準備
+
+:::{.columns}
+
+:::{.column width=50%}
+### データ
+
+- `rent-odakyu-enoshima96-04.csv`
+- `asai00-10.csv`
+- `panel-gravity-data.csv`
+- `Cambodia-gsp.csv`
+- `nlswork.csv`
+- `asai-data-construct.xlsx`
+
+:::
+
+:::{.column width=50%}
+
+### パッケージ
+
+- `tidyverse` : データ加工
+- `estimatr` : 差の差分析
+- `fixest` : 固定効果モデル
+- `plm` : パネルデータ分析
+
+:::
+
+:::
+
+## 前後比較と差の差の分析
+
+
+
+## 差の差分析
+
+- **差の差分析** (Difference-in-Differences: DiD) は、2つのグループにおいて、**処置前後の変化**を比較することで**処置効果**を推定する方法
+- **パネルデータ** (Panel Data, Logitudinal Data) は、同じ個体(unit)や地域における複数時点にわたって追跡調査したデータ
+
+処置を受けた群を**処置群**(treatment)といい、$Y_T$で表す。
+処置を受けていない群を**対照群**(control)といい、$Y_C$で表す。
+グループに属する個体を$i$、時点を$t$で表す。
+$Y_{T,i,t}$は処置群にいる$i$の$t$時点のデータを表す。
+
+## 差の差の分析
+
+処置群と対照群の結果の差を比較するため、
+
+$$
+\underbrace{\underbrace{( Y_{T,i,t} - Y_{T,i,t-1} )}_{処置群の差} - \underbrace{( Y_{C,i,t} - Y_{C,i,t-1} )}_{対照群の差}}_{差の差}
+$$
+
+を計算する。
+これが**差の差の分析**(Difference in Difference: **DiD**)の基礎概念である。
+ただ、これはほぼ不可能なので、代わりに次のように推定する。
+
+## 反実仮想
+
+理想的な因果推論の方法として、**反実仮想**(counterfactual)を考える。
+先のキャリアセンター企画の例で言うと、
+
+- 自分$i$がキャリアセンター企画に参加したら、参加しなかった自分はいなくなる。
+- しかし本当に知りたい処置効果は、参加した自分と参加しなかった自分の差である。
+- 処置群の$Y_{T,i,t}$に対して、対照群の$Y_{C,i,t}$は反実仮想である。
+
+## 反実仮想の推定
+
+- 反実仮想は観察不可能なので、反実仮想を推定する方法が必要
+- その方法が**平均処置効果**(ATE: Average Treatment Effect)の推定方法
+- 個々の処置効果は観察不可能だけれど、処置群と対照群の平均の差を比較することで、処置効果を推定できる。
+- ランダムに処置を振り分けられている場合、平均をとることで個々の要因を相殺することができる、と考える。
+
+## 5.1.2 都市開発の効果分析
+
+
+```{r}
+pacman::p_load(tidyverse, estimatr, tinytable, modelsummary, kableExtra)
+df <- read_csv("data/rent-odakyu-enoshima96-04.csv")
+df |> head()
+```
+
+- 都市開発の対象グループを処置群、非対象グループを対照群とする。
+
+## 回帰モデル
+
+差の差分析は、回帰モデルを使って推定することができる。
+
+$$
+\begin{aligned}
+Y_{i,t} = \alpha &+ \beta_1 Treat_i + \beta_2 After_t \\
+                 &+ \beta_3 (Treat_i \times After_t) + \beta_4 X_{it} + \varepsilon_{i,t}
+\end{aligned}
+$$
+
+- $Treat_i$ : 個体$i$が処置群なら1、そうでないなら0
+- $After_t$ : 時点$t$が処置後なら1、そうでないなら0
+- $Treat_i \times After_t$ : 処置群かつ処置後なら1、そうでないなら0
+
+## 回帰係数の解釈
+
+$$
+\begin{aligned}
+\frac{\partial Y_{i,t}}{\partial Treat_i} &= \beta_1 + \beta_3 After_t \\
+\frac{\partial Y_{i,t}}{\partial After_t} &= \beta_2 + \beta_3 Treat_t \\
+\frac{\partial^2 Y_{i,t}}{\partial Treat_i \partial After_t } &= \beta_3
+\end{aligned}
+$$
+
+## ダミー変数の作成
+
+DiDで用いる処置群ダミーと処置年度ダミーを作成する。
+前回と同じよう、`dplyr::mutate()`と`dplyr::if_else()`を使って作成する。
+```{r}
+df <- df |>
+  mutate(
+    # 賃料と距離の変数作成
+    rent_total = rent + service,
+    dist = walk + bus,
+    # ダミー変数の作成
+    treat = if_else(station == "Shonandai", 1, 0),
+    after = if_else(year == 2004, 1, 0),
+  )
+```
+
+## 回帰分析
+
+```{r}
+#| output-location: slide
+results <- list(
+  "model1" = lm(rent_total ~ floor + age + dist + treat*after, data = df)
+)
+msummary(
+  results,
+  output = "kableExtra",
+  gof_omit = 'DF|Deviance|AIC|BIC|F|Log.Lik.',
+  stars = TRUE) |>
+  kable_styling(font_size = 18)
+```
+
+
+# 前後比較と差の差の分析
+
+## DiDによる都市開発の効果
+
+```{r}
+df <- read_csv("data/rent-odakyu-enoshima96-04.csv")
+glimpse(df)
+```
+
+
+## 回帰分析でDiD
+
+電車の新路線開通が、賃貸価格に与える影響を調べるため、DiD分析を行う。
+
+$$
+Y_{it} = \alpha + \beta_1 Treat_i + \beta_2 After_t + \beta_3 Treat_i \times After_t + \beta_4 X_{it} + \varepsilon_{it}
+$$
+
+- $\beta_1$ :湘南台ダミー
+- $\beta_2$ :2004年ダミー
+- $\beta_3$ :湘南台ダミーと2004年ダミーの交差項で、<span class="marky">湘南台プレミアが1996年から2004年でどの程度変化したのかを示し、これが差の差分析の処置効果</span>を現している。
+
+## Rで分析
+
+```{r}
+pacman::p_load(tidyverse, estimatr, modelsummary, gt, gtExtras)
+df <- read_csv("data/rent-odakyu-enoshima96-04.csv")
+df <- df |>
+  mutate(
+    rent_total = rent + service,
+    dist = walk + bus,
+    treat = if_else(station == "Shonandai", 1, 0),
+    after = if_else(year == 2004, 1, 0)
+  )
+head(df,3)
+```
+
+## 湘南台駅の前後比較
+
+```{r}
+results1 <- estimatr::lm_robust(rent_total ~ floor + age + dist + treat:after, data = df, station == "Shonandai")
+summary(results1)
+```
+
+## 差の差の分析
+
+```{r}
+results2 <- estimatr::lm_robust(rent_total ~ floor + age + dist + treat*after, data = df)
+summary(results2)
+```
+
+## 結果の比較
+
+```{r}
+modelsummary::msummary(
+  list("前後比較" = results1, "差の差分析" = results2),
+  stars = TRUE,
+  gof_omit = 'DF|Deviance|AIC|BIC|F|Log.Lik.',
+  output = "gt"
+) |>
+  gt::fmt_number(columns = 2:3, decimals = 2)
+```
+
+## 結果の解釈
+
+- $treat \times after$の係数は`0.938`と統計的に有意に正の値であるため、湘南台駅の開業により賃料が上昇したことが示唆される。
+- 前後比較の`after`変数の係数は統計的に有意ではないため、何も分からない。
+- 処置群と対照群の差は`treat`で、回帰係数は正に有意となっており、湘南台駅付近の賃料は他の賃料よりも高いことが示されている。
+
