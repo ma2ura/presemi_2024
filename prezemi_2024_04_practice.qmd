@@ -1,0 +1,194 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第4回 離散選択モデル</br> 練習問題</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: katex
+    transition: slide
+    slide-number: true
+    touch: true
+    controls: true
+    df_print: paged
+    width: 1400
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+css: mystyle.css
+---
+
+# 第1問 自民党の決定要因
+
+## パッケージとデータの読み込み
+
+`pacman`パッケージを使って、必要なパッケージを読み込み，`readr::read_csv()`関数でデータを読み込む。
+
+```{r}
+pacman::p_load(tidyverse, modelsummary, kableExtra, ggthemes)
+# dataフォルダにあるldp.csvを読み込む
+df <- read_csv("data/political_party.csv")
+glimpse(df)
+```
+
+## 問(1)
+
+`LDP`を従属変数とした線形確率モデルを推定する。
+
+```{r}
+#| output-location: slide
+ols = lm(LDP ~ female + educ + marriage + income + age + value_family + social_class, data = df)
+ols |>
+  msummary(
+    output = "kableExtra",
+    stars = TRUE, fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+    ) |>
+  kable_styling(font_size = 18) |>
+  kableExtra::kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+## 問(2)
+
+`LDP`を従属変数としたロジットモデルを推定する。
+
+```{r}
+#| output-location: slide
+logit = glm(LDP ~ female + educ + marriage + income + age + value_family + social_class, data = df, family = binomial(link = "logit"))
+logit |>
+  msummary(
+    output = "kableExtra",
+    stars = TRUE, fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+    ) |>
+  kable_styling(font_size = 18) |>
+  kableExtra::kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+## 結果の解釈
+
+統計的に有意な変数は`age`と`value_family`と`social_class`である。
+
+- `age`は正で有意であるため、年齢が高いほど、
+- `value_family`は正で有意であるため、男性が仕事、女性は家庭という価値観を持つほど、
+- `social_class`は正で有意であるため、自分が社会で上位にいると感じるほど、
+
+自民党を支持する確率が高くなる、という結果が分かった。
+
+## 推定値の最小値と最大値
+
+```{r}
+df_pred <- tibble(
+  ols_pred = predict(ols),
+  logit_pred = predict(logit, type = "response")
+)
+df_pred |>
+  summarise(
+    ols_min = min(ols_pred),
+    ols_max = max(ols_pred),
+    logit_min = min(logit_pred),
+    logit_max = max(logit_pred)
+  ) |>
+  kable()
+```
+
+## 作図
+
+```{r}
+# ロジットモデル
+logit = glm(LDP ~ female + educ + marriage + income + age + value_family + social_class, data = df, family = binomial)
+# 回帰曲線
+df$pred <- predict(logit, type = "response")
+ggplot(df, aes(x = age, y = pred)) +
+  geom_line(color = "red", size = 1) +
+  geom_point(aes(y = LDP), color = "blue") +
+  theme_economist_white()
+```
+
+# 第2問 フリンジベネフィット
+
+## データの読み込み
+
+```{r}
+data(fringe, package = "wooldridge")
+glimpse(fringe)
+```
+
+## 問(1)
+
+福利厚生`hrbens`と年金`pension`がゼロの数を数える。
+
+```{r}
+fringe |>
+  summarise(
+    hrbens_zero = sum(hrbens == 0),
+    pension_zero = sum(pension == 0)
+  ) |>
+  kable()
+```
+
+## ヒストグラム
+
+```{r}
+#| code-fold: true
+library(patchwork)
+g1 <- ggplot(fringe) + aes(x = hrbens) + geom_histogram(bins = 30, colour = "gray10", fill = "Tomato1") + labs(title = "Histogram of hrbens")
+g2 <- ggplot(fringe) + aes(x = pension) + geom_histogram(bins = 30, colour = "gray10", fill = "dodgerblue1") + labs(title = "Histogram of pension")
+(g1 | g2) * theme_economist_white()
+```
+
+
+## 問(2)
+
+次のモデルをトービットモデルで推定する。
+
+$$
+\begin{aligned}
+hrbens = \beta_0 & + \beta_1 age + \beta_2 educ + \beta_3 married \\
+                  &+ \beta_4 white + \beta_5 male + \varepsilon
+\end{aligned}
+$$
+
+`censReg`パッケージの`censReg()`関数を使ってトービットモデルを推定
+```{r}
+#| output-location: slide
+model = hrbens ~ age + educ + married + white + male
+ols <- lm(model, data = fringe)
+tobit <- censReg::censReg(model, left = 0, data = fringe)
+res_hr <- list("OLS_hrbens" = ols, "Tobit_hrbens" = tobit)
+summary(tobit)
+```
+
+
+
+## 問(3) 福利厚生と年金モデルの結果
+
+```{r}
+#| output-location: slide
+model <- pension ~ age + educ + married + white + male
+ols <- lm(model, data = fringe)
+tobit <- censReg::censReg(model, left = 0, data = fringe)
+res_pen <- list("OLS_pen" = ols, "Tobit_pen" = tobit)
+res <- c(res_hr, res_pen)
+res |>
+  msummary(
+    output = "kableExtra",
+    stars = TRUE,
+    fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+    ) |>
+  kable_styling(full_width = FALSE, font_size = 20) |>
+  row_spec(c(3, 5, 7, 11), background = "lightblue")# 塗りたい行
+
+```
+
+## トービットの結果の解釈
+
+福利厚生`hrbens`と年金`pension`を従属変数としたトービットモデルの結果を解釈する。
+
+- `age`は有意に正であるため，年齢が高いほど福利厚生と年金が高くなる。
+- `educ`は有意に正であるため，教育が高いほど福利厚生と年金が高くなる。
+- `married`は`hrbens`に対してのみ有意に正であるため，既婚者の方が福利厚生が高くなる。
+- `male`は有意に負であるため，男性の方が福利厚生と年金が低くなる。

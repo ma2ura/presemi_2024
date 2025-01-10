@@ -1,0 +1,266 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第2回の復習</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: katex
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    footer: "Ritsumeikan University"
+    transition: slide
+    background-transition: fade
+    highlight-style: github
+    code-line-numbers: false
+    include-in-header: 
+      text: |
+        <style>
+          .v-center-container {
+          display: flex;
+          justify-content: center;
+          }
+        </style>
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+filters:
+  - webr
+webr:
+  packages: ['readr', 'dplyr', 'ggplot2'] # Install R packages on document open
+---
+
+# 基本操作
+
+## Rの基本操作
+
+右を左のオブジェクト`x`に代入するには、
+
+:::{.v-center-container}
+<span style = "font-family: Myryca MM; font-size:2em; color:#e3439e"><-</span>
+:::
+
+を使います。
+
+```{r}
+x <- 3
+4 -> y
+x
+y
+```
+
+# パッケージ
+
+
+## パッケージの導入
+
+Rでは元々備わっている関数以外の機能を追加するためにパッケージを利用します。
+パッケージを利用するには、まずインストールする必要があります。
+
+```{r install_packages}
+#| eval: false
+install.packages("pacman")
+```
+
+とすることで、`pacman`パッケージをインストールできます。
+`pacman`のところを他のパッケージ名に変えることで、他のパッケージもインストールできます。
+
+
+## パッケージの読み込み
+
+パッケージをインストールしただけでは、そのパッケージの関数を利用することができません。
+パッケージを利用するためには、`library()`関数を使って読み込む必要があります。
+
+```{r load_packages}
+#| eval: false
+library(pacman)
+```
+
+これで、`pacman`パッケージの関数を利用することができます。
+度々いろいろなパッケージをインストールして、それを毎回読み込むのは面倒です。
+
+## パッケージの一括読み込み
+
+そこで、`pacman`パッケージの`p_load()`関数を使って複数のパッケージを一括で読み込むことができます。
+
+```{r load_once}
+#| eval: false
+p_load(tidyverse, pysch, tableone)
+```
+
+これで、`tidyverse`, `pysch`, `tableone`パッケージの関数を利用することができます。
+もし、インストールされていないパッケージがあれば、自動でインストールしてくれます。
+
+## どのパッケージの関数か明示
+
+`library()`関数を使ってパッケージを読み込まなくても、`::`を使ってパッケージ名を明示することで、そのパッケージの関数を利用することができます。
+
+::: {.v-center-container}
+<span style = "font-size:2em; color:#e3439e">パッケージ名::関数()</span>
+:::
+
+```{r}
+pacman::p_load(tidyverse, psych, tableone)
+```
+`library(pacman)`を実行していなくても`pacman::p_load()`で`p_load()`関数を利用できます。
+`dplyr`パッケージの`mutate()`関数を使う場合は、`dplyr::mutate()`とします。
+
+# 作業ディレクトリ
+
+## 作業ディレクトリ
+
+- Rでは、**作業ディレクトリ**(Working Directory)を設定することで、そのディレクトリ内のファイルを参照しやすくなります。
+作業ディレクトリとは、Rがファイルを読み込む際の基準となる**フォルダ**のことです。
+
+- 作業ディレクトリの設定は`setwd()`関数、確認は`getwd()`関数を使います。
+
+- ただ、Rstudioを使う場合は、Rstudioのプロジェクト機能を使う方が便利です。
+- [R4A](https://ma2ura.github.io/R4A/chap02_prepare.html)のページを参考にしてください。
+
+## Windowsの場合
+
+- Windowsの場合、一番上のディレクトリは`C:\`です。
+- その`C:\`の中に`R`というフォルダを作成し、その中に`presemi2024`というフォルダを作成します。
+- その中に`data`フォルダを作成します。
+- フルパスで書くと`C:/R/presemi2024/data/`
+- そこに保存した`rent-shonandai96-04.csv`を読み込みます。
+
+```{r}
+#| eval: false
+df <- read_csv("C:/R/presemi2024/data/rent-shonandai96-04.csv")
+```
+
+## ネットから読み込む
+
+ネット上にデータがある場合は、URLを指定して読み込むこともできます。
+たとえば、松浦のサイトにあるデータを読み込む場合は、以下のようにします。
+
+```{r}
+df <- read_csv("https://so-ichi.com/rent-shonandai96-04.csv")
+```
+
+# データの確認
+
+## データの先頭
+
+データを読み込んだら、まずはデータを確認するために
+
+:::{.v-center-container}
+<span style = "font-family: Myryca MM; font-size:1.5em; color:#e3439e; text-align: center">head()</span>
+:::
+関数を使います。
+
+
+```{r}
+head(df)
+```
+
+## データの概要
+
+データの概要を知るためには、
+
+:::{.v-center-container}
+<span style = "font-family: Myryca MM; font-size:1.5em; color:#e3439e; text-align: center">str()</span>
+:::
+
+- `num`は数値データ
+- `chr`は文字データ
+
+# 第2章 練習問題
+
+テキストの練習用データ`rent-jonan-kawasaki.csv`を使って以下の問題を解きます。
+追加のパッケージも導入しておきます。データも読み込みます。
+```{r}
+pacman::p_load(knitr, kableExtra)
+df <- read_csv("data/rent-jonan-kawasaki.csv")
+```
+
+## 路線別オートロック付物件の比率
+
+```{r}
+df$auto_lock |>   # オートロックの有無変数を
+  table() |>      # 表にして
+  prop.table() |> # 比率に変換して
+  round(2) |>     # 小数点第2位まで表示
+  kable()         # 表を表示
+```
+
+オートロック付きが36％、なしが64％である。
+
+## 鉄道沿線別の平均賃貸料、平均築年数、平均専有面積
+
+```{r}
+df |> 
+  group_by(line) |> # 沿線ごとに
+  summarise(        # 平均を求める
+    mean_rent = mean(rent), # 平均賃料
+    mean_age  = mean(age),  # 平均築年数
+    mean_area = mean(floor) # 平均専有面積
+  )
+```
+
+## 賃貸料を3万円刻みの度数分布表を作成
+
+```{r}
+df |> 
+  mutate( # 賃貸料を3万円刻みの区分に
+    rent = cut(rent, breaks = seq(3, 21, 3))
+  ) |> 
+  count(rent) # 度数分布表を作成
+```
+
+## 相関係数を求める
+
+東急沿線限定で、賃貸料、1平方メートル当り賃貸料と駅からの時間、ターミナルからの所要時間の相関係数
+
+
+```{r}
+#| output-location: slide
+df |> 
+  filter(line == "tokyu") |> # 東急沿線限定
+  mutate( # 新しい変数を作成
+    rent_total = rent + service, # 総賃料
+    dist = bus + walk, # 総距離
+    rent_per_floor = rent_total / floor # 面積当たり賃料
+  ) |>
+  select(rent_total, rent_per_floor, dist, terminal) |>
+  cor() |> # 相関係数を求める
+  round(2) |> # 小数点以下2位まで表示
+  kable() |> kable_styling(font_size = 28)
+```
+
+## 第2問
+
+
+```{r}
+df_shaken <- read_csv("data/todai-shaken.csv")
+df_shaken <- df_shaken |>
+  mutate(
+    univ = ifelse(ZQ23A == 5 | ZQ23A == 6, "univ", "others"),
+    LDP = ifelse(ZQ42 == 1, "LDP", "others")
+  )
+table(df_shaken$univ, df_shaken$LDP) |> prop.table(margin = 2) |> round(4)
+```
+
+## 第2問 (2)
+
+「普段収入になる仕事をしている人(`ZQ03 == 1`)かつ「既婚」(`ZQ50 == 2`)の男性(`sex == 1`)に限定したデータを抽出し、
+大卒・院卒とそれ以外で家事をする人の比率を比べる。
+家事については、`ZQ54A`〜`ZA54D`に注目して、
+
+```{r}
+df_job_male <- df_shaken |>
+  filter(ZQ03 == 1 & ZQ50 == 2 & sex == 1) |>
+  mutate(
+    housework = case_when(
+      ZQ54A == 1 | ZQ54B == 1 | ZQ54C == 1 | ZQ54D == 1 ~ "housework",
+      TRUE ~ "others"
+    )
+  )
+df_job_male |> 
+  select(univ, housework) |> 
+  table() |> prop.table(margin = 1) |> round(4)
+```

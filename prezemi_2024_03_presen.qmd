@@ -1,0 +1,698 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第3回 回帰分析</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    width: 1400
+    webgl: true
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+filters:
+  - webr
+webr:
+  packages: ['readr', 'dplyr', 'ggplot2'] # Install R packages on document open
+css: mystyle.css
+---
+
+
+
+# はじめに
+
+##
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+:::{.columns  .v-center-container}
+:::{.column width=50%}
+<br >
+<br >
+<br >
+<br >
+_「回帰分析をしないやつの話は一切聞かない」_
+:::
+:::{.column width=50%}
+![孫正義](img/son.png)
+:::
+:::
+
+## 今日の目標
+
+
+本日の**到達目標**は、
+
+- 新しい変数を作ることができる。
+- 回帰モデルを作ることができる。
+- 回帰モデルを推定することができる。
+- 回帰分析の結果を解釈できる。
+
+## 今日使う関数
+
+パッケージとデータの読み込み・書き込み
+
+- `tidyverse` : いつものやつ
+- `modelsummary` : 分析結果をいい感じの表にする
+- `openxlsx` : Excelファイルを読み込む
+- `lm()` : 回帰モデルを推定する
+- `dplyr::arrange()` : データを並び替える
+- `modelsummary::msummary()` : 回帰分析の結果を表にする
+
+
+## パッケージの読み込み
+
+`pacman`で必要なパッケージを一括ロード
+
+```{r}
+# install.packages("pacman") # first time only
+pacman::p_load(tidyverse, modelsummary, openxlsx)
+```
+
+- `tidyverse`は便利なパッケージ群で必須です。
+- `modelsummary`は回帰分析の結果をいい感じの表にしてくれます。
+- `openxlsx`はExcelファイルを読み込むためのパッケージです。
+
+## データを読み込む
+
+`readr`パッケージの`read_csv`関数を使ってデータを読み込みます。
+
+```{r}
+dataf <- read_csv("data/rent-shonandai96-04.csv")
+# データを確認
+head(dataf) # 先頭6行を表示
+```
+
+## 新しい変数を作成
+
+`dplyr`パッケージの`mutate()`関数で新変数`rent_total`と`dist`を作成します。
+
+```{r}
+dataf <- dataf |>
+  mutate( # 新しい変数を2つ作成
+    rent_total = rent + service, # 家賃と管理費の合計
+    dist = bus + walk # バスと徒歩の合計
+    )
+```
+
+- `dataf <- dataf`は`dataf`を更新することを意味
+- `mutate`は`新変数名 = 式`という形式で新しい変数を作成
+
+
+# 回帰分析
+
+## 回帰分析とは
+
+- 因果関係を調べるための統計手法で，原因となる変数を**説明変数**，結果となる変数を**目的変数**といい，その関係を調べる手法です。
+- 最もシンプルな回帰分析は，**単回帰分析**で，説明変数が1つの場合です。
+
+$$
+Y_i = \alpha + \beta X_i + \varepsilon_i
+$$
+
+- ここでは，$Y_i$が目的変数，$X_i$が説明変数、$\varepsilon_i$が誤差項です。
+- $\alpha$が切片，$\beta$が傾きを表す、データから推定されるパラメータです。
+
+## 回帰分析　図解
+
+![最小二乗法](img/regression.png)
+
+## 回帰分析の例
+
+- いくつかの企業の売上高と広告宣伝費のデータが手元にあるとします。
+- また、売上高は広告宣伝費によって決まる、というモデルを考えます。
+- このとき、広告宣伝費を説明変数、売上高を目的変数とした回帰モデルを作ります。
+
+$$
+\text{売上高}_i = \alpha + \beta \times \text{広告宣伝費}_i + \varepsilon
+$$
+
+ここで$i$は企業の番号を表し、$i = 1, \dots , N$とします。
+
+---
+
+売上高が完全に広告宣伝費のみによって決まるなら、
+
+$$
+\text{売上高}_i = \alpha + \beta \times \text{広告宣伝費}_i
+$$
+
+- となりますが、実際には他の要因も影響しているため、回帰モデルには誤差項$\varepsilon$が入ります。
+- この$N$個のデータの組$\{\text{売上高}_i, \text{広告宣伝費}_i\}$から$\alpha$と$\beta$を推定します。
+- 推定された$\hat{\alpha}$と$\hat{\beta}$を用いれば、新しい広告宣伝費に対する売上高を予測することができます。
+
+
+
+## 最小二乗法
+
+- 手元にあるサンプルサイズ$N$のデータ$\{Y_i , X_i\}, i = 1, \dots ,N$を使って，$\alpha$と$\beta$を推定する方法として**最小二乗法**があります。
+- 最小二乗法は，誤差項の二乗和を最小にするような$\alpha$と$\beta$を求める方法です。
+$$
+\min _{\alpha , \beta} \sum_{i=1}^{n} \varepsilon_{i}^{2}
+$$
+
+くわしくは「*計量経済学*」の教科書を参照してください。
+
+## `lm()`関数
+
+_R_で回帰モデルを推定するための関数が`lm()`です。
+`lm()`関数は**主に**以下の引数をとります。
+
+- `formula` : 回帰式 `y ~ x`
+- `data` : データフレーム
+- `method` : 推定方法
+
+## その他の引数 (参考)
+
+`lm()`関数は他にもたくさんの引数をとります。
+
+- `subset` : データの部分集合
+- `weights` : 重み
+- `na.action` : 欠損値の扱い
+- `model = TRUE` : モデルを返すかどうか
+- `qr = TRUE` : QR分解を使うかどうか
+
+
+## `lm()`の練習
+
+さきほど読み込んだデータを使って，家賃総額`rent_total`を広さ`floor`で回帰してみます。
+
+```{r}
+ols_model <- "rent_total ~ floor" # 回帰式
+model_linear1 <- lm(ols_model, data = dataf) # OLS推定
+model_linear1 # 結果
+```
+
+## `lm()`の詳細な結果
+
+より詳細な結果を見るためには，`summary()`関数を使います。
+
+```{r}
+summary(model_linear1)
+```
+
+## `modelsummary`パッケージ
+
+`modelsummary`パッケージを使うと，回帰分析の結果をいい感じの表にしてくれます。
+
+```{r}
+#| output-location: slide
+model_linear1 |>
+  msummary(
+    stars = TRUE, # p値のマークをつける
+    fmt = '%.4f', # 小数点以下4桁まで表示
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F|R2.Adj' # 統計量を省略
+  )
+
+```
+
+## 回帰分析の結果の解釈
+
+最小二乗法による推定結果から、
+
+$$
+\text{家賃総額} = 3.5290 + 0.1132 \times \text{広さ}
+$$
+
+という関係にあることが分かりました。
+しかし、家賃が部屋の広さだけで決まるわけではないので、他の要因も考慮するために、説明変数を追加します。
+複数の説明変数を使った回帰分析を**重回帰分析**といいます。
+
+## 重回帰分析
+
+先ほどのモデルに、新たな説明変数として築年数`age`を追加して重回帰分析を行います。
+
+$$
+\text{家賃総額} = \alpha + \beta_1 \times \text{広さ} + \beta_2 \times \text{築年数}
+$$
+
+という線形回帰モデルを推定します。
+
+
+```{r}
+#| output-location: slide
+model_linear2 <- lm(rent_total ~ floor + age, data = dataf)
+results <- list(model_linear1, model_linear2) # 結果をリストにまとめる
+msummary(results,
+  stars　=　TRUE, # p値のマークをつける
+  fmt = '%.4f',  # 小数点以下4桁まで表示
+  gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F|R2.Adj')
+```
+
+## 重回帰分析の結果の解釈
+
+- 重回帰分析の結果から、
+$$
+\text{家賃総額} = 4.0750 + 0.1120 \text{広さ} - 0.0834 \text{築年数}
+$$
+という関係が得られました。
+
+- ここから、**築年数が同じとしたら**広さが1増えると家賃が1120円増加し、
+- **広さが同じとしたら**築年数が1増えると、家賃総額が834円下がる、ということが分かります。
+
+
+## 回帰分析の結果の見方のポイント
+
+1. **回帰係数の符号の向き**：予想どおりか逆か
+2. **回帰係数の$p$値**：10%以下なら有意
+3. **決定係数$R^2$**：高い方が良いけど気にしない
+
+# ダミー変数
+
+## カテゴリー変数
+
+- ダミー変数は**質的変数**を扱うための変数で，ある観測値が特定のカテゴリに属するかどうかを示す変数です。
+- たとえば，ある$i$さんが男性というカテゴリーに入っているときは$1$，女性というカテゴリーに入っているときは$0$というように表現します。
+- ダミー変数を使うことで，カテゴリー間の差を定量的に分析することができます。
+
+先の重回帰分析のモデルに，オートロックがついているかどうかを示すダミー変数`auto_lock`を追加して重回帰分析を行います。
+
+## 変数の確認
+
+`auto_lock`の中身を確認します。
+
+```{r}
+dataf$auto_lock |> head(10)
+```
+
+`"No"`と`"Yes"`の2つのカテゴリーが文字列として入っていることが分かります。
+このままだと回帰分析に使えないので（実際は使えないこともない），`mutate()`関数を使ってダミー変数を作成します。
+
+## ダミー変数の作成
+
+`auto_lock`が`"Yes"`のときは`1`，`"No"`のときは`0`というダミー変数`d_autolock`を作成します。
+`dplyr::mutate()`関数で新しい変数を作成します。
+
+```{r}
+dataf <- dataf |>
+  mutate( # 新しい変数を作成
+    # dplyr::if_else()関数で条件分岐
+    d_autolock = dplyr::if_else(auto_lock == "Yes", 1, 0),
+    )
+dataf$d_autolock |> head(10)
+```
+
+## ダミー変数を使った回帰分析
+
+ダミー変数`d_autolock`を使った重回帰分析
+
+```{css, echo=FALSE}
+.table, th, td {
+  font-size: 0.8em;
+}
+.table tbody td, .table thead tr {
+    white-space: nowrap;
+}
+```
+
+```{r}
+#| output-location: slide
+model_multi1 <- "rent_total ~ floor + d_autolock"
+model_multi2 <- "rent_total ~ floor + age + dist + d_autolock"
+model_linear3 <- lm(model_multi1, dataf)
+model_linear4 <- lm(model_multi2, dataf)
+results <- list(model_linear1, model_linear2, model_linear3, model_linear4) # 結果をリストにまとめる
+msummary(results,
+  stars = TRUE, # p値のマークをつける
+  fmt = '%.4f', # 小数点以下4桁まで表示
+  gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F|R2')
+```
+
+$$
+\begin{aligned}
+rent \_ total_i &= \alpha + \beta_1 floor_i + \beta_2 d \_ autolock_i + \varepsilon_i \\
+rent \_ total_i &= \alpha + \beta_1 floor_i + \beta_2 age_i + \beta_3 d \_ autolock_i + \varepsilon_i
+\end{aligned}
+$$
+
+## 作図
+
+`ggplot2`で`auto_lock`ごとに家賃総額をプロット
+
+```{r}
+#| code-fold: true
+g <- ggplot(dataf) +
+  aes(x = floor, y = rent_total, color = d_autolock) + geom_point()
+# auto_lockごとに切片が異なる回帰式を追加
+g <- g +
+  geom_abline(intercept = 3.5227, slope = 0.1027, linetype = "dashed", color = "red") +
+  geom_abline(intercept = 3.5227 + 1.7851, slope = 0.1027, linetype = "dashed", color = "blue") +
+  theme_bw()
+print(g)
+```
+
+## 複数のダミー変数
+
+ダミー変数は複数使うことができます。たとえば次のような分析を行いたいとします。
+
+1. 賃金*水準*は学歴によって差があり、高学歴ほど賃金*水準*が高い
+2. 男女間でも賃金水準に差がある
+3. 賃金は年齢とともに上昇するが、昇級の程度は男性あるいは高学歴の方が高い
+4. 賃金水準は、最初は上昇するが後に減少する
+
+1と2を考慮するために，学歴と性別のダミー変数を使います。
+
+## 教育データを読み込む
+
+```{r}
+# 賃金データ読み込み
+dataf <- readr::read_csv("data/wage-census2022.csv")
+dplyr::glimpse(dataf)
+```
+
+## 学歴ダミー変数を作成
+
+変数`education`は1〜4の値をもち、1が中卒、2が高卒、3が専門・短大、4が大卒以上を表します。
+変数`male`は男性なら1、女性なら0を表します。
+```{r}
+dataf$education |> head(10)
+```
+
+
+## カテゴリー変数をダミー変数に変換
+
+`education`をダミー変数に変換するため，
+
+- `education`が`1`のとき`1`を，`1`以外のときは`0`を示す`edu1`，
+- `education`が`2`のとき`1`を，`2`以外のときは`0`を示す`edu2`と，
+- `education`が`3`のとき`1`を，`3`以外のときは`0`を示す`edu3`と，
+- `education`が`4`のとき`1`を，`4`以外のときは`0`を示す`edu4`
+
+という4つのダミー変数を作成します。
+
+## ダミー変数を作成
+
+ダミー変数を作る方法はいろいろありますが，ここでは条件分岐を使って作成します。
+`dplyr::if_else()`関数が便利です。
+
+```{r}
+dataf <- dataf |>
+  mutate(
+    edu1 = if_else(education == 1, 1, 0),
+    edu2 = if_else(education == 2, 1, 0),
+    edu3 = if_else(education == 3, 1, 0),
+    edu4 = if_else(education == 4, 1, 0)
+    )
+```
+
+## ダミー変数を使った回帰分析
+
+年齢が賃金に与える影響を調べてみます。
+```{r}
+model_99 <- lm(wage ~ age + male + edu1 + edu2 + edu3 + edu4, data = dataf)
+summary(model_99)
+```
+`edu4`が`NA`になってる・・・？
+
+## ダミー変数を全部入れちゃダメ問題
+
+- ダミー変数を全部入れると**多重共線性**が生じます。
+- たとえば，男性なら1女性なら0を示すダミー変数`male`と，女性なら1男性なら0を示すダミー変数`female`を使うと，`male`と`female`は完全に相関してしまいます。
+
+```{r}
+dataf |> select(edu1, edu2, edu3, edu4) |> head(4)
+```
+
+## 適切な変数を選択した回帰分析
+
+```{r}
+model_linear <-
+  lm(wage ~ age + male + edu2 + edu3 + edu4, data = dataf)
+summary(model_linear)
+```
+
+## 図にしてみる。
+
+女性の賃金モデル
+
+```{r}
+#| output-location: slide
+g <- ggplot(dataf) +
+  aes(x = age, y = wage, color = factor(education)) + geom_point()
+# auto_lockごとに切片が異なる回帰式を追加
+g <- g +
+  geom_abline(intercept = 116.5651, slope = 2.6341, linetype = "dashed", color = "red") +
+  geom_abline(intercept = 116.5651 + 13.7600, slope = 2.6341, linetype = "dashed", color = "blue") +
+  geom_abline(intercept = 116.5651 + 47.1908, slope = 2.6341, linetype = "dashed", color = "green") +
+  geom_abline(intercept = 116.5651 + 115.9678, slope = 2.6341, linetype = "dashed", color = "purple") +
+  theme_bw()
+print(g)
+```
+
+# 交差項を使う
+
+## 教育水準ごとに平均賃金を計算
+
+```{r}
+dataf |>
+  dplyr::group_by(education) %>% # 教育水準ごとに
+  summarize(
+    mean(wage) # 平均賃金
+    )
+```
+
+
+## 交差項を入れた分析方法
+
+- `変数A : 変数B` で，相互作用のみの回帰分析となり，
+- `変数A * 変数B` で，変数単体と相互作用をいれた回帰分析となります。
+
+```{r}
+#| output-location: slide
+model_linear1 <- lm(wage ~ age + male + age:male, dataf)
+model_linear2 <- lm(wage ~ age * male, dataf)
+list(model_linear1, model_linear2) |>
+  msummary(
+    stars = TRUE, # p値のマークをつける
+    fmt = '%.4f', # 小数点以下4桁まで表示
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F|R2.Adj' # 統計量を省略
+  )
+```
+
+## 交差項のグラフ
+
+`male`ダミーと`age`との交差項を入れた回帰分析では，切片の差と昇級の差が推定されます。
+
+```{r}
+#| code-fold: true
+g <- ggplot(dataf) + aes(x = age, y = wage, color = factor(male)) + geom_point()
+g <- g + xlim(0, 80) +
+  geom_abline(intercept = 190.4211, slope = 1.8585, linetype = "dashed", color = "red") +
+  geom_abline(intercept = 190.4211 - 2.3055, slope = 1.8585 + 2.0300, linetype = "dashed", color = "blue")
+print(g)
+```
+
+# 二乗項を使う
+
+## 二乗項？
+
+- 年齢の影響が線形ではない場合，年齢の二乗項を追加することで，**非線形な関係**を捉えることができます。
+- 二乗項があると，次のような関数系になります。
+$$
+y = \alpha  + \beta _1 x + \beta _2 x^2
+$$
+グラフにすると次のようになります。
+
+---
+
+```{r}
+#| code-fold: true
+pacman::p_load(tidyverse, rgl)
+# x > 0 の範囲を定義
+x <- seq(0.1, 10, length.out = 100)  # 0より大きいxの範囲
+a <- seq(-5, 5, length.out = 100)
+# 3Dグリッドを作成
+grid <- expand.grid(x = x, a = a)
+# y = a + x + x^2 を計算
+y <- grid$a + grid$x + grid$x^2
+# 3Dプロット
+plot3d(grid$x, grid$a, y,
+  col = "blue", type = "s", size = 1,
+  xlab = "x", ylab = "a", zlab = "y")
+```
+
+## 二乗項の解釈
+
+二乗項があると二次関数の形になるので，極値を求めることができます。
+1階の条件で極値を求めると，次のようになります。
+
+$$
+\begin{align}
+\frac{dY}{dX} = \beta_1 + 2\beta_2 X &= 0 \\
+            X &= -\frac{\beta_1}{2\beta_2}
+\end{align}
+$$
+
+つまり$X$は$-\beta_1 / 2\beta_2$のとき極値をとり、その前後で符号が変わります。
+
+## 年齢の二乗項
+
+```{r}
+#| output-location: slide
+dataf <- dataf |> mutate(age2 = age^2)
+results <- list(
+  model_linear1 <- lm(wage ~ age + male, dataf),
+  model_linear2 <- lm(wage ~ age + male + age^2, dataf),
+  model_linear3 <- lm(wage ~ age + male + age2, dataf),
+  model_linear4 <- lm(wage ~ age + male + I(age^2), dataf),
+  model_linear5 <- lm(wage ~ age + male + tenure , dataf),
+  model_linear6 <- lm(wage ~ male + tenure, dataf)
+)
+results |> msummary(
+  stars = TRUE, # p値のマークをつける
+  fmt = '%.4f', # 小数点以下4桁まで表示
+  gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F|R2.Adj' # 統計量を省略
+)
+```
+`I()`を使うと`age^2`をそのまま使うことができます。
+
+
+## 多重共線性
+
+独立変数間に強い相関があると，**多重共線性**が生じます。
+多重共線性が生じると，推定された係数の信頼性が低下し，推定値が不安定になります。
+
+```{r}
+cor(dataf$age, dataf$tenure, use="pairwise.complete.obs")
+```
+
+年齢`age`と在職年数`tenure`の相関係数は$0.9357$と非常に高いため、両方をモデルに入れると結果が不安定になります。
+
+
+## まとめ
+
+
+1. ダミー変数を活用して、グループ間の差を分析しよう。
+2. 交差項を使って、グループ間の差や関係性を分析しよう。
+3. 二乗項を使って、非線形な関係性を分析しよう。
+
+
+## 二乗項の図
+
+
+```{r}
+#| code-fold: true
+# 必要なライブラリを読み込みます
+library(plotly)
+
+# サンプルデータを生成します
+set.seed(123)  # 再現性のためのシード設定
+n <- 1000  # データ数
+X <- runif(n, 20, 60)  # 20歳から60歳までのランダムな年齢データ
+
+# 極値がX = 40で現れるように係数を設定します
+b2 <- -0.1  # 二次項の係数
+b1 <- -2 * b2 * 40  # 一次項の係数（極値がX=40になるように計算）
+a <- 300  # 切片を大きく設定して給与が正になるように調整
+
+# 給与データを生成します
+Y <- a + b1 * X + b2 * X^2 + rnorm(n, mean = 0, sd = 5)  # 誤差項を含む
+
+# 回帰モデルを作成します
+model <- lm(Y ~ X + I(X^2))
+
+# モデルの係数を取得します
+# coef(model)
+
+# 回帰平面を描写するためのグリッドを作成します
+x_seq <- seq(min(X), max(X), length.out = 100)
+grid <- data.frame(X = x_seq)
+grid$X2 <- grid$X^2
+grid$Y <- predict(model, newdata = grid)
+
+# データフレームを作成します
+data <- data.frame(X = X, Y = Y)
+
+# プロットを作成します
+fig <- plot_ly()
+
+# データポイントを追加します
+fig <- fig %>% add_markers(data = data, x = ~X, y = ~Y,
+                           marker = list(size = 5), name = 'データ')
+
+# 回帰曲線を追加します
+fig <- fig %>% add_lines(data = grid, x = ~X, y = ~Y, name = '回帰曲線')
+
+# レイアウトを設定します
+fig <- fig %>% layout(xaxis = list(title = '年齢 (X)'),
+                      yaxis = list(title = '給与 (Y)'),
+                      title = 'Y = a + b1*X + b2*X^2 の回帰曲線（極値が分かりやすいように調整）')
+
+# プロットを表示します
+fig
+```
+
+## 3Dプロット
+
+
+```{r}
+#| code-fold: true
+# 必要なライブラリを読み込みます
+library(plotly)
+
+# サンプルデータを生成します
+set.seed(123)  # 再現性のためのシード設定
+n <- 100  # データ数
+X <- runif(n, 20, 60)  # 20歳から60歳までのランダムな年齢データ
+
+# 極値がX = 40で現れるように係数を設定します
+b2 <- -0.1  # 二次項の係数
+X_extremum <- 40  # 極値が現れる年齢
+b1 <- -2 * b2 * X_extremum  # 一次項の係数を計算
+a <- 300  # 切片を調整して給与が正になるように
+
+# 給与データを生成します
+Y <- a + b1 * X + b2 * X^2 + rnorm(n, mean = 0, sd = 5)  # 誤差項を含む
+X2 <- X^2  # Xの二乗項
+
+# 回帰モデルを作成します
+model <- lm(Y ~ X + I(X^2))
+
+# モデルの係数を取得します
+coefficients <- coef(model)
+a_hat <- coefficients[1]
+b1_hat <- coefficients[2]
+b2_hat <- coefficients[3]
+
+# 回帰平面を描写するためのグリッドを作成します
+x_seq <- seq(min(X), max(X), length.out = 50)
+grid <- expand.grid(X = x_seq)
+grid$X2 <- grid$X^2
+grid$Y <- predict(model, newdata = grid)
+
+# データフレームを作成します
+data <- data.frame(X = X, X2 = X2, Y = Y)
+
+# プロットを作成します
+fig <- plot_ly()
+
+# データポイントを追加します
+fig <- fig %>% add_markers(data = data, x = ~X, y = ~X2, z = ~Y,
+                           marker = list(size = 3), name = 'データ')
+
+# 回帰平面を追加します
+# x_seqを使ってメッシュグリッドを作成します
+X_mesh <- matrix(rep(x_seq, each = length(x_seq)), nrow = length(x_seq))
+X2_mesh <- X_mesh^2
+Y_mesh <- a_hat + b1_hat * X_mesh + b2_hat * X2_mesh
+
+fig <- fig %>% add_surface(x = x_seq, y = x_seq^2, z = Y_mesh,
+                           opacity = 0.6, name = '回帰平面')
+
+# レイアウトを設定します
+fig <- fig %>% layout(scene = list(xaxis = list(title = '年齢 (X)'),
+                                   yaxis = list(title = '年齢の二乗 (X²)'),
+                                   zaxis = list(title = '給与 (Y)')),
+                      title = 'Y = a + b₁X + b₂X² の回帰平面（極値が分かりやすいように調整）')
+
+# プロットを表示します
+fig
+```

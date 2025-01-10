@@ -1,0 +1,390 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第2回 Rによる統計表の作成</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: katex
+    transition: convex
+    slide-number: true
+    df_print: paged
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+filters:
+  - webr
+webr:
+  packages: ['readr', 'dplyr', 'ggplot2'] # Install R packages on document open
+---
+
+## 今日の目標
+
+
+第2回講義の**到達目標**は、
+
+- データの読み込み
+- データの中身を確認
+- 特定の変数にアクセス
+- `dplyr`でデータ加工
+
+## 今日使う関数
+
+パッケージとデータの読み込み・書き込み
+
+- `pacman::p_load()` : パッケージを一括読み込み
+- `readr::read_csv()` : csvファイルを読み込む
+- `readr::write_csv()` : データフレームをcsvファイルとして保存
+- `read.csv()` : csvファイルを読み込む
+- `write.csv()` : オブジェクトをcsvファイルとして保存
+
+
+---
+
+### データ操作
+
+- `dplyr::mutate()` : 新しい変数を作る
+- `dplyr::filter()` : 条件を満たす行だけ抽出
+- `dplyr::group_by()` : グループ分けを行う
+- `dplyr::summarise()` : 統計量を計算する
+- `case_when()` : カテゴリーを分ける
+- `cut()` : 連続変数をカテゴリー化する
+
+---
+
+### 統計量を計算
+
+- `sum()` : 合計を返す
+- `mean()` : 平均を返す
+- `sd()` : 標準偏差を返す
+- `summary()` : 記述統計を出力する
+- `psych::describe()`: 詳細な記述統計を出力
+
+---
+
+図表を作る
+
+- `table()`と`prop.table()` : 度数と割合の表
+- `barplot()` : 棒グラフを作成する
+- `ggplot2::ggplot()` : キレイなグラフを作成
+
+
+# 準備
+
+## パッケージの読み込み
+
+一度に複数のパッケージを読み込むには，`pacman`パッケージを使うと便利なので，ここでは`pacman`パッケージを導入して読み込みます。
+
+```{r}
+# install.packages("pacman") # first time only
+pacman::p_load(tidyverse,psych,tableone)
+```
+
+- `tidyverse`は便利なパッケージ群で必須です。
+- `psych`は心理学でよく使う機能を提供
+- `tableone`は作表に便利なパッケージ
+
+
+## データの場所
+
+- パソコンの分かりやすい場所に`presemi2024`というフォルダを作成する。
+- その中にデータを保存する`data`フォルダを作成する。
+- 著者の![サポートサイト](https://sites.google.com/site/matsuuratoshiyuki/japanese-top/text-book/r-text-web-support?authuser=0)からデータが入ったzipファイルをダウンロードして解凍する。
+- 中に入っているファイルを,先ほど作成した`data`フォルダに入れる。
+
+## データを読み込む
+
+`readr`パッケージの`read_csv`関数を使ってデータを読み込みます。
+`read.csv()`ではなく`read_csv()`なので気をつけて。
+
+```{r}
+dataf <- readr::read_csv("data/rent-shonandai96-04.csv")
+head(dataf) # 先頭6行を表示
+```
+
+## 下準備
+
+`dplyr`パッケージの`mutate()`関数で新変数`rent_total`と`dist`を作成します。
+
+```{r}
+dataf <- dataf |>
+  mutate( # 新しい変数を2つ作成
+    rent_total = rent + service, # 家賃と管理費の合計
+    dist = bus + walk # バスと徒歩の合計
+    )
+```
+
+
+`新変数名 = 式`という形式で新しい変数を作成します。
+
+
+## クロス表
+
+`table()`関数でクロス表を作成します。
+
+```{r}
+table(dataf$auto_lock) # オートロックの有無
+table(dataf$auto_lock, dataf$year) # オートロックの有無と年
+```
+
+
+## クロス表に追加要素
+
+クロス表の周辺に要素を追加できます。
+
+```{r}
+addmargins(table(dataf$auto_lock, dataf$year)) # 合計値を追加
+prop.table(table(dataf$auto_lock, dataf$year), margin=2) # 列方向の比率
+```
+
+## 行方向の比率
+
+`prop.table()`関数に`margin = 1`を付けると行方向の比率
+
+```{r}
+table(dataf$auto_lock, dataf$year) |> prop.table(margin = 1)
+```
+
+`margin = 2`は列方向です。指定しないと全体の比率
+
+```{r}
+table(dataf$auto_lock, dataf$year) |> prop.table()
+```
+
+## 件数のカウント
+
+`sum()`は合計値を返す関数です。
+引数に条件を指定すると条件に合致するデータの件数を返します。
+`dataf$bus == 0`でバス時間が0のデータを抽出しています。
+
+```{r}
+sum(dataf$bus == 0)
+```
+
+`=`ではなく`==`を使うことに注意してください。
+
+
+## 結果表をCSVファイルに出力
+
+`write.csv()`関数を使って作成した表をcsvファイルとして保存します。
+
+```{r}
+table(dataf$auto_lock, dataf$year) |> # 度数の表
+  prop.table(margin = 1) |> # 割合の表に変換
+  print() |> # 出力
+  write.csv("result.csv") # csvファイルとして保存
+```
+
+`readr`の`write_csv()`関数は，データフレームをcsvファイルとして保存する関数なので，ここでは使いません。
+
+
+
+# 連続変数
+
+## 連続変数のカテゴリー化
+
+連続変数を特定の区分で分けることをカテゴリー化と言います。
+`case_when()`関数を使ってカテゴリー化します。
+
+```{r}
+#| eval: false
+dataf <- dataf |>
+  mutate(
+    r_category = case_when(
+    rent_total >= 3  & rent_total < 6  ~ "03-06",
+    rent_total >= 6  & rent_total < 9  ~ "06-09",
+    rent_total >= 9  & rent_total < 12 ~ "09-12",
+    rent_total >= 12 & rent_total < 15 ~ "12-15",
+    rent_total >= 15 & rent_total < 18 ~ "15-18",
+    rent_total >= 18 ~ "18-")
+    )
+```
+
+## `case_when()`は遅い
+
+ここでは`cut()`関数を使って，同じカテゴリー変数を作成してみます。
+
+```{r}
+dataf <- dataf |>
+  mutate(
+    r_category = cut(
+      rent_total,
+      breaks = c(3, 6, 9, 12, 15, 18, Inf),  # カテゴリの範囲を定義
+      labels = c("03-06", "06-09", "09-12", "12-15", "15-18", "18-"),  # ラベルを定義
+      right = FALSE  # 範囲の右端が含まれるかどうかを設定 (FALSEは "<" を表す)
+    )
+  )
+```
+
+## カテゴリー化した変数のクロス表
+
+```{r}
+table(dataf$r_category)
+```
+
+## カテゴリー化した変数の棒グラフ
+
+横軸がカテゴリー変数の場合は，`barplot()`関数を使って棒グラフを作成します。
+
+```{r}
+dataf$r_category |> table() |> barplot()
+```
+
+
+## 1996年のデータに限定して棒グラフ
+
+```{r}
+dataf96 <- dataf |> filter(year == 1996)
+dataf96$r_category |> table() |> barplot()
+```
+
+## 2004年のデータに限定して棒グラフ
+
+```{r}
+dataf04 <- dataf |> filter(year == 2004)
+dataf04$r_category |> table() |> barplot()
+```
+
+
+## 記述統計
+
+1変数の記述統計を表示するには，`summary()`関数を使います。
+
+```{r}
+summary(dataf$rent_total)
+```
+
+
+---
+
+### データフレーム全体の記述統計
+
+```{r}
+summary(dataf)
+```
+
+## `describe()`関数
+
+`psych`パッケージの`describe()`関数を使うと，データの記述統計を一度に表示できます。
+
+```{r}
+describe(dataf)
+```
+
+---
+
+統計量が多すぎて，表示されていないので，`skew = FALSE`オプションを指定し，歪度を非表示に
+
+```{r}
+dataf |> describe(skew = FALSE) # パイプ演算子
+```
+
+## CSVファイルに出力
+
+作成した記述統計をcsvファイルに出力します。
+
+```{r}
+dataf |>
+  describe(skew = FALSE) |> # 記述統計を計算し
+  write.csv("result.csv") # csvファイルとして保存
+```
+
+
+## グループ別の平均値
+
+```{r}
+dataf |>
+  group_by(year) |> # 年度ごとに
+  summarise(
+    mean(rent_total),
+    sd(rent_total)
+    )
+```
+
+
+## 年別オートロックの有無別の平均値
+
+```{r}
+dataf |>
+  group_by(year, auto_lock) |>
+  summarise(
+    mean(rent_total) # 家賃総額の平均
+    )
+```
+
+
+
+## tidyr::pivot_widerを使うと見栄えがよくなる
+
+```{r}
+dataf |> # datafを
+  dplyr::group_by(year, auto_lock) |> # 年とオートロックごとの
+  summarise( # 総家賃平均をm_rentとして作成して，
+    m_rent = mean(rent_total)
+    ) |>
+  pivot_wider(
+    names_from = auto_lock, # オートロックの有無を横に
+    values_from = m_rent # 家賃総額の平均を値に
+    )
+```
+
+
+## 平均値の差の検定
+
+`tableone`パッケージの`CreateTableOne()`関数を使って，1996年と2004年の平均値の差を検定します。
+```{r}
+CreateTableOne(#
+  vars = c("rent_total", "floor", "age", "auto_lock"), # 変数を指定
+  strata = "year", # 年ごとに
+  factorVars = "auto_lock", # オートロックを因子変数に
+  data = dataf # データフレームを指定
+  )
+```
+
+
+# 作図
+
+## ggplotによる散布図
+
+横軸に年齢，縦軸に家賃総額をとった散布図を作成します。
+
+```{r}
+ggplot(data = dataf) + # 作図データを指定
+  aes(x = age, y = rent_total) + # 軸の変数を指定
+  geom_point() # 散布図を作成
+```
+
+## 軸の変数を変えたグラフ
+
+変数を変えて，シンプルに書きつつ，いったん`g`に代入してから要素を加えていくのが良いです。
+
+```{r}
+g <- ggplot(dataf) + aes(floor, rent_total)
+g <- g + geom_point()
+print(g)
+```
+
+
+## 図をpngファイルに出力
+
+```{r}
+png(filename = "scatter.png", width = 400, height = 300)
+g # gを出力
+dev.off()
+```
+
+
+## 相関係数
+
+2変数の相関係数を計算してみる。
+
+```{r}
+cor(dataf$rent_total, dataf$floor, use = "pairwise.complete.obs")
+# 変数を限定して相関係数行列を作成
+dataf_cor <- dataf |>
+  select(rent_total, dist, age, floor) # 必要な変数を指定
+cor(dataf_cor, use = "pairwise.complete.obs") |> round(digits = 3)
+```
+

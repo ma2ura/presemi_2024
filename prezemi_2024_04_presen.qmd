@@ -1,0 +1,881 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第4回 離散選択モデル</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: mathjax
+    transition: slide
+    slide-number: true
+    df_print: paged
+    chalkboard: true
+    width: 1400
+    touch: true
+    controls: true
+    webgl: true
+    footer: "松浦プレゼミ2024"
+    logo: "img/yoko.jpg"
+    include-header:
+      text: |
+       <style>
+        .v-center-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 90%;
+        }
+        <style>
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+filters:
+  - webr
+webr:
+  packages: ['readr', 'dplyr', 'ggplot2'] # Install R packages on document open
+css: mystyle.css
+---
+
+# 回帰分析の復習
+
+## 回帰分析とは
+
+- 複数の説明変数と1つの被説明変数との間の**因果関係**を調べるための手法
+- 説明変数$X$と被説明変数$Y$との間に線形関係を仮定する**線形回帰モデル**
+
+
+$$
+Y_i = \alpha + \sum _{i=1}^n \beta X_i + \varepsilon _i, \quad i = 1,2,\ldots,
+$$
+- $\alpha$、$\beta$は回帰係数と呼ばれ、$\varepsilon \sim N(0, \sigma^2)$は誤差項
+- 回帰係数$\alpha$と$\beta$を推定する方法として**最小二乗法**
+
+## 最小二乗法
+
+- 今手元に説明変数$X$と被説明変数$Y$のデータの組$(x_i,y_i)$があるとする。
+- このデータから回帰パラメータを推定する最小二乗法は、**残差平方和を最小にするような**回帰パラメータを求める方法である。
+
+$$
+\begin{aligned}
+\min _{\hat{\alpha}, \hat{\beta}} \sum _{i=1}^n \underbrace{ \left \{ Y_i - \left ( \alpha + \sum _{j=1}^n \beta _j X_{ij} \right )\right \}^2 }_{=\varepsilon ^2}
+\end{aligned}
+$$
+
+## 回帰分析の実装
+
+Rでは`lm()`関数を使って最小二乗法による回帰分析を行う。
+`lm()`の主要な引数は，`formula`と`data`の2つ
+
+- `formula` ： 回帰式を表す式で，`Y ~ X`のように書く。
+- `data` ： 回帰分析に用いるデータフレーム
+
+```{r}
+#| eval: FALSE
+res <- lm(Y ~ X, data = df)
+```
+
+## 準備
+
+```{r}
+knitr::opts_chunk$set(dev = "ragg_png")
+pacman::p_load(tidyverse, ggthemes, knitr, kableExtra, scales, modelsummary,gt, tinytable)
+theme_set(theme_few(base_size = 12))
+update_geom_defaults("point", list(size = 3))
+```
+
+## 回帰分析の練習
+
+ボストン住宅価格データを使って回帰分析を実行
+
+```{r}
+#| echo = TRUE
+library(MASS) # データを取得
+df <- Boston
+head(df)
+```
+
+## 回帰分析の練習
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- `crim` : 犯罪率
+- `zn`:	広い家の割合
+- `indus`:	非小売業の割合
+- `chas`:	川に近接(1:yes, 0:no)
+- `nox`:	一酸化窒素濃度
+- `rm`:	平均部屋数
+- `age`:	古い家の割合
+
+:::
+
+::: {.column width="50%"}
+
+- `dis`:	主要施設への距離
+- `rad`:	主要高速道路へのアクセス性
+- `tax`:	固定資産税率
+- `ptratio`:	生徒先生の比率
+- `black`:	黒人の割合
+- `lstat`:	低所得者割合
+- `medv`:	住宅価格
+
+:::
+
+::::
+
+## 回帰分析の練習
+
+このデータを使って、回帰モデルを構築してみてください。
+たとえば、
+
+```{webr-r}
+# 好きなようにモデルを変えてみてください
+library(MASS) # データを取得
+df <- Boston
+lm(medv ~ rm, data = df) |> summary()
+```
+
+## ダミー変数の利用
+
+**ダミー変数**(dummy variable)とは，二値変数(binary variable)とか指示変数(indicator variable)とも呼ばれ，カテゴリーに属しているかどうかを表す1か0の値をとる変数のことです。
+
+$$
+\begin{aligned}
+D_i = \begin{cases}
+1 & \text{if あるカテゴリーに$i$が属している}\\
+0 & \text{if あるカテゴリーに$i$が属していない}
+\end{cases}
+\end{aligned}
+$$
+
+
+## 説明変数がダミー変数のみの回帰
+
+例えば、単回帰分析の説明変数がダミー変数$D$である場合
+
+$$
+\begin{aligned}
+Y_i = \beta_0 + \beta_1 D_i + \varepsilon_i
+\end{aligned}
+$$
+
+このとき、この単回帰モデルを次のように書くことが出来ます。
+
+$$
+\begin{aligned}
+Y_i = \begin{cases}
+\beta_0 + \varepsilon_i & \text{if } D_i = 0 \\
+\beta_0 + \beta_1 + \varepsilon_i & \text{if } D_i = 1
+\end{cases}
+\end{aligned}
+$$
+
+
+## 説明変数がダミー変数のみの回帰
+
+このとき、期待値$\mathrm{E}[Y]$は次のようになります。
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] = \begin{cases}
+\beta_0  & \text{if } D = 0 \\
+\beta_0 + \beta_1 & \text{if } D = 1
+\end{cases}
+\end{aligned}
+$$
+
+この単回帰モデルの切片$\beta_0$は、ダミー変数$D$が0のときの$Y$の平均値を表しています。
+
+## 説明変数がダミー変数のみの回帰
+
+住宅価格と川に隣接しているかどうかのダミー変数を使って回帰分析
+
+```{r}
+res <- lm(medv ~ chas, data = df)
+coef(res)
+```
+
+- 川に接してない家の平均価格は、`r round(coef(res)[1], digits = 3)`ドル
+- 川に接している家の平均価格は、`r round(coef(res)[1] + coef(res)[2], digits = 3)`ドル
+- `chas`の係数の$p$値は、`r round(coef(summary(res))[2,4],digits = 3)`
+
+## 会計研究のダミー変数の例
+
+経営の定量研究では，コントロール変数として頻出の
+
+- 企業ダミー
+- 業種ダミー
+- 年度ダミー
+
+に加えて，会計だと
+
+- 監査の質の代理変数となる四大監査法人ダミー
+- IFRSダミー
+
+と広範囲で利用されている。
+
+
+## ダミー変数の注意点
+
+回帰分析にダミー変数を使う場合に気をつける点として，
+
+- **カテゴリの数が$k$個のカテゴリー変数は，$k-1$個のダミー変数を回帰分析に組み込む**
+- **ダミー変数の数が多すぎると，推定値の標準誤差が大きくなる**
+
+という2点があります。
+
+## 製造業ダミーの例
+
+- すべての企業が製造業か非製造業のどちらかに属する
+- 製造業に属するかどうかを表すダミー変数$mani$と，非製造業に属するかどうかを表すダミー変数$nomani$を作成
+  - 製造業なら$1$，非製造業なら$0$という製造業ダミー変数`manu`と，
+  - 非製造なら$1$，製造業なら$0$をとる非製造業ダミー変数`no_manu`
+- ここで，`manu = 1`のとき，`no_manu`は必ず$0$をとり，逆に`no_manu = 1`のとき，`manu`はかならず$0$の値を取ります。
+  この2つのダミー変数は相関係数が$-1$となり，同じ情報をもっている変数です。
+- **多重共線性**が発生
+
+## ダミー変数
+
+**カテゴリーを表す変数で，0か1の値を取る変数**
+
+たとえば、
+
+- 性別: 男性なら1，女性なら0
+- 学歴: 大卒以上なら1，高校未満なら0
+- 会計：IFRSなら1，JGAAPなら0
+- 組織：創業者なら1、そうでないなら0
+- 購買：購入したら1，しなかったら0
+
+とか。
+
+## ダミー変数の作り方
+
+- カテゴリーが**2つの場合** : 観測値が1つ目のカテゴリーにはいるときは1，そうでないときは0とする。
+- カテゴリーが**3つ以上の場合** : カテゴリーごとにダミー変数を作成する。
+  - カテゴリーAなら1，それ以外なら0
+  - カテゴリーBなら1，それ以外なら0
+  - カテゴリーCなら1，それ以外なら0 (実際は必要ない)
+- **連続変数**の場合は、ある*基準値*（平均とか中央値）を設定して、その値以上なら1、未満なら0とする。
+
+## Rでダミー変数を作る
+
+前回の教育データ`wage-census2022.csv`の`education`を使って、ダミー変数を作成してみる。
+
+```{r}
+df <- readr::read_csv("data/wage-census2022.csv")
+df <- df |>
+  dplyr::mutate( # 新しい変数を作成
+    edu1 = dplyr::if_else(education == 4, 1, 0), #大卒
+    edu2 = dplyr::if_else(education == 3, 1, 0), #専門卒
+    edu3 = dplyr::if_else(education == 2, 1, 0), #高卒
+  )
+table(df$edu1) # 大卒以上が18名
+```
+
+## 連続変数をダミー変数にする
+
+たとえば、連続変数である賃金`wage`が`400`以上なら1、未満なら0とするダミー変数を作成してみる。
+
+```{r}
+df <- df |>
+  dplyr::mutate(
+    wage_400_dummy = dplyr::if_else(wage >= 400, 1, 0)
+  )
+table(df$wage_400_dummy) # 10名が400以上
+```
+
+
+
+
+
+## 交差項で何が分かるのか
+
+説明変数$X$が被説明変数$Y$に与える影響(直接効果)に対して，別の説明変数$Z$が与える影響がある場合，$X$と$Z$の交差項$X \times Z$をモデルに組み入れることで，$X$の影響が$Z$の値によってどのように変化するかを分析することができる。
+
+$$
+Y = \alpha + \beta_1 X + \beta_2 Z + \beta_3 X \times Z + \varepsilon
+$$
+
+この$X \times Z$を**交差項**(interaction term)とよびます。
+いま，$Z$がダミー変数の場合を考えます。
+$$
+Y = \alpha + \beta_1 X + \beta_2 D + \beta_3 (X \times D) + \varepsilon
+$$
+
+## ダミー変数の交差項
+
+$D=1$の場合
+
+$$
+\begin{aligned}
+Y &= \alpha + \beta _1 X + \beta _2 \times 1 + \beta _3 (X \times 1) + \varepsilon\\
+  &= \alpha + \beta _1 X + \beta _2 + \beta _3 X + \varepsilon\\
+  &= (\alpha + \beta _2) + (\beta _1 + \beta _3) X + \varepsilon\\
+\end{aligned}
+$$
+
+$D=0$の場合
+
+$$
+\begin{aligned}
+Y &= \alpha + \beta _1 X + \beta _2 \times 0 + \beta _3 (X \times 0) + \varepsilon\\
+  &= \alpha + \beta _1 X + \varepsilon\\
+\end{aligned}
+$$
+
+
+## 交差項を入れた回帰分析の注意点
+
+回帰分析で交差項を入れる場合の注意点は次の4
+
+1. 条件付仮説(たとえば，十分に$Z$が大きいとき，$X$は$Y$に影響を与える，とか)を検証する場合に，交差項を使う。
+2. 交差項を入れるときは，交差項を構成する変数をそれぞれ回帰モデルに入れる。
+3. 交差項を構成する変数の回帰係数はそのまま解釈できない。
+4. 分析結果として，限界効果と標準誤差を示す。
+
+## 交差項を入れた回帰分析の注意点
+
+数式で確認すれば分かりやすいです。
+回帰モデルが
+
+$$
+Y = \beta_0 + \beta_1 X + \beta_2 Z + \beta_3 X \times Z + \varepsilon
+$$
+
+であるとき，$Y$に対する$X$の影響は，$Y$を$X$で(偏)微分することで求められます。
+
+$$
+\frac{\partial Y}{\partial X} = \beta_1 + \beta_3 Z
+$$
+
+## 限界効果
+
+- この式から，$Z$の値によって，$X$の影響が変化することが分かります。
+- $\beta_1$の値だけでは，$X$の影響を正確に評価することができません。
+- $Z$の値によって，$X$の影響が変化することを示すためには，$Z$の値を変化させたときの$\beta_1$の値を示す必要がある。
+- これを**限界効果**(marginal effect)とよぶ
+
+
+# 本日の学び
+
+
+## 今日の目標
+
+
+本日の**到達目標**は、
+
+- 離散選択モデルの基本的な考え方を理解する。
+- ロジスティック回帰モデルを作ることができる。
+- ロジスティック回帰モデルを推定することができる。
+- ロジスティック回帰モデルの結果を解釈することができる。
+
+## 今日使う関数
+
+
+- `tidyverse` : いつものやつ
+- `modelsummary` : 分析結果をいい感じの表にする
+- `openxlsx` : Excelファイルを読み込む
+- `wooldridge` : 経済学のデータセットを読み込む
+- `DescTools` : 記述統計量を出力する
+- `censReg` : ランダム効果モデルを推定する
+- `mfx` : 限界効果を推定することができる。
+
+
+## 前回の復習
+
+- ダミー変数とは，カテゴリーを表す変数で，0か1の値を取る変数
+- ダミー変数を単独で独立変数として使うことで，カテゴリーごとの**切片の差**を推定できる。
+- ダミー変数と連続変数の交差項を使うことで，カテゴリーごとの**傾きの差**を推定できる。
+- 二次項を使うことで，非線形関係を分析することができる。
+
+
+## パッケージの読み込み
+
+`pacman`で必要なパッケージを一括ロード
+
+```{r}
+pacman::p_load(tidyverse, modelsummary, openxlsx, wooldridge, DescTools, censReg, mfx, skimr, kableExtra)
+```
+
+`wooldrige`パッケージに含まれる`mroz`データを読み込む
+
+```{r}
+data("mroz", package = "wooldridge")
+str(mroz)
+```
+
+22個の変数と753個の観測値が読み込まれました。
+
+## `mroz`データの内容
+
+`mroz`データは，Mroz (1987)の論文
+''The Sensitivity of an Empirical Model of Married Women’s Hours of Work to Economic and Statistical Assumptions,''で用いられた論文で，既婚女性の就業に関するデータセットです。主に，
+
+:::{.columns}
+::::{.column width="50%"}
+- `inlf`: 就業してたら1
+- `hours`: 労働時間
+- `kidslt6`: 6才未満子ども数
+- `kidsge6`: 6才以上子ども数
+- `age`: 年齢
+- `educ`: 教育年数
+::::
+
+::::{.column width="50%"}
+- `wage`: 時給
+- `hushrs`: 夫の労働時間
+- `husage`: 夫の年齢
+- `huseduc`: 夫の教育年数
+- `huswage`: 夫の時給
+- `faminc` : 世帯所得
+::::
+:::
+
+
+## 就業の決定要因
+
+*既婚女性が就業しているかどうか*を説明するための要因を考える。つまり，
+
+:::{.callout-important}
+既婚女性が就業するかどうかの意思決定を行う際に，どのような要因がその意思決定に影響を与えているのかだろうか？
+:::
+
+- 被説明変数は`inlf`(in the labor force) で，就業していれば1，していなければ0
+- 説明変数は，年齢`age`，教育年数`educ`， 6才未満の子どもの数`kidslt6`，`6才以上の子どもの数`kidsge6`を入れてみる。
+
+## まずはデータの確認
+
+被説明変数`inlf`の内容を確認する。
+
+```{r}
+table(mroz$inlf)
+```
+
+就業していない女性が`r table(mroz$inlf)[1]`名，就業している女性が`r table(mroz$inlf)[2]`名となりました。
+
+## さらにデータを確認
+
+`skimr`パッケージを使って，データの概要を確認する。
+
+```{r}
+skimr::skim(mroz) |> kable() |> kable_styling(font_size = 12)
+```
+
+
+## もっとデータを確認
+
+複数の変数の特徴や変数間の関係を一気に確認するには，`psych`パッケージの`pairs.panels()`関数を使うと便利です。
+このためだけに`psych`パッケージを読み込むのも無駄なので，`psych::pairs.panels()`として読み込みます。
+
+```{r}
+#| output-location: slide
+mroz |>
+  dplyr::select(inlf, age, educ, kidslt6, kidsge6) |>
+  psych::pairs.panels()
+```
+
+# 離散選択モデル
+
+## 回帰モデルを作る
+
+既婚女性の就業に影響を与える要因を調べたいので，結果を表す被説明変数と，原因を表す説明変数は次のようになります。
+
+- 被説明変数: $inlf$
+- 説明変数: $age, educ, kidslt6, kidsge6$
+
+次のような線形回帰モデルを考えます。
+
+$$
+inlf = \beta_0 + \beta_1 age + \beta_2 educ + \beta_3 kidslt6 + \beta_4 kidsge6 + u
+$$
+
+## 最小二乗法で推定する
+
+この線形回帰モデルを最小二乗法で推定すると，次のような結果が得られます。
+
+```{r}
+lm1 <- lm(inlf ~ age + educ + kidslt6 + kidsge6, data = mroz)
+summary(lm1)
+```
+
+## 結果の解釈
+
+- `kidsge6`以外の変数は統計的に有意である。
+- `age`は負の係数となり，年齢が上がると就業していない。
+- `educ`は正の係数となり，教育年数が増えると就業している。
+- `kidslt6`は負の係数となり，6才未満の子どもが多いと就業していない
+
+という傾向が見られた。
+
+## しかし...
+
+横軸を`age`と`edu`，縦軸を`inlf`として3Dプロットを作成すると，次のような図が得られます。
+
+
+```{r}
+#| output-location: slide
+library(plotly)
+graph <- plot_ly(data = mroz, x = ~age, y = ~educ, z = ~inlf, type = 'scatter3d', mode = 'markers', size = 1) |>
+  layout(scene = list(
+    xaxis = list(title = 'Age'),
+    yaxis = list(title = 'Education'),
+    zaxis = list(title = 'In Labor Force')
+  ))
+# 平面の定義
+age_vals <- seq(min(mroz$age)-10, max(mroz$age)+10, length.out = 50)
+educ_vals <- seq(min(mroz$educ), max(mroz$educ), length.out = 50)
+plane_data <- expand.grid(age = age_vals, educ = educ_vals)
+plane_data$z <- 0.712156 - 0.013274 * plane_data$age + 0.042142 * plane_data$educ
+# 平面を3Dプロットに追加
+graph <- graph |>
+  add_trace(
+    x = plane_data$age,
+    y = plane_data$educ,
+    z = plane_data$z,
+    type = 'mesh3d',
+    opacity = 0.5,
+    color = 'orange'
+  )
+
+graph
+```
+
+## 問題点
+
+- `inlf`は0か1の値しか取らないのに，線形回帰モデルでは予測値が0を下回ることも1を上回ることもある。
+- このようなモデルは*線形確率モデル*といい、説明変数を一単位変化させたときの$y=1$である確率の変化を表現していると考える。
+- 決定係数$R^2$は意味を持たない。
+- 予測値を確率として用いる場合は、0から1の間に収まる確率モデルが必要となる。それが
+
+:::{.v-center-container}
+<span style="font-size: 2em; font-weight: bold; color: #d06d8c;">ロジスティック回帰モデル</span>
+:::
+
+
+# ロジスティック関数
+
+
+## 被説明変数が二値
+
+- 「当たったか、外れたか」、「ある会計基準を選択したか、否か」、「ある商品を購入したか、否か」など
+- 結果が二値で表されるような変数を**二値変数**(binary variable)とか**ダミー変数**(dummy variable)という。
+- 二値変数を被説明変数とした回帰分析をしたいとき、**ロジスティック回帰分析**を使う。
+
+## オッズ
+
+- 事象Aと事象Bのどちらかが起こるとき、事象Aが起こる確率を$p$とすると、事象Bが起こる確率は$1-p$となる。
+- $p$は確率を表しているので，$0$から$1$の間の値をとる。
+- この事象Aが起こる確率と事象Aが起こらない確率の比を**オッズ(odds)**という。
+
+$$
+odds = \frac{p}{1-p}
+$$
+
+
+## オッズのグラフ
+
+オッズを図にするとこうなります。
+
+```{r}
+#| code-fold: true
+#| code-summary: "Rコード"
+
+p <- seq(0, 1, 0.005) # 0〜1を0.005刻み
+odds <- p / (1 - p) # オッズ
+df <- data.frame(p, odds)
+g <- ggplot(df) + aes(x = p, y = odds) + geom_line() # 折れ線グラフ
+g <- g +
+  geom_hline(yintercept = 1, linetype = "dashed")
+g <- g + labs(x = "確率p", y = "オッズ")
+print(g)
+```
+
+## オッズ
+
+- オッズは$0$から$\infty$の間の値をとる。
+- このオッズを**対数変換**して，$p$の関数$f(p)$としたものを`ロジット関数`という。
+- 生起確率$p$が$0$から$1$の値をとるとき，$f(p)$は$-\infty$から$\infty$の値をとる。
+
+$$
+f(p) = \log \left( \frac{p}{1-p} \right)
+$$
+<!-- = \log p - \log (1-p) -->
+
+
+## ロジット関数
+
+図にするとこう
+
+```{r}
+#| code-fold: true
+#| code-summary: "Rコード"
+p <- seq(0, 1, 0.005) # 0〜1を0.005刻み
+logit <- log( p / (1 - p)) # 対数オッズ比
+df <- data.frame(p, logit)
+g <- ggplot(df) + aes(x = p, y = logit) + geom_line() # 折れ線グラフ
+g <- g +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 1, linetype = "dashed")
+g <- g + labs(x = "確率p", y = "ロジット関数f(x)")
+print(g)
+```
+
+
+## ロジット関数の逆関数
+
+ここで、$f(p) = x$とおいて、$x$に対する$p$の値を求める逆関数$f^{-1}(x)$を見つける。
+$x = \log(p / (1-p))$の両辺の指数をとると、次のようになります。
+
+$$
+\begin{aligned}
+\exp(x) &= \frac{p}{1-p} \\
+\exp(x) (1-p) &= p \\
+\exp(x) - \exp(x)p &= p \\
+% \exp(x) &= p + \exp(x)p \\
+\exp(x) &= p(1 + \exp(x)) \\
+p &= \frac{\exp(x)}{1 + \exp(x)}
+\end{aligned}
+$$
+
+
+<!--
+ロジット関数$f(p)$の逆関数$f^{-1}(p)$を考える。
+対数関数の逆関数は指数関数なので，ロジット関数の両辺の指数をとる。
+-->
+
+---
+
+### 続き
+
+上の式を整理すると，次のようになります。
+
+$$
+\begin{aligned}
+p &= \frac{\exp(x)}{1 + \exp(x)} = \frac{\frac{\exp(x)}{\exp(x)}}{\frac{1 + \exp(x)}{\exp(x)}} = \frac{1}{\frac{1}{\exp(x)}+1}\\
+  &= \frac{1}{1 + \exp(-x)}
+\end{aligned}
+$$
+
+この任意の$x$に対して$p$を求めることができる$f^{-1}(x)$を**標準ロジスティック関数**という。
+
+## ロジスティク関数
+
+- ロジット関数$f(p)$の逆関数$f^{-1}(x)$は$x$が$-\infty$から$\infty$の値をとるとき，$p$は$0$から$1$の範囲をとる。
+
+$$
+p = f^{-1}(x) = \frac{1}{1 + \exp(-x)}
+$$
+
+## 標準ロジスティックス関数
+
+標準ロジスティクス関数は次のような形をしています。
+
+```{r}
+#| code-fold: true
+#| code-summary: "Rコード"
+x <- seq(-6, 6, 0.005)
+logistic <- exp(x) / (1 + exp(x))
+df <- data.frame(x, logistic)
+g <- ggplot(df) + aes(x = x, y = logistic) + geom_line() # 折れ線グラフ
+g <- g + geom_hline(yintercept = c(0,1), linetype = "dashed")
+g <- g + labs(x = "x", y = "標準ロジスティック関数")
+print(g)
+```
+<!--
+## ロジスティクス関数
+
+- 標準ロジスティクス関数の定義域は$-\infty$から$\infty$
+- $x$が$0$のとき，$f^{-1}(x)$は$0.5$
+- 手元の被説明変数データは$0$と$1$の2種類しかなく、このようなデータを生み出す確率モデルには確率$p$で$1$、確率$1-p$で$0$をとるベルヌーイ分布を使う。
+- この確率$p$を先ほど導出したロジスティック関数(logistic function)で表す。
+
+$$
+\text{logistic}(x) = \frac{\exp(x)}{1 + \exp(x)} = \frac{1}{1 + \exp(-x)}
+$$
+-->
+
+## ロジスティクス関数
+
+ロジスティック関数を使って確率$p$を次のように表す。
+
+$$
+\Pr(y_i = 1)  = \text{logistic}(b_0 + b_1x_i) =  \frac{1}{1 + \exp(-\beta_0 - \beta_1 x_i)}
+$$
+
+この式は、$x_i$が与えられたときに$y_i$が$1$となる確率を表しています。
+この式を変形すると、次のようになります。
+
+$$
+\log \left( \frac{\Pr(y_i = 1)}{1 - \Pr(y_i = 1)} \right) = \beta_0 + \beta_1 x_i
+$$
+
+ようやく回帰分析の式になった。
+
+## 最尤法
+
+$\beta$を推定する方法を考える。
+
+- この回帰モデルは非線形であるため，最小二乗法が使えない。
+- パラメータを**最尤法**(most likelifood method)を使って推定する。
+- ロジスティック回帰のモデルの背後にある線形モデルについて考える。
+- 観察される被説明変数$y_i$は$0$か$1$という二値変数となりますが，その背後には，線形関係があると考える。
+
+## 最尤法
+
+つまりある閾値$y^*$を設定して，$y_i$が$y^*$より大きいときは$1$，$y^*$より小さいときは$0$となると考える。
+
+$$
+y_i =
+\begin{cases}
+1 & \text{if } \quad \beta_0 + \beta_1 x_i + \varepsilon_i > y^* \\
+0 & \text{if } \quad \beta_0 + \beta_1 x_i + \varepsilon_i \leq y^*
+\end{cases}
+$$
+
+このように，二値変数の背後に観察できない連続変数があり，閾値を境にカテゴリーが観察される，と考える。
+
+
+# ロジスティクス関数の実践
+
+## 手順
+
+1. 帰無仮説と対立仮説を設定する。
+2. 説明変数$X$と応用変数$Y$の散布図を確認する。
+3. ロジスティクス回帰モデルを作る。
+4. 最尤法を用いて回帰係数を推定する。
+5. 回帰係数の有意性を検定する。
+6. 推定結果の意味を解釈する。
+
+## データの読み込み
+
+データは上で確認した`mroz`データを使います。
+
+```{r}
+data("mroz", package = "wooldridge")
+```
+
+## 帰無仮説と対立仮説
+
+検証する帰無仮説は
+
+- 既婚女性の就業に年齢は関係がない。
+- 既婚女性の就業に学歴は関係がない。
+- 既婚女性の就業に子どもの人数は関係がない。
+
+となり、対立仮説は
+
+- 既婚女性の就業に年齢は関係がある
+- 既婚女性の就業に学歴は関係がある。
+- 既婚女性の就業に子どもの人数は関係がある。
+
+## 最小二乗法で推定してみる
+
+もう一度、線形確率モデルとして次の線形回帰を推定してみる。
+
+```{r}
+ols <- lm(inlf ~ age + educ + kidslt6 + kidsge6, data = mroz)
+```
+
+$$
+\begin{aligned}
+inlf = \alpha &+ \beta_1 age + \beta_2 educ \\
+&+ \beta_3 kidslt6 + \beta_4 kidsge6 + u
+\end{aligned}
+$$
+
+## ロジスティクス関数を推定
+
+非線形回帰モデルを推定するために`glm()`関数を使う。
+引数に，`family = binomial(link = "logit")`を指定して，ロジスティクス関数を指定する。
+
+```{r}
+logit <- glm(
+  inlf ~ age + educ + kidslt6 + kidsge6, data = mroz,
+  family = binomial(link = "logit")
+  )
+```
+
+
+
+## プロビット回帰モデル
+
+ロジスティクス関数の他に，プロビット関数を使ったモデルもあります。
+プロビット関数は次のようになります。
+
+$$
+\Phi(x) = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}} \exp \left( -\frac{t^2}{2} \right) dt
+$$
+
+正規分布の確率密度関数を積分したもので，ロジスティクス関数と同じように$0$から$1$の値をとります。
+
+## プロビット関数
+
+プロビット関数は次のようになります。
+
+```{r}
+#| code-fold: true
+#| code-summary: "Rコード"
+
+x <- seq(-6, 6, 0.005)
+# プロビット関数
+probit <- pnorm(x)
+df <- data.frame(x, probit)
+df$logistic <- exp(x) / (1 + exp(x))
+
+# Plot both probit and logistic functions on the same graph
+g <- ggplot(df) +
+  aes(x = x) +
+  geom_line(aes(y = probit, color = "Probit Function")) +
+  geom_line(aes(y = logistic, color = "Logistic Function")) +
+  geom_hline(yintercept = c(0, 1), linetype = "dashed") +
+  labs(x = "x", y = "Function Value") +
+  scale_color_manual(name = "Function", values = c("Probit Function" = "blue", "Logistic Function" = "red"))
+
+# Display the plot
+print(g)
+```
+
+## プロビット関数
+
+- プロビット関数はロジスティクス関数と同じように$0$から$1$の値をとる。
+- ロジスティクス関数とプロビット関数は形状が異なるが、推定結果はほぼ同じになる。
+
+```{r}
+probit <- glm(
+  inlf ~ age + educ + kidslt6 + kidsge6, data = mroz,
+  family = binomial(link = "probit")
+  )
+```
+
+`link = "probit"`を指定して、プロビット関数を使ったモデルを推定
+
+
+## 結果の比較
+
+OLSとロジスティック回帰とプロビット回帰の結果を比較する。
+
+```{r}
+#| code-fold: true
+model <- "inlf ~ age + educ + kidslt6 + kidsge6"
+results <- list(
+  "OLS"     =  lm(formula = model, data = mroz),
+  "Logit"   = glm(formula = model, data = mroz, family = binomial(link = "logit")),
+  "Probit"  = glm(formula = model, data = mroz, family = binomial(link = "probit"))
+)
+msummary(
+  results,
+  gof_omit = 'DF|Deviance|R2|AIC|BIC', stars = TRUE) |>
+  style_tt(fontsize = 0.5)
+```
+
+## 結果の解釈
+
+- `age`の回帰係数は有意に負：年齢が上がると就業確率が下がる
+- `educ`の回帰係数は有意に正：教育年数が増えると就業確率が上がる
+- `kidslt6`の回帰係数は有意に負：6才未満の子どもが多いと就業確率が下がる
+- `kidsge6`の回帰係数は有意でない：6才以上の子どもの数が就業確率に**影響をあたえているかどうか分からない**
+
+「有意ではない = 関係が無い」ではなく、「有意ではない = 帰無仮説が棄却できない」だけなので、何も言えないということに注意

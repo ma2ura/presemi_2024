@@ -1,0 +1,345 @@
+---
+title: |
+  <b>プレゼミ2024</b> </br>
+  <span style="color: #282A36; ">第3回 回帰分析 練習問題</span>
+author: "Soichi Matsuura"
+format:
+  revealjs:
+    theme: ["default", "dracula.scss"]
+    html-math-method: katex
+    transition: slide
+    slide-number: true
+    touch: true
+    controls: true
+    df_print: paged
+    width: 1400
+highlight-style: github
+execute:
+  echo: true
+  warning: false
+css: mystyle.css
+---
+
+
+# 第1問 賃貸料の決定要因
+
+## パッケージとデータの読み込み
+
+`pacman`パッケージを使って、必要なパッケージを読み込み，`readr::read_csv()`関数でデータを読み込む。
+ついでに，`dplyr::mutate()`関数で変数`rent_total`と`dist`を作成する。
+
+```{r}
+pacman::p_load(tidyverse, modelsummary, tinytable, gt, kableExtra)
+# dataフォルダにあるrent-jonan-kawasaki.csvを読み込む
+df <- read_csv("data/rent-jonan-kawasaki.csv")
+df <- df |>
+  mutate( # 新変数の作成
+    rent_total = rent + service, # 実賃料
+    dist = bus + walk # 距離
+  )
+df$line |> table()
+```
+
+## 問(1)
+
+$$
+rent\_total = \alpha + \beta_1 floor + \beta_2 age + \beta _3 dist + Other + \varepsilon
+$$
+
+```{r}
+#| output-location: slide
+model1_1 = lm(rent_total ~ floor + age + dist, data = df)
+model1_2 = lm(rent_total ~ floor + age + dist + auto_lock, data = df)
+model1_3 = lm(rent_total ~ floor + age + dist + catv, data = df)
+results <- list("モデル1" = model1_1, "モデル2" = model1_2, "モデル3" = model1_3)
+results |> # 結果の表を作成
+  msummary(
+    output = "kableExtra",
+    stars = TRUE, fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+    ) |>
+  kable_styling(font_size = 24) |>
+  row_spec(c(9, 11), background = "lightblue")
+```
+
+## 問(2)
+
+実際の賃貸料`rent_total`よりも理論値が最も大きく上回る物件を探す。
+
+```{r}
+model2 <- lm(rent_total ~ floor + age + dist + auto_lock, data = df)
+df |>
+  mutate(
+    predict = predict(model2), # 理論値
+    diff =  predict - rent_total # 理論値と実際の差
+  ) |>
+  select(rent_total, predict, diff, floor, age, dist, auto_lock) |>
+  filter(station == "Omori") |>
+  arrange(desc(diff)) |> # 理論値と実際の差を降順に並び替え
+  head(1) |> kable(align = 'c')
+
+```
+
+## 問(3)
+
+JRダミーと東急ダミーを作成して、モデルに追加する。
+```{r}
+#| output-location: column
+df <- df |>
+  mutate(
+    JR = if_else(line == "JR", 1, 0), # JRダミー
+    Tokyu = if_else(line == "tokyu", 1, 0) # 東急ダミー
+  )
+# 回帰モデルを作成
+model <- lm(rent_total ~ floor + age + dist + terminal + JR + Tokyu, data = df)
+# msummaryの出力
+list("モデル1" = model) |>
+  msummary(
+    output = "kableExtra",
+    stars = TRUE, fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+  ) |>
+  kable_styling(full_width = FALSE, font_size = 20) |>
+  row_spec(c(11, 13), background = "lightblue")# 塗りたい行
+```
+
+## 問(4)
+
+busダミーを作成して、モデルに追加する。
+
+
+```{r}
+#| output-location: column
+df <- df |>
+  mutate(
+    bus_dummy = if_else(bus > 0, 1, 0) # バスダミー
+  )
+lm(rent_total ~ floor + age + dist + terminal + JR + Tokyu + bus_dummy, data = df) |>
+   msummary(
+    output = "kableExtra",
+    stars = TRUE,
+    fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+    ) |>
+  kable_styling(full_width = FALSE, font_size = 18) |>
+  row_spec(c(15), background = "lightblue")# 塗りたい行
+```
+
+# 第2問 賃金の決定要因
+
+## データの読み込み
+
+```{r}
+df <- read_csv("data/wage-census2022-by-ind.csv")
+glimpse(df)
+```
+
+## 問(1)
+
+$$
+wage = \alpha + \beta_1 age + \beta_2 D\_size + \beta _3 D\_education + \beta _4 D\_ind + \varepsilon
+$$
+
+```{r}
+#| output-location: slide
+results <- list(
+  "model1" = lm(wage ~ age  + factor(size) + factor(education) + factor(ind), data = df),
+  "model2" = lm(lwage ~ age + factor(size) + factor(education) + factor(ind), data = df)
+)
+results |>
+   msummary(
+    output = "kableExtra",
+    stars = TRUE,
+    fmt = '%.4f',
+    gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+    ) |>
+  kable_styling(full_width = FALSE, font_size = 18) |>
+  row_spec(c(3), background = "lightblue")# 塗りたい行
+```
+
+## 問(2)
+
+
+```{r}
+#| output-location: column
+df <- df |>
+  mutate(
+    age2 = age^2
+  )
+res <- lm(wage ~ age + age2 + age*factor(ind) + age2*factor(ind) + factor(size) + factor(education) + factor(ind), data = df)
+msummary(res,
+  output = "kableExtra",
+  stars = TRUE,
+  fmt = '%.4f',
+  gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+  ) |>
+  kable_styling(full_width = FALSE, font_size = 18)
+```
+
+# 第3問 早生まれは不利？
+
+## データの読み込み
+
+
+```{r}
+df <- read_csv("data/todai-shaken.csv")
+glimpse(df)
+```
+
+## データの説明 | 教育水準
+
+教育については、`ZQ23A`が回答者、`ZQ23C`が父親の通った学校を表しており、
+
+:::{.columns}
+::::{.column width="50%"}
+1. 中学校
+2. 高等学校
+3. 専修学校（専門学校）
+4. 短期大学・高等専門学校
+::::
+::::{.column width="50%"}
+5. 大学
+6. 大学院
+7. わからない
+::::
+:::
+
+となっている。
+
+`ZQ24`でその学校を卒業した(1)、中退した(2)、在学中(3)を表している。
+
+## データの説明 | 兄弟姉妹の数
+
+家族構成については、
+
+- `ZQ14_1A` : 兄の人数
+- `ZQ14_1B` : 姉の人数
+- `ZQ14_1C` : 弟の人数
+- `ZQ14_1D` : 妹の人数
+
+欠損値には`99`が入っているため、これを`NA`に変換する必要がある。
+
+## データの説明 | 早生まれ
+
+回答者の生まれつきは`mbirth`で記録されている。
+
+```{r}
+table(df$mbirth)
+```
+
+1〜12月生まれの人数の人数はこのとおり。
+
+## 変数の作成 | 教育水準
+
+教育水準と卒業を表す変数から、教育年数の変数`educ`を作成する。
+
+```{r}
+df <- df |>
+  mutate(
+    educ = case_when(
+      ZQ23A == 1 & ZQ24 == 1 ~ 9, # 中学校
+      ZQ23A == 2 & ZQ24 == 1 ~ 12, # 高等学校
+      ZQ23A == 3 & ZQ24 == 1 ~ 14, # 専修学校
+      ZQ23A == 4 & ZQ24 == 1 ~ 14, # 短期大学・高等専門学校
+      ZQ23A == 5 & ZQ24 == 1 ~ 16, # 大学
+      ZQ23A == 6 & ZQ24 == 1 ~ 18, # 大学院
+      TRUE ~ NA_real_
+    )
+  )
+df$educ |> table()
+```
+
+---
+
+父親の教育年数`educ_pa`も同様に作成する。
+
+```{r}
+df <- df |>
+  mutate(
+    educ_pa = case_when(
+      ZQ23C == 1 & ZQ24 == 1 ~ 9, # 中学校
+      ZQ23C == 2 & ZQ24 == 1 ~ 12, # 高等学校
+      ZQ23C == 3 & ZQ24 == 1 ~ 14, # 専修学校
+      ZQ23C == 4 & ZQ24 == 1 ~ 14, # 短期大学・高等専門学校
+      ZQ23C == 5 & ZQ24 == 1 ~ 16, # 大学
+      ZQ23C == 6 & ZQ24 == 1 ~ 18, # 大学院
+      TRUE ~ NA_real_
+    )
+  )
+df$educ_pa |> table()
+```
+
+
+## 変数の作成 | 兄弟姉妹の数
+
+欠損値を意味する`99`を`NA`に変換し、それから兄弟姉妹の数を合計して、`n_siblings`を作成する。
+
+```{r}
+df <- df |>
+  mutate(
+    across(starts_with("ZQ14"), ~replace(., . == 99, NA_real_)),
+    n_siblings = ZQ14_1A + ZQ14_1B + ZQ14_1C + ZQ14_1D
+  )
+df$n_siblings |> table()
+```
+
+## 早生まれ変数
+
+1から3月生まれを早生まれとして、`born_early`を作成する。
+
+```{r}
+df <- df |>
+  mutate(
+    born_early = if_else(between(mbirth, 1, 3), 1, 0)
+  )
+df$born_early |> table()
+```
+
+
+## 問(1)
+
+```{r}
+df_test <- df |>
+  mutate(born_early = factor(born_early)) |>
+  select(educ, educ_pa, born_early, n_siblings)
+df_test |> summary()
+```
+
+## 問(2) のための準備
+
+いろいろな表を作成
+
+
+```{r}
+df_test |> psych::pairs.panels()
+```
+
+本人と親の教育年数の相関係数が少々高め？
+
+## 問(2)
+
+回帰分析
+
+
+```{r}
+#| output-location: slide
+res <- list(
+  "model1" = lm(educ ~ born_early, data = df_test),
+  "model2" = lm(educ ~ born_early + educ_pa + n_siblings, data = df_test)
+)
+msummary(res,
+          output = "gt",
+         stars = TRUE,
+         gof_omit = 'RMSE|AIC|BIC|Log.Lik.|F'
+         ) |>
+  tab_style(
+    style = cell_fill(color = 'lightblue'),
+    locations = cells_body(rows = c(3,5,7))
+  )
+```
+
+## 結果の解釈
+
+- model1では、`born_early`が教育年数に対して有意に負の関係があることから、早生まれだと教育年数が`0.339`年少ない、といえる。
+- しかし変数を増やしたmodel2では`born_early`の係数は有意ではなく、`educ_pa`とn_siblingsが教育年数に対して有意な影響を持っている。
+- 父親の教育年数が1年増えると、本人の教育年数は`0.266`年増え、兄弟姉妹の数が1人増えると、本人の教育年数は`0.198`年減少する。
