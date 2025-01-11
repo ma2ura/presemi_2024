@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Helvetica Neue', Arial, 'Hiragino Sans', Meiryo, sans-serif;
 }
 
 body {
@@ -67,19 +67,7 @@ a:hover {
     box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
 }
 
-/* 未定のリンクのスタイル */
-a[href$="html"]:not([href*="gaisho_2024"]) {
-    color: #999;
-    background: #f8f8f8;
-    cursor: pointer; /* ここを変更 */
-}
 
-a[href$="html"]:not([href*="gaisho_2024"]):hover {
-    background: #f8f8f8;
-    color: #999;
-    transform: none;
-    box-shadow: none;
-}
 
 /* 非活性化されたリンクのスタイル */
 a.inactive {
@@ -89,20 +77,31 @@ a.inactive {
     pointer-events: none;
 }
 
+
+/* リンクのカーソルを明確化 */
+a {
+    cursor: pointer; /* 一般のリンクは明確にポインター表示 */
+}
+
+/* 非活性リンクのカーソル変更（必要な場合） */
+a.inactive {
+    cursor: not-allowed;
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 600px) {
     body {
         padding: 1rem;
     }
-    
+
     h1 {
         font-size: 1.5rem;
     }
-    
+
     ul {
         padding: 0.5rem;
     }
-    
+
     a {
         padding: 0.8rem 1rem;
     }
