@@ -2,87 +2,106 @@
 title: |
   <b>プレゼミ2024</b> </br>
   <span style="color: #282A36; ">第5章 練習問題</span>
-author: "Soichi Matsuura"
+author: "松浦総一"
 format:
-  revealjs:
-    theme: ["default", "dracula.scss"]
-    html-math-method: mathjax
-    transition: slide
-    slide-number: true
+  html:
+    theme: minty
     df_print: paged
-    chalkboard: true
-    width: 1400
-    # width: 1200
-    # height: 900
-    webgl: true
-    footer: "松浦プレゼミ2024"
-    logo: "img/yoko.jpg"
+    html-math-method: katex
 highlight-style: github
+css: mystyle.css
 execute:
   echo: true
   warning: false
-css: mystyle.css
 ---
 
-```{r include=FALSE}
-knitr::opts_chunk$set(dev = "ragg_png")
-```
 
-## 第5章の練習問題
+# 第5章 練習問題
 
-結婚している人は結婚していない人に比べて賃金が高い（マリッジ・プレミアム）の要因分析
+第5章「パネルデータ分析」の練習問題を解いていきます。
+結婚している人は結婚していない人に比べて賃金が高い（マリッジ・プレミアム）の要因分析を行います。
+
+まずは事前の準備として，パッケージの読み込み，データの読み込み，文字化け対策を行います。
 
 - パッケージ: `wooldridge`, `tidyverse`, `fixest`
 - データ：`wagepan.csv`
 
-```{r}
+```{r packages}
+# パッケージの読み込み
 pacman::p_load(wooldridge, tidyverse, fixest)
+# データの読み込み
 data("wagepan")
-head(wagepan)
+# 文字化け対策
+knitr::opts_chunk$set(dev = "ragg_png")
 ```
+
+読み込んだデータの確認を行います。
+
+```{r glimpse_wagepan}
+glimpse(wagepan)
+wagepan |> names()
+```
+
+`wagepan`は44変数・4360観測値のデータセットです。
+変数が多いので，以下で用いるデータのみ抽出し，`df`に代入しておきます。
+
+- `nr` : 固体id
+- `year` : 年度
+- `lwage` : 賃金の対数
+- `married` : 既婚ダミー
+- `educ` : 教育年数
+- `exper` : 仕事経験年数
+- `black` : 黒人ダミー
+- `hisp` : ヒスパニックダミー
+
+```{r select_vars}
+df <- wagepan |>
+  select(lwage, married, educ, exper, black, hisp, nr, year)
+```
+
 
 ## (1) 回帰モデル
 
-賃金の対数値`lwage`を，`married`，`educ`，`exper`，`black`，`hisssp`で回帰する。プーリング回帰と固定効果モデルで推定する。
+賃金の対数値`lwage`を，`married`，`educ`，`exper`，`black`，`hisp`で回帰する。
+プーリング回帰と固定効果モデルで推定する。教科書では`hisssp`とありますが，正しくは`hisp`です。
 
 ### プーリング回帰
 
+年度効果と固体効果を無視したプーリング回帰分析を行います。
 
-```{r}
-lm_pool <- lm(lwage ~ married + educ + exper + black + hisp, data = wagepan)
-summary(lm_pool)
+```{r pooling}
+lm_pool <- lm(lwage ~ married + educ + exper + black + hisp, data = df)
+modelsummary::msummary(
+  lm_pool,
+  stars = TRUE,
+  gof_omit = 'RMSE|AIC|BIC|Log.Lik.'
+  )
 ```
 
----
+プーリング回帰の結果，
+
+- 結婚していて，
+- 教育年数が長く，
+- 仕事経験年数が長く，
+- 黒人ではないとき，
+
+給料が高い，という関係があることが分かった。
 
 ### 固定効果モデル
 
-固体効果，固体効果と年固定効果の両方を入れた二つのモデルを推定する。
-固定効果モデルの推定には、`fixest`パッケージの`feols()`関数を使うと便利
-```{r}
+次に固体効果，固体効果と年固定効果の両方を入れた二つの固定効果モデルを推定します。
+プーリング回帰と同様に`lm()`関数でも推定できますが，固定効果モデルの推定には便利な`fixest`パッケージの`feols()`関数を使います。
+
+```{r fe}
 results <- list(
-  "個体効果"      = feols(lwage ~ married + educ + exper + black + hisp | nr , data = wagepan),
-  "個体・年度効果" = feols(lwage ~ married + educ + exper + black + hisp | nr + year, data = wagepan)
+  "個体効果"      = feols(lwage ~ married + educ + exper + black + hisp | nr , data = df),
+  "個体・年度効果" = feols(lwage ~ married + educ + exper + black + hisp | nr + year, data = df)
   )
 fixest::etable(results, se.below = TRUE)
 ```
 
----
 
-### 固定効果モデル
-
-`lm()`関数を使って固定効果モデルを推定してみます。
-
-
-```{r}
-result <- list(
-  lm_fe1 <- lm(lwage ~ married + educ + exper + black + hisp + factor(nr) + factor(year), data = wagepan),
-  lm_fe2 <- lm(lwage ~ married + educ + exper + black + hisp + factor(nr) , data = wagepan)
-  )
-modelsummary::msummary(result, stars = TRUE)
-```
-
-##  刑事裁判のデータ
+## (2) 刑事裁判のデータ
 
 アメリカの州ごとに司法の結果が異なるかを確認し，犯罪コストが犯罪発生率に与える影響を検証する。
 
@@ -90,42 +109,36 @@ modelsummary::msummary(result, stars = TRUE)
 - データ：`Crime`
 
 
-```{r}
+```{r crime_packages}
 pacman::p_load(plm, fixest, tidyverse, modelsummary)
 data("Crime")
 head(Crime)
+names(Crime)
 ```
 
 ## (1) 回帰係数の符号予測
 
-従属変数`lcrmrte`を，
-
-- 逮捕確率`prbarr`：マイナス
-- 有罪確率`prbconv`：マイナス
-- 有罪ののち収監される確率`prbpris`：マイナス
-- 刑期の平均`avgsen`：マイナス
-- 人口当たり警察官の数`polpc`：マイナス
-- 人口密度`density`：プラス
-
-で回帰する。
+各独立変数が従属変数`lcrmrte`に与える影響を考え、符号の向きを予測してください。
 
 ## (2) 回帰分析
 
 プーリング回帰と固定効果の比較を行う。
 
-
-```{r}
-lm_pool <- lm(lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density, data = Crime)
-summary(lm_pool)
+```{r pooling_vs_fe}
+pool_model <- "lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density"
+res_pool <-  lm(pool_model, data = Crime)
+modelsummary::msummary(
+  res_pool,
+  stars = TRUE,
+  gof_omit = 'RMSE|AIC|BIC|Log.Lik.'
+  )
 ```
-
----
 
 ### 固定効果モデル
 
 固体効果，固体効果と年固定効果の両方を入れた二つのモデルを推定する。
 
-```{r}
+```{r one_vs_two_fe}
 results <- list(
   "個体効果"      = feols(lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density | county, data = Crime),
   "個体・年度効果" = feols(lcrmrte ~ prbarr + prbconv + prbpris + avgsen + polpc + density | county + year, data = Crime)
@@ -133,6 +146,8 @@ results <- list(
 fixest::etable(results, se.below = TRUE)
 ```
 
+## (3) 結果の解説
 
-## 結果の解釈
 
+
+## (4) 結果の解釈
